@@ -6,10 +6,23 @@ Build a deterministic-first, AI-assisted **Deletion Audit Agent** that audits 51
 ### Core Architectural Principle: "Index Everything Once, Audit Deterministically"
 Do NOT use an LLM in a per-case tool-calling loop over the 94 evidence files.
 Instead:
-1. **Stage 1 (Static Evidence Indexing):** Parse all 94 evidence files (`.sql`, `.json`, `.log`, `.txt`, `.pdf`, `.png`) ONCE into a unified in-memory relational index (and cache the parsed output of the 4 PDFs and 9 PNGs to disk as JSON).
+1. **Stage 1 (Static Evidence Indexing):** Parse all 94 evidence files (`.sql`, `.json`, `.log`, `.txt`, `.pdf`, `.png`) ONCE into a unified in-memory relational index (and cache the parsed output of the 4 PDFs and 11 PNGs to disk as JSON).
 2. **Stage 2 (Deterministic Case Execution):** Resolve all 518 cases deterministically in seconds using the in-memory index, using the LLM only for:
-   - One-time OCR/VLM structured extraction of the 9 PNG console screenshots (and 4 PDFs if text extraction requires structure).
+   - One-time OCR/VLM structured extraction of the 11 PNG console screenshots (and 4 PDFs if text extraction requires structure).
    - Batched intent classification of `request_text` for `NOT_APPLICABLE` detection (with strict prompt-injection isolation).
+
+### Verified Evidence Inventory (`dataset/evidence_files.csv`, 94 rows)
+
+| Folder | Ext | Count | File families (count) | Captured range |
+|---|---|---|---|---|
+| `databases/` | `.sql` | 24 | `customer_data_inventory_*` (11), `customer_data_read_replica_*` (5), `customer_data_regional_replicas_*` (3), `customer_data_reporting_replica_*` (2), `customer_data_failover_replica_20260920` (1), `customer_accounts_failover_replica_20260902` (1), `customer_search_primary_20260910` (1) | 2026-02-08 → 2026-09-21 |
+| `records/` | `.json` | 28 | `customer_data_snapshot_bundle_*` (12), `service_resource_export_*` (11), `connector_configurations_20260812`, `customer_export_manifest_20260409`, `security_audit_ledger_20261001`, `customer_analytics_report_20260907`, `customer_export_jobs_20260914` | 2026-01-29 → 2026-10-01 |
+| `records/` | `.txt` | 1 | `customer_account_handover_20261001` (`evidence_03`) | 2026-10-01 |
+| `logs/` | `.log` | 26 | `resource_lookup_trace_*` (11), `service_events_*` (2), `structured_service_events_*` (2), `syslog_archive_*` (2), `application_trace_*` (2), `operations_stream_*` (2), `cloud_runtime_export_*` (2), `notification_delivery_20260315`, `search_index_diagnostic_20260906`, `support_replica` | 2026-02-03 → 2026-09-30 |
+| `documents/` | `.pdf` | 4 | `evidence_18`, `evidence_27`, `evidence_55`, `evidence_58` | — |
+| `images/` | `.png` | 11 | `evidence_04`, `09`, `14`, `19`, `23`, `28`, `32`, `37`, `42`, `46`, `60` | — |
+
+> Dates come from file names; the authoritative capture time is `captured_at` in `evidence_files.csv`. `sample_output.csv` contains 10 `COMPLETE` and 22 `INCOMPLETE` cases and **no** `NOT_APPLICABLE` cases.
 
 ---
 
@@ -21,7 +34,7 @@ code/
 ├── requirements.txt                 # Dependencies (pandas/polars, pypdf, pdfplumber, openai/anthropic/google-genai, pytest)
 ├── README.md                        # Setup, architecture, run, and evaluation instructions
 ├── cache/
-│   ├── multimodal_evidence.json     # Cached structured extraction of the 9 PNGs & 4 PDFs
+│   ├── multimodal_evidence.json     # Cached structured extraction of the 11 PNGs & 4 PDFs
 │   └── intent_classifications.json  # Cached intent decisions for deletion_requests
 ├── src/
 │   ├── __init__.py
@@ -31,7 +44,7 @@ code/
 │   │   ├── csv_loader.py            # Loads all CSVs (requests, identities, audit_log, activity, rules, evidence_files)
 │   │   ├── sql_parser.py            # Loads .sql files into in-memory SQLite & extracts observations + snapshot_scope
 │   │   ├── json_txt_parser.py       # Parses records/*.json and records/*.txt (shift handovers, bundles, exports)
-│   │   ├── log_parser.py            # Parses logs/*.log (resource_lookup_trace, service_events, syslog, support_replica)
+│   │   ├── log_parser.py            # Parses logs/*.log (resource_lookup_trace, service_events, syslog, cloud_runtime_export, support_replica, ...)
 │   │   └── multimodal_parser.py     # Extracts documents/*.pdf and images/*.png (with disk caching & token metering)
 │   ├── core/
 │   │   ├── intent_classifier.py     # Hybrid deterministic + LLM batch classifier (anti-prompt-injection)
@@ -236,14 +249,14 @@ steps.sort(key=lambda s: (
 ### Phase 3: Build Deterministic Evidence Parsers (Structured Files)
 
 * [ ] **Task 3.1:** Implement `src/loaders/csv_loader.py` to load all CSV manifests.
-* [ ] **Task 3.2:** Implement `src/loaders/sql_parser.py` using Python's built-in `sqlite3` (`:memory:`) to parse all 18 `.sql` files, recording both table rows and `snapshot_scope`.
-* [ ] **Task 3.3:** Implement `src/loaders/json_txt_parser.py` to parse all 20 `.json` files and `customer_account_handover_20261001.txt` (`evidence_03`).
-* [ ] **Task 3.4:** Implement `src/loaders/log_parser.py` to parse all 21 `.log` files (`resource_lookup_trace_*`, `service_events_*`, `structured_service_events_*`, `syslog_archive_*`, `application_trace_*`, `operations_stream_*`, `notification_delivery_*`, `search_index_diagnostic_*`, `support_replica.log`).
+* [ ] **Task 3.2:** Implement `src/loaders/sql_parser.py` using Python's built-in `sqlite3` (`:memory:`) to parse all 24 `.sql` files (`customer_data_read_replica_*` ×5, `customer_data_regional_replicas_*` ×3, `customer_data_reporting_replica_*` ×2, `customer_data_failover_replica_20260920` + `customer_accounts_failover_replica_20260902`, `customer_search_primary_20260910`, `customer_data_inventory_*` ×11), recording both table rows and `snapshot_scope`.
+* [ ] **Task 3.3:** Implement `src/loaders/json_txt_parser.py` to parse all 28 `.json` files (`customer_data_snapshot_bundle_*` ×12, `service_resource_export_*` ×11, `connector_configurations_20260812`, `customer_export_manifest_20260409`, `security_audit_ledger_20261001`, `customer_analytics_report_20260907`, `customer_export_jobs_20260914`) and `customer_account_handover_20261001.txt` (`evidence_03`).
+* [ ] **Task 3.4:** Implement `src/loaders/log_parser.py` to parse all 26 `.log` files (`resource_lookup_trace_*` ×11, `service_events_*` ×2, `structured_service_events_*` ×2, `syslog_archive_*` ×2, `application_trace_*` ×2, `operations_stream_*` ×2, `cloud_runtime_export_*` ×2, `notification_delivery_20260315`, `search_index_diagnostic_20260906`, `support_replica.log`).
 
-### Phase 4: One-Time Multimodal Extraction (4 PDFs + 9 PNGs)
+### Phase 4: One-Time Multimodal Extraction (4 PDFs + 11 PNGs)
 
 * [ ] **Task 4.1:** Implement PDF extraction in `src/loaders/multimodal_parser.py` using `pypdf`/`pdfplumber` for the 4 PDFs (`evidence_18`, `evidence_27`, `evidence_55`, `evidence_58`). Inspect the extracted text directly; if structured tables exist, parse them into `EvidenceObservation` objects.
-* [ ] **Task 4.2:** Implement VLM extraction for the 9 PNG images (`evidence_04`, `evidence_09`, `evidence_14`, `evidence_19`, `evidence_23`, `evidence_28`, `evidence_32`, `evidence_37`, `evidence_42`, `evidence_46`, `evidence_60`). Send each image ONCE with a strict JSON schema prompt to extract every row/record visible on the admin console, save to `cache/multimodal_evidence.json`, and log tokens in `metering.py`.
+* [ ] **Task 4.2:** Implement VLM extraction for the 11 PNG images (`evidence_04`, `evidence_09`, `evidence_14`, `evidence_19`, `evidence_23`, `evidence_28`, `evidence_32`, `evidence_37`, `evidence_42`, `evidence_46`, `evidence_60`). Send each image ONCE with a strict JSON schema prompt to extract every row/record visible on the admin console, save to `cache/multimodal_evidence.json`, and log tokens in `metering.py`.
 
 ### Phase 5: Core Audit Engine (Identity, Inventory, State, Rules, Planner)
 
