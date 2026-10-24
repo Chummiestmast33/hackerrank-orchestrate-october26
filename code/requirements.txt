@@ -1,0 +1,21 @@
+# Core Data & Runtime
+pandas>=2.0.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# Document & Multimodal Parsing
+pypdf>=4.0.0
+pdfplumber>=0.10.0
+Pillow>=10.0.0
+
+# LLM Providers
+google-genai>=0.1.0
+openai>=1.0.0
+anthropic>=0.20.0
+
+# Testing, Linting & Mutation Testing (Phase 0)
+pytest>=8.0.0
+ruff>=0.4.0
+mypy>=1.10.0
+mutmut>=2.4.5
+cosmic-ray>=8.7.0

@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "dataset",
+    "build",
+    "dist"
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+explicit_package_bases = true
+mypy_path = "code"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = [
+    "code/tests"
+]
+pythonpath = [
+    "code"
+]
+
+# Mutmut config (for Linux/WSL/CI environments)
+[tool.mutmut]
+paths_to_mutate = "code/src/"
+backup = false
+runner = "python -m pytest code/tests"
+tests_dir = "code/tests/"
+
+# Cosmic-Ray config (Native Windows & Cross-platform mutation testing)
+[tool.cosmic-ray]
+module-path = "code/src"
+test-runner = "pytest"
+test-args = "code/tests"
+dist = "local"
