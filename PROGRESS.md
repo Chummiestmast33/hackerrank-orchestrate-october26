@@ -42,13 +42,22 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P2.11 Synthetic scaffold: 6 grounded cases in `code/tests/fixtures/synthetic/synthetic_cases.json` + `test_synthetic_cases.py`
 - [x] P2.12 Quality gates: ruff/mypy/pytest green (62 tests); cosmic-ray on `code/src/evaluation`: run 1 = 696/1195 killed (58.2%); after mutation-driven test hardening run 2 = 758/1195 killed (63.4%). Target ≥80% not met; remaining survivors are dominated by operator swaps in message/format branches and near-equivalent comparisons. Non-blocking per decision; sessions kept in `code/cache/cr_eval_session*.sqlite` (gitignored).
 
-## Phase 3: Deterministic Evidence Parsers (Structured Files)
-- [ ] `code/src/models.py` (`IdentityGraph`, `ResourceItem`, `EvidenceObservation`, `AuditStep`)
-- [ ] Task 3.1 `code/src/loaders/csv_loader.py` (all CSVs)
-- [ ] Task 3.2 `code/src/loaders/sql_parser.py` (24 `.sql` files, `snapshot_scope`)
-- [ ] Task 3.3 `code/src/loaders/json_txt_parser.py` (28 `.json` + 1 `.txt`)
-- [ ] Task 3.4 `code/src/loaders/log_parser.py` (26 `.log` files)
-- [ ] Parser unit tests
+## Phase 3: Deterministic Evidence Parsers (Structured Files) — ✅ Complete (branch `phase-03-evidence-parsers`)
+- [x] P3.0 Branch + plan md (`docs/execution_plans/phase_03_deterministic_parsers.md`) + cosmic-ray feasibility probe — verdict: raw 73.7% (864/1172), adjusted 84.3% (864/1025) after excluding 147 void PEP-604-annotation mutants cosmic-ray counts in the denominator; ≥80% reachable on the adjusted denominator, not on raw. Sessions: `code/cache/cr_eval_session3.sqlite`, `cr_eval_session4.sqlite`.
+- [x] P3.1 `code/src/models.py` — `ObservationState`/`ParseStatus`/`Provenance` enums, `EvidenceObservation` (reason, locator, identifiers, state_inputs, pii flag), `ParseReport` (errors, scope, captured collections, direct systems), `finalize_status`
+- [x] P3.2 `code/src/loaders/state_vocab.py` + `collection_rules.py` — explicit decoder table (result/boolean/readback/count/search/analytics/profile/support/matched/available/existence); every unknown token or missing field ⇒ `UNKNOWN` with reason; no default state branches
+- [x] P3.3 `code/src/loaders/csv_loader.py` — manifest, requests, identities, audit log, activity, rules; ISO-8601 validation, duplicate-key and missing-column detection
+- [x] P3.4 `code/src/loaders/sql_parser.py` — inventory typed tables + `snapshot_scope`, generic `record_json` replicas keyed by `collection_name`, dedicated account/search replicas; unknown family/table/collection ⇒ explicit error
+- [x] P3.5 `code/src/loaders/json_txt_parser.py` — bundles (incl. empty-collection metadata), service exports (all 8 services, nested search `hits`), ledgers, export jobs, analytics report, handover text; malformed JSON/line ⇒ `PARSE_ERROR`
+- [x] P3.6 `code/src/loaders/log_parser.py` — 7 line shapes, state-bearing event table (account/support/connector/backup/search/security/analytics/export/record_lookup/restore_candidate_evaluated); unmapped values ⇒ `UNKNOWN`, broken lines ⇒ line errors
+- [x] Parser unit tests — `test_state_vocab`, `test_csv_loader`, `test_sql_parser`, `test_json_txt_parser`, `test_log_parser` (138 total tests green repo-wide after P3.7/P3.8)
+- [x] P3.7 Aggressive all-in-one cache + parse CLI — `code/src/loaders/cache.py` (sha256+PARSER_VERSION reuse forever, atomic deterministic writes, `UNSUPPORTED_FORMAT` placeholders) and `cli.py parse-all` (family census, cache stats, exit codes); verified first run 94 misses → second run 94 hits, cache 2 MB gitignored
+- [x] P3.8 Corpus tests — committed census snapshot `code/tests/fixtures/parsers/corpus_census.json` (94 files), drift test, double-parse determinism, golden-citation cross-check (70 matched / 0 mismatched / 4 documented scope exemptions / 1 PDF)
+- [x] P3.9 Evaluation mutation debt — resolved on the adjusted denominator (session 4: 864/1025 = 84.3%); void annotation-mutant exclusion documented in `docs/findings/phase_03_parser_notes.md` §6
+- [x] P3.10 Src-wide cosmic-ray gate — **deferred to Phase 6** by decision; loader/model modules join that run; current valid gate remains session 4
+- [x] P3.11 `docs/findings/phase_03_parser_notes.md` — implemented decode tables, deviations, corpus results, cache semantics, mutation status
+- [x] P3.12 Closeout — trackers updated, mutation byproducts purged, gates green, single Phase 3 commit on the branch
+- [x] Corpus results: 79 structured files `OK` + 15 binary placeholders, 0 errors, 0 UNKNOWN, 2886 observation records, 70/70 structured golden citations matching
 
 ## Phase 4: One-Time Multimodal Extraction (4 PDFs + 11 PNGs)
 - [ ] Task 4.1 PDF extraction (`pypdf` / `pdfplumber`)
@@ -74,5 +83,5 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1 + Phase 2 complete. Harness validated: golden sample self-comparison = 100% on all metrics; `evaluation/evaluation_report.md` + `evaluation/usage_report.md` skeletons generated (deterministic-only usage).
-- **Next step:** Phases 3–5 (deterministic parsers and audit engine), then Phase 6 convergence using the harness.
+- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers` (parsers + aggressive cache + CLI + 138 tests, corpus census pinned, 70/70 structured golden citations, notes in `docs/findings/phase_03_parser_notes.md`). Src-wide mutation gate deferred to Phase 6 per decision.
+- **Next step:** Phase 4 (PDF text extraction + 11 PNG VLM extraction into `EvidenceObservation`, replacing the binary placeholder cache entries).

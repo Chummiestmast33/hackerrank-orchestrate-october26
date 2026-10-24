@@ -62,6 +62,7 @@ def test_report_contains_exact_token_lines(tmp_path: Path) -> None:
     assert "- Output tokens: 1300" in text
     assert "- Total tokens: 4300" in text
     assert "- Total calls: 3" in text
+    assert "- Uncached calls: 2" in text
     assert "- Cache-hit calls (0 tokens recorded): 1" in text
     assert "| gemini | gemini-2.5-pro | 2 | 1 | 1000 | 500 | 1500 | null |" in text
 

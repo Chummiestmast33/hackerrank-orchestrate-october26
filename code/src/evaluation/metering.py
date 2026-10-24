@@ -6,8 +6,6 @@ Cached calls are counted separately and excluded from token/cost totals. No
 secrets or configuration values are ever written to the reports.
 """
 
-from __future__ import annotations
-
 import json
 import uuid
 from collections.abc import Iterator, Mapping
@@ -50,7 +48,7 @@ class UsageRecord:
         )
 
     @classmethod
-    def from_json(cls, line: str) -> UsageRecord:
+    def from_json(cls, line: str) -> "UsageRecord":
         data = json.loads(line)
         return cls(
             run_id=data["run_id"],

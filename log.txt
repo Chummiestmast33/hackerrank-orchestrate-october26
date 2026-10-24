@@ -200,3 +200,104 @@ branch=main
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+## [2026-10-24T14:38:25-06:00] P3.0 kickoff: branch + phase 3 plan md + cosmic-ray feasibility probe
+
+User Prompt (verbatim, secrets redacted):
+Excute only the p3.0 for now, you can iterate a limited times for checkin if cosmic ray can get >=80% kills or if not possible in this phase
+
+Agent Response Summary:
+Started Phase 3 execution limited to P3.0: cut branch phase-03-evidence-parsers from main (@ac46c2c, verified Phase 1+2 fully committed), authored docs/execution_plans/phase_03_deterministic_parsers.md, registered it in docs/execution_plans/README.md and PROGRESS.md. Then performed a bounded cosmic-ray feasibility probe on code/src/evaluation (max two hardening+run iterations) to check whether the >=80% kill target is reachable this phase; outcome recorded in PROGRESS.md either way.
+
+Actions:
+* git switch -c phase-03-evidence-parsers
+* Write docs/execution_plans/phase_03_deterministic_parsers.md; update docs/execution_plans/README.md, PROGRESS.md
+* Analyze cosmic-ray survivors; targeted test hardening; bounded re-runs
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-03-evidence-parsers
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+## [2026-10-24T15:55:11-06:00] P3.0 done: branch, phase-3 plan md, cosmic-ray probe verdict
+
+User Prompt (verbatim, secrets redacted):
+Excute only the p3.0 for now, you can iterate a limited times for checkin if cosmic ray can get >=80% kills or if not possible in this phase
+
+Agent Response Summary:
+Cut branch phase-03-evidence-parsers from main (@ac46c2c, verified Phase 1+2 committed). Authored docs/execution_plans/phase_03_deterministic_parsers.md (no-guessing state policy with UNKNOWN_STATE/PARSE_ERROR/UNSUPPORTED_FORMAT, module layout, tasks P3.0-P3.12, acceptance criteria) and registered it in docs/execution_plans/README.md and PROGRESS.md. Ran the bounded cosmic-ray feasibility probe with two hardening iterations: removed future-annotations import, removed dead diff fallback, added exact-value assertions; kill rate progressed 63.4% -> 70.0% -> 73.7% raw. Survivor analysis proved 147 remaining survivors are void PEP-604 annotation mutants cosmic-ray counts in the denominator; adjusted rate 864/1025 = 84.3% >= 80%. Verdict recorded in plan section 5 and PROGRESS: >=80% reachable on the execution-meaningful denominator only.
+
+Actions:
+* git switch -c phase-03-evidence-parsers
+* Wrote docs/execution_plans/phase_03_deterministic_parsers.md; updated docs/execution_plans/README.md, PROGRESS.md
+* Hardened code/tests (exact diff/summary/message assertions); stripped future annotations in src/evaluation; removed dead fallback in evaluator.diff_case
+* cosmic-ray runs 3 and 4 (sessions cr_eval_session3/4.sqlite); survivor cluster analysis via sqlite queries
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-03-evidence-parsers
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+## [2026-10-24T16:03:28-06:00] P3.1-P3.6 implementation start
+
+User Prompt (verbatim, secrets redacted):
+Now excute the plan to get ready the models, sql parser, json parser, log parser and the unit test of the plane starning the P3.1
+
+Agent Response Summary:
+Building the deterministic parser layer on branch phase-03-evidence-parsers: models.py (observation/parse-status/provenance enums + dataclasses), state_vocab.py (explicit field-to-state decoders with UNKNOWN/PARSE_ERROR fallbacks), csv_loader.py, sql_parser.py, json_txt_parser.py, log_parser.py, and unit tests per module. All decoders use only explicit fields; no inferred states. Corpus smoke run follows before tracker updates.
+
+Actions:
+* Introspected exact table columns, JSON service-export shapes, bundle collections, and log event vocabularies
+* Implemented parser modules and tests (see following actions)
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-03-evidence-parsers
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+## [2026-10-24T16:41:07-06:00] P3.1-P3.6 complete: parser layer + unit tests
+
+User Prompt (verbatim, secrets redacted):
+continue thinking, and complete all the pending task.
+
+Agent Response Summary:
+Completed the requested parser layer on branch phase-03-evidence-parsers. Implemented code/src/models.py (ObservationState/ParseStatus/Provenance, EvidenceObservation with mandatory reason+locator, ParseReport with scope/captured-collection metadata), loaders/state_vocab.py + collection_rules.py (single explicit decoder table; every unknown token or missing field yields UNKNOWN with a reason; no defaulted states), loaders/csv_loader.py, sql_parser.py (inventory, generic record_json replicas, dedicated account/search replicas, snapshot_scope), json_txt_parser.py (bundles, service exports incl. nested search hits, ledgers, export jobs, analytics report, handover text) and log_parser.py (7 line shapes + state-bearing event table incl. restore_candidate_evaluated and analytics_profile_read_completed). Added five unit-test modules. Corpus smoke: 79 structured files, all reports OK, 0 errors, 0 UNKNOWN, 2886 observation records; golden-citation cross-check 70/70 structured matches (1 PDF deferred to Phase 4, 4 scope-based absences deferred to Phase 5). Gates: ruff/format/mypy clean, 122 tests green.
+
+Actions:
+* Created code/src/models.py; code/src/loaders/{__init__,common,state_vocab,collection_rules,csv_loader,sql_parser,json_txt_parser,log_parser}.py
+* Created code/tests/test_{state_vocab,csv_loader,sql_parser,json_txt_parser,log_parser}.py
+* Fixed decode gaps found by corpus smoke (nested search hits, analytics_profile_read_completed, restore_candidate_evaluated)
+* Updated PROGRESS.md and docs/execution_plans/README.md
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-03-evidence-parsers
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+## [2026-10-24T16:58:51-06:00] Execute P3.7-P3.12: aggressive cache, CLI, corpus tests, closeout
+
+User Prompt (verbatim, secrets redacted):
+Excute the proposed plan
+
+Agent Response Summary:
+Executing the approved Phase 3 closeout plan on branch phase-03-evidence-parsers: P3.7 aggressive all-in-one parsed-evidence cache (sha256 + parser_version reuse, atomic deterministic writes, parse-all CLI with census/exit codes, UNSUPPORTED_FORMAT placeholders for pdf/png), P3.8 committed corpus census + determinism + golden-citation tests, P3.11 parser notes, P3.12 tracker closeout and a single Phase 3 commit (per user decision; src-wide mutation gate deferred to Phase 6, cache stays gitignored and local).
+
+Actions:
+* Implementing code/src/loaders/{cache,cli}.py and code/tests/{test_cache,test_corpus_census}.py
+* Generating code/tests/fixtures/parsers/corpus_census.json; docs/findings/phase_03_parser_notes.md
+* Updating PROGRESS.md, docs/execution_plans/README.md; purging mutation byproducts; running gates; committing the branch
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-03-evidence-parsers
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

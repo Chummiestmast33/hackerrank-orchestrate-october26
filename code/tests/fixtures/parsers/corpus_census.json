@@ -1,0 +1,1457 @@
+{
+  "evidence_01": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 10,
+      "ACTIVE": 4,
+      "PRESENT": 22
+    },
+    "status": "OK"
+  },
+  "evidence_02": {
+    "captured_collections": 11,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 41,
+    "scope": [],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 5,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 28
+    },
+    "status": "OK"
+  },
+  "evidence_03": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "txt:handover",
+    "observations": 41,
+    "scope": [],
+    "states": {
+      "ABSENT": 10,
+      "ACTIVE": 4,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 22,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_04": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_05": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 61,
+    "scope": [],
+    "states": {
+      "ACTIVE": 8,
+      "ANONYMIZED": 6,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 43
+    },
+    "status": "OK"
+  },
+  "evidence_06": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 2,
+      "ANONYMIZED": 1,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 22
+    },
+    "status": "OK"
+  },
+  "evidence_07": {
+    "captured_collections": 9,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 30,
+    "scope": [],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 4,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 18
+    },
+    "status": "OK"
+  },
+  "evidence_08": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 4,
+      "ANONYMIZED": 1,
+      "PRESENT": 22
+    },
+    "status": "OK"
+  },
+  "evidence_09": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_10": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 59,
+    "scope": [],
+    "states": {
+      "ACTIVE": 6,
+      "ANONYMIZED": 10,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 39
+    },
+    "status": "OK"
+  },
+  "evidence_11": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "PRESENT": 23
+    },
+    "status": "OK"
+  },
+  "evidence_12": {
+    "captured_collections": 11,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 29,
+    "scope": [],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "PRESENT": 25
+    },
+    "status": "OK"
+  },
+  "evidence_13": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:ledger",
+    "observations": 39,
+    "scope": [],
+    "states": {
+      "ABSENT": 8,
+      "ACTIVE": 3,
+      "PRESENT": 28
+    },
+    "status": "OK"
+  },
+  "evidence_14": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_15": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 49,
+    "scope": [],
+    "states": {
+      "ACTIVE": 4,
+      "ANONYMIZED": 4,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 37
+    },
+    "status": "OK"
+  },
+  "evidence_16": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 8,
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "PRESENT": 24
+    },
+    "status": "OK"
+  },
+  "evidence_17": {
+    "captured_collections": 11,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 29
+    },
+    "status": "OK"
+  },
+  "evidence_18": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.pdf",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_19": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_20": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 63,
+    "scope": [],
+    "states": {
+      "ACTIVE": 8,
+      "ANONYMIZED": 4,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 47
+    },
+    "status": "OK"
+  },
+  "evidence_21": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 39,
+    "scope": [],
+    "states": {
+      "ABSENT": 10,
+      "ACTIVE": 1,
+      "ANONYMIZED": 4,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 22
+    },
+    "status": "OK"
+  },
+  "evidence_22": {
+    "captured_collections": 11,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 71,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 6,
+      "ANONYMIZED": 6,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 42,
+      "REDACTED": 2
+    },
+    "status": "OK"
+  },
+  "evidence_23": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_24": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 50,
+    "scope": [],
+    "states": {
+      "ACTIVE": 4,
+      "ANONYMIZED": 6,
+      "PRESENT": 40
+    },
+    "status": "OK"
+  },
+  "evidence_25": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 42,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 26
+    },
+    "status": "OK"
+  },
+  "evidence_26": {
+    "captured_collections": 9,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 32,
+    "scope": [],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 3,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 24
+    },
+    "status": "OK"
+  },
+  "evidence_27": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.pdf",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_28": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_29": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 85,
+    "scope": [],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 6,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 70
+    },
+    "status": "OK"
+  },
+  "evidence_30": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 38,
+    "scope": [],
+    "states": {
+      "ABSENT": 10,
+      "ACTIVE": 4,
+      "ANONYMIZED": 4,
+      "PRESENT": 20
+    },
+    "status": "OK"
+  },
+  "evidence_31": {
+    "captured_collections": 10,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 74,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 5,
+      "ANONYMIZED": 6,
+      "BLOCKED": 4,
+      "DISABLED": 4,
+      "PRESENT": 45,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_32": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_33": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 89,
+    "scope": [],
+    "states": {
+      "ACTIVE": 9,
+      "ANONYMIZED": 6,
+      "PRESENT": 74
+    },
+    "status": "OK"
+  },
+  "evidence_34": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 44,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 5,
+      "ANONYMIZED": 1,
+      "PRESENT": 29
+    },
+    "status": "OK"
+  },
+  "evidence_35": {
+    "captured_collections": 8,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 28,
+    "scope": [],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 4,
+      "PRESENT": 22
+    },
+    "status": "OK"
+  },
+  "evidence_36": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:ledger",
+    "observations": 46,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 4,
+      "ANONYMIZED": 3,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 27,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_37": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_38": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 85,
+    "scope": [],
+    "states": {
+      "ACTIVE": 6,
+      "ANONYMIZED": 12,
+      "PRESENT": 67
+    },
+    "status": "OK"
+  },
+  "evidence_39": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 40,
+    "scope": [],
+    "states": {
+      "ABSENT": 8,
+      "ACTIVE": 3,
+      "PRESENT": 29
+    },
+    "status": "OK"
+  },
+  "evidence_40": {
+    "captured_collections": 12,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 31,
+    "scope": [],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 3,
+      "PRESENT": 26
+    },
+    "status": "OK"
+  },
+  "evidence_41": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 39,
+    "scope": [],
+    "states": {
+      "ABSENT": 8,
+      "ACTIVE": 5,
+      "PRESENT": 26
+    },
+    "status": "OK"
+  },
+  "evidence_42": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_43": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 51,
+    "scope": [],
+    "states": {
+      "ACTIVE": 4,
+      "ANONYMIZED": 6,
+      "PRESENT": 41
+    },
+    "status": "OK"
+  },
+  "evidence_44": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 39,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 2,
+      "ANONYMIZED": 3,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 21
+    },
+    "status": "OK"
+  },
+  "evidence_45": {
+    "captured_collections": 11,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 75,
+    "scope": [],
+    "states": {
+      "ABSENT": 8,
+      "ACTIVE": 6,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 57
+    },
+    "status": "OK"
+  },
+  "evidence_46": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_47": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 49,
+    "scope": [],
+    "states": {
+      "ACTIVE": 4,
+      "ANONYMIZED": 2,
+      "PRESENT": 43
+    },
+    "status": "OK"
+  },
+  "evidence_48": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 9,
+      "ACTIVE": 4,
+      "ANONYMIZED": 2,
+      "PRESENT": 21
+    },
+    "status": "OK"
+  },
+  "evidence_49": {
+    "captured_collections": 10,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 34,
+    "scope": [],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 27
+    },
+    "status": "OK"
+  },
+  "evidence_50": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:ledger",
+    "observations": 20,
+    "scope": [],
+    "states": {
+      "PRESENT": 20
+    },
+    "status": "OK"
+  },
+  "evidence_51": {
+    "captured_collections": 3,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:snapshot_bundle",
+    "observations": 4,
+    "scope": [],
+    "states": {
+      "PRESENT": 3,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_52": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:generic_replica",
+    "observations": 32,
+    "scope": [],
+    "states": {
+      "PRESENT": 24,
+      "REDACTED": 8
+    },
+    "status": "OK"
+  },
+  "evidence_53": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 300,
+    "scope": [],
+    "states": {
+      "PRESENT": 300
+    },
+    "status": "OK"
+  },
+  "evidence_54": {
+    "captured_collections": 0,
+    "direct_systems": [
+      "account_service"
+    ],
+    "errors": 0,
+    "family": "sql:accounts_failover",
+    "observations": 7,
+    "scope": [],
+    "states": {
+      "PRESENT": 7
+    },
+    "status": "OK"
+  },
+  "evidence_55": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.pdf",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_56": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:analytics_report",
+    "observations": 2,
+    "scope": [],
+    "states": {
+      "ANONYMIZED": 1,
+      "PRESENT": 1
+    },
+    "status": "OK"
+  },
+  "evidence_57": {
+    "captured_collections": 0,
+    "direct_systems": [
+      "search_service"
+    ],
+    "errors": 0,
+    "family": "sql:search_primary",
+    "observations": 3,
+    "scope": [],
+    "states": {
+      "PRESENT": 3
+    },
+    "status": "OK"
+  },
+  "evidence_58": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.pdf",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_59": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:export_jobs",
+    "observations": 2,
+    "scope": [],
+    "states": {
+      "PRESENT": 2
+    },
+    "status": "OK"
+  },
+  "evidence_60": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "binary:.png",
+    "observations": 0,
+    "scope": [],
+    "states": {},
+    "status": "UNSUPPORTED_FORMAT"
+  },
+  "evidence_61": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 3,
+    "scope": [],
+    "states": {
+      "PRESENT": 3
+    },
+    "status": "OK"
+  },
+  "evidence_62": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 29,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 18,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_63": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 17,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 3,
+      "PRESENT": 12
+    },
+    "status": "OK"
+  },
+  "evidence_64": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 26,
+    "scope": [],
+    "states": {
+      "ABSENT": 2,
+      "ACTIVE": 3,
+      "ANONYMIZED": 1,
+      "PRESENT": 20
+    },
+    "status": "OK"
+  },
+  "evidence_65": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 27,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 2,
+      "ANONYMIZED": 3,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 12,
+      "REDACTED": 2
+    },
+    "status": "OK"
+  },
+  "evidence_66": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 23,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 5,
+      "ANONYMIZED": 2,
+      "PRESENT": 16
+    },
+    "status": "OK"
+  },
+  "evidence_67": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 1,
+    "scope": [],
+    "states": {
+      "ABSENT": 1
+    },
+    "status": "OK"
+  },
+  "evidence_68": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 25,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 2,
+      "ANONYMIZED": 3,
+      "PRESENT": 16
+    },
+    "status": "OK"
+  },
+  "evidence_69": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 18,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "PRESENT": 13
+    },
+    "status": "OK"
+  },
+  "evidence_70": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 24,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 2,
+      "ANONYMIZED": 4,
+      "PRESENT": 14
+    },
+    "status": "OK"
+  },
+  "evidence_71": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 28,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 3,
+      "ANONYMIZED": 4,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 14,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_72": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 21,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 13,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_73": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 33,
+    "scope": [],
+    "states": {
+      "ABSENT": 5,
+      "ACTIVE": 2,
+      "ANONYMIZED": 4,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 16
+    },
+    "status": "OK"
+  },
+  "evidence_74": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 25,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 4,
+      "ANONYMIZED": 4,
+      "PRESENT": 13
+    },
+    "status": "OK"
+  },
+  "evidence_75": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 24,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 4,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 14,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_76": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 23,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 4,
+      "ANONYMIZED": 3,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 11
+    },
+    "status": "OK"
+  },
+  "evidence_77": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 27,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 3,
+      "ANONYMIZED": 3,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 15,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_78": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 19,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 1,
+      "ANONYMIZED": 2,
+      "PRESENT": 16
+    },
+    "status": "OK"
+  },
+  "evidence_79": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 29,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 3,
+      "ANONYMIZED": 3,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 15
+    },
+    "status": "OK"
+  },
+  "evidence_80": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 24,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 3,
+      "ANONYMIZED": 3,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 12,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_81": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 24,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 1,
+      "ANONYMIZED": 4,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 16,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_82": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 26,
+    "scope": [],
+    "states": {
+      "ABSENT": 4,
+      "ACTIVE": 3,
+      "ANONYMIZED": 4,
+      "PRESENT": 15
+    },
+    "status": "OK"
+  },
+  "evidence_83": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 29,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 19,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_84": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 26,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 18,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_85": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 22,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "PRESENT": 15
+    },
+    "status": "OK"
+  },
+  "evidence_86": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 23,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 3,
+      "ANONYMIZED": 2,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 12,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_87": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 19,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "PRESENT": 15
+    },
+    "status": "OK"
+  },
+  "evidence_88": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 22,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 2,
+      "ANONYMIZED": 2,
+      "PRESENT": 15
+    },
+    "status": "OK"
+  },
+  "evidence_89": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 23,
+    "scope": [],
+    "states": {
+      "ABSENT": 1,
+      "ACTIVE": 3,
+      "ANONYMIZED": 1,
+      "PRESENT": 18
+    },
+    "status": "OK"
+  },
+  "evidence_90": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 0,
+    "scope": [
+      "account_service"
+    ],
+    "states": {},
+    "status": "OK"
+  },
+  "evidence_91": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 30,
+    "scope": [],
+    "states": {
+      "ABSENT": 6,
+      "ACTIVE": 2,
+      "ANONYMIZED": 4,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 12
+    },
+    "status": "OK"
+  },
+  "evidence_92": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "json:service_export",
+    "observations": 36,
+    "scope": [],
+    "states": {
+      "ABSENT": 5,
+      "ACTIVE": 2,
+      "ANONYMIZED": 5,
+      "BLOCKED": 3,
+      "DISABLED": 3,
+      "PRESENT": 15,
+      "REDACTED": 3
+    },
+    "status": "OK"
+  },
+  "evidence_93": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "sql:inventory",
+    "observations": 17,
+    "scope": [
+      "account_service",
+      "analytics_platform",
+      "backup_service",
+      "export_service",
+      "integration_service",
+      "search_service",
+      "security_service",
+      "support_platform"
+    ],
+    "states": {
+      "ACTIVE": 2,
+      "ANONYMIZED": 1,
+      "BLOCKED": 1,
+      "DISABLED": 1,
+      "PRESENT": 11,
+      "REDACTED": 1
+    },
+    "status": "OK"
+  },
+  "evidence_94": {
+    "captured_collections": 0,
+    "direct_systems": [],
+    "errors": 0,
+    "family": "log",
+    "observations": 28,
+    "scope": [],
+    "states": {
+      "ABSENT": 3,
+      "ACTIVE": 4,
+      "ANONYMIZED": 3,
+      "BLOCKED": 2,
+      "DISABLED": 2,
+      "PRESENT": 14
+    },
+    "status": "OK"
+  }
+}

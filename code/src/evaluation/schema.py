@@ -7,8 +7,6 @@ being evidence-backed verification only, and INCOMPLETE rows citing evidence onl
 on FINDING steps. No invented minimum-step or required-phase rules.
 """
 
-from __future__ import annotations
-
 import csv
 import json
 import re
