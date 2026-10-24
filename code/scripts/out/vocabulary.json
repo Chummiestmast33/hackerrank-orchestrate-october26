@@ -1,0 +1,81 @@
+{
+  "cited_evidence_ids": {
+    "evidence_01": 5,
+    "evidence_03": 7,
+    "evidence_05": 4,
+    "evidence_51": 4,
+    "evidence_54": 4,
+    "evidence_56": 1,
+    "evidence_57": 1,
+    "evidence_58": 1,
+    "evidence_59": 1,
+    "evidence_61": 1,
+    "evidence_92": 36,
+    "evidence_93": 1,
+    "evidence_94": 9
+  },
+  "empty_evidence_by_phase": {
+    "REMEDIATION": 41,
+    "VERIFICATION": 77
+  },
+  "operation_state_pairs": {
+    "ANONYMIZE_RECORD|ANONYMIZED": 5,
+    "BLOCK_RESTORE|BLOCKED": 3,
+    "DELETE_RECORD|ABSENT": 21,
+    "DISABLE_DATA_FLOW|DISABLED": 6,
+    "REDACT_RECORD|REDACTED": 6,
+    "REPORT_ACTIVE_DATA_FLOW|ACTIVE": 6,
+    "REPORT_EXPOSED_PII|PRESENT": 11,
+    "REPORT_REMAINING_RECORD|PRESENT": 21,
+    "REPORT_RESTORE_RISK|ACTIVE": 3,
+    "VERIFY_DATA_FLOW_DISABLED|DISABLED": 9,
+    "VERIFY_RECORD_ABSENT|ABSENT": 50,
+    "VERIFY_RECORD_ANONYMIZED|ANONYMIZED": 12,
+    "VERIFY_RECORD_PRESENT|PRESENT": 24,
+    "VERIFY_RECORD_REDACTED|REDACTED": 10,
+    "VERIFY_RESTORE_BLOCKED|BLOCKED": 6
+  },
+  "phase_operation_pairs": {
+    "FINDING|REPORT_ACTIVE_DATA_FLOW": 6,
+    "FINDING|REPORT_EXPOSED_PII": 11,
+    "FINDING|REPORT_REMAINING_RECORD": 21,
+    "FINDING|REPORT_RESTORE_RISK": 3,
+    "REMEDIATION|ANONYMIZE_RECORD": 5,
+    "REMEDIATION|BLOCK_RESTORE": 3,
+    "REMEDIATION|DELETE_RECORD": 21,
+    "REMEDIATION|DISABLE_DATA_FLOW": 6,
+    "REMEDIATION|REDACT_RECORD": 6,
+    "VERIFICATION|VERIFY_DATA_FLOW_DISABLED": 9,
+    "VERIFICATION|VERIFY_RECORD_ABSENT": 50,
+    "VERIFICATION|VERIFY_RECORD_ANONYMIZED": 12,
+    "VERIFICATION|VERIFY_RECORD_PRESENT": 24,
+    "VERIFICATION|VERIFY_RECORD_REDACTED": 10,
+    "VERIFICATION|VERIFY_RESTORE_BLOCKED": 6
+  },
+  "resource_prefixes": {
+    "account_": 38,
+    "analytics_": 25,
+    "audit_": 24,
+    "backup_": 12,
+    "data_": 21,
+    "export_": 6,
+    "search_": 36,
+    "support_": 27,
+    "tombstone_": 4
+  },
+  "statuses": {
+    "COMPLETE": 10,
+    "INCOMPLETE": 22
+  },
+  "systems": {
+    "account_service": 38,
+    "analytics_platform": 25,
+    "backup_service": 12,
+    "export_service": 6,
+    "identity_service": 4,
+    "integration_service": 21,
+    "search_service": 36,
+    "security_service": 24,
+    "support_platform": 27
+  }
+}

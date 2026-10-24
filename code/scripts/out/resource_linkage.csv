@@ -1,0 +1,112 @@
+case_id,system_id,resource_id,verdict,activity_events,activity_ids_sample,linked_activity_ids,files_with_rid_le_audit,rid_in_identifier_files
+case_01,account_service,account_001,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3342,,,
+case_02,account_service,account_002,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3376,,,
+case_03,account_service,account_7566,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3851,,evidence_94,evidence_94
+case_03,analytics_platform,analytics_9406,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3852,,evidence_94,evidence_94
+case_03,security_service,audit_record_2016,DISCOVERABLE_EVIDENCE,{},,,evidence_94,evidence_94
+case_04,account_service,account_004,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_04,analytics_platform,analytics_901,RID_ONLY_NO_IDENTIFIER_SAME_FILE,"{""ANONYMIZE_RECORD"": 1}",activity_3463,,evidence_56,
+case_05,account_service,account_005,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1, ""SYNC_RECORD"": 1}",activity_3482;activity_3483,,evidence_54,evidence_54
+case_06,account_service,account_006,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3545,,evidence_57,evidence_57
+case_06,search_service,search_001,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3546,,evidence_57,evidence_57
+case_07,account_service,account_007,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3590,,,
+case_07,support_platform,support_001,DISCOVERABLE_EVIDENCE,{},,,evidence_58,evidence_58
+case_08,account_service,account_008,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3554,,,
+case_08,export_service,export_001,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3555,,evidence_59,evidence_59
+case_09,account_service,account_3960,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3703,,,
+case_09,backup_service,backup_4978,DISCOVERABLE_EVIDENCE,"{""CHECK_RESTORE_ACCESS"": 1}",activity_3709,,evidence_93,evidence_93
+case_09,security_service,audit_record_4902,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_10,account_service,account_010,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3595,,,
+case_10,support_platform,support_002,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3596,,evidence_61,evidence_61
+case_11,account_service,account_4248,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3801,,evidence_03,evidence_03
+case_11,analytics_platform,analytics_2034,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3816,,evidence_03,evidence_03
+case_11,integration_service,data_flow_9522,DISCOVERABLE_EVIDENCE,"{""CHECK_DATA_FLOW"": 1}",activity_3817,,evidence_03,evidence_03
+case_11,search_service,search_052,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3814,,evidence_03,evidence_03
+case_11,security_service,audit_record_9394,DISCOVERABLE_EVIDENCE,{},,,evidence_03,evidence_03
+case_11,support_platform,support_864,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3815,,evidence_03,evidence_03
+case_12,account_service,account_9797,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3432,,evidence_01,evidence_01
+case_12,analytics_platform,analytics_9914,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3435,,evidence_01,evidence_01
+case_12,security_service,audit_record_2945,DISCOVERABLE_EVIDENCE,{},,,evidence_01,evidence_01
+case_13,account_service,account_9335,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3739,,evidence_03,evidence_03
+case_13,search_service,search_1308,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3756,,evidence_03,evidence_03
+case_13,security_service,audit_record_4816,DISCOVERABLE_EVIDENCE,{},,,evidence_03,evidence_03
+case_13,support_platform,support_4218,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3752,,evidence_03,evidence_03
+case_14,account_service,account_3677,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3686,,evidence_03,evidence_03
+case_14,backup_service,backup_3870,DISCOVERABLE_EVIDENCE,"{""CHECK_RESTORE_ACCESS"": 1}",activity_3690,,evidence_03,evidence_03
+case_14,security_service,audit_record_987,DISCOVERABLE_EVIDENCE,{},,,evidence_03,evidence_03
+case_15,account_service,account_4745,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3382,,evidence_01,evidence_01
+case_15,integration_service,data_flow_9846,DISCOVERABLE_EVIDENCE,"{""CHECK_DATA_FLOW"": 1}",activity_3386,,evidence_01,evidence_01
+case_15,security_service,audit_record_1596,DISCOVERABLE_EVIDENCE,{},,,evidence_01,evidence_01
+case_16,account_service,account_994,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1, ""SYNC_RECORD"": 1}",activity_3571;activity_3577,,evidence_05,evidence_05
+case_16,search_service,search_1007,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3580,,evidence_05,evidence_05
+case_16,security_service,audit_record_9528,DISCOVERABLE_EVIDENCE,{},,,evidence_05,evidence_05
+case_17,account_service,account_4092,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3383,,evidence_01,evidence_01
+case_17,backup_service,backup_3245,DISCOVERABLE_EVIDENCE,"{""CHECK_RESTORE_ACCESS"": 1}",activity_3385,,evidence_01,evidence_01
+case_17,security_service,audit_record_1797,DISCOVERABLE_EVIDENCE,{},,,evidence_01,evidence_01
+case_18,account_service,account_5521,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3732,,,
+case_18,analytics_platform,analytics_037,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3751,,evidence_94,evidence_94
+case_18,integration_service,data_flow_4890,DISCOVERABLE_EVIDENCE,"{""CHECK_DATA_FLOW"": 1}",activity_3753,,evidence_94,evidence_94
+case_18,search_service,search_4013,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3747,,evidence_94,evidence_94
+case_18,security_service,audit_record_6645,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_18,support_platform,support_5569,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3744,,evidence_94,evidence_94
+case_19,account_service,account_9102,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3323,,evidence_01,evidence_01
+case_19,search_service,search_6083,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3332,,evidence_01,evidence_01
+case_19,security_service,audit_record_6793,DISCOVERABLE_EVIDENCE,{},,,evidence_01,evidence_01
+case_19,support_platform,support_9553,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3329,,evidence_01,evidence_01
+case_20,account_service,account_5037,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3734,,,
+case_20,integration_service,data_flow_1770,DISCOVERABLE_EVIDENCE,"{""CHECK_DATA_FLOW"": 1}",activity_3745,,evidence_94,evidence_94
+case_20,search_service,search_4262,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3750,,evidence_94,evidence_94
+case_20,security_service,audit_record_5569,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_21,account_service,account_6440,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3661,,evidence_92,evidence_92
+case_21,analytics_platform,analytics_5335,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3665,,evidence_92,evidence_92
+case_21,security_service,audit_record_3737,DISCOVERABLE_EVIDENCE,{},,,evidence_92,evidence_92
+case_22,account_service,account_4990,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3573,,,
+case_22,analytics_platform,analytics_4440,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3578,,evidence_05,evidence_05
+case_22,search_service,search_8911,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3581,,evidence_05,evidence_05
+case_22,security_service,audit_record_3482,DISCOVERABLE_EVIDENCE,{},,,evidence_05,evidence_05
+case_23,account_service,account_410,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3662,,,
+case_23,export_service,export_7364,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3667,,evidence_92,evidence_92
+case_23,search_service,search_898,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3671,,evidence_92,evidence_92
+case_23,security_service,audit_record_4128,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_24,account_service,account_5334,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1, ""SYNC_RECORD"": 1}",activity_3599;activity_3608,,evidence_92,evidence_92
+case_24,search_service,search_5577,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3610,,evidence_92,evidence_92
+case_24,security_service,audit_record_7095,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_25,account_service,account_3136,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3597,,evidence_92,evidence_92
+case_25,analytics_platform,analytics_1895,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3602,,evidence_92,evidence_92
+case_25,security_service,audit_record_451,DISCOVERABLE_EVIDENCE,{},,,evidence_92,evidence_92
+case_26,account_service,account_5684,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3600,,evidence_92,evidence_92
+case_26,analytics_platform,analytics_4566,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3603,,evidence_92,evidence_92
+case_26,backup_service,backup_3120,DISCOVERABLE_EVIDENCE,"{""BLOCK_RESTORE"": 1}",activity_3607,,evidence_92,evidence_92
+case_26,integration_service,data_flow_6244,DISCOVERABLE_EVIDENCE,"{""DISABLE_DATA_FLOW"": 1}",activity_3606,,evidence_92,evidence_92
+case_26,security_service,audit_record_5416,DISCOVERABLE_EVIDENCE,{},,,evidence_92,evidence_92
+case_26,support_platform,support_4715,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3605,,evidence_92,evidence_92
+case_27,account_service,account_3866,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3530,,evidence_92,evidence_92
+case_27,analytics_platform,analytics_4574,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3533,,evidence_92,evidence_92
+case_27,backup_service,backup_5970,DISCOVERABLE_EVIDENCE,"{""BLOCK_RESTORE"": 1}",activity_3540,,evidence_92,evidence_92
+case_27,integration_service,data_flow_2295,DISCOVERABLE_EVIDENCE,"{""DISABLE_DATA_FLOW"": 1}",activity_3537,,evidence_92,evidence_92
+case_27,security_service,audit_record_3830,DISCOVERABLE_EVIDENCE,{},,,evidence_92,evidence_92
+case_27,support_platform,support_4707,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3536,,evidence_92,evidence_92
+case_28,account_service,account_5482,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3529,,evidence_92,evidence_92
+case_28,analytics_platform,analytics_6077,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3534,,evidence_92,evidence_92
+case_28,backup_service,backup_838,DISCOVERABLE_EVIDENCE,"{""BLOCK_RESTORE"": 1}",activity_3539,,evidence_92,evidence_92
+case_28,integration_service,data_flow_2337,DISCOVERABLE_EVIDENCE,"{""DISABLE_DATA_FLOW"": 1}",activity_3538,,evidence_92,evidence_92
+case_28,security_service,audit_record_9265,DISCOVERABLE_EVIDENCE,{},,,evidence_92,evidence_92
+case_28,support_platform,support_2351,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3535,,evidence_92,evidence_92
+case_29,account_service,account_7012,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3532,,,
+case_29,analytics_platform,analytics_5208,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3544,,evidence_92,evidence_92
+case_29,integration_service,data_flow_3827,DISCOVERABLE_EVIDENCE,"{""CHECK_DATA_FLOW"": 1}",activity_3541,,evidence_92,evidence_92
+case_29,search_service,search_1993,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3542,,evidence_92,evidence_92
+case_29,security_service,audit_record_3954,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_29,support_platform,support_5281,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3543,,evidence_92,evidence_92
+case_30,account_service,account_4163,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3465,,,
+case_30,analytics_platform,analytics_3697,DISCOVERABLE_EVIDENCE,"{""ANONYMIZE_RECORD"": 1}",activity_3470,,evidence_92,evidence_92
+case_30,integration_service,data_flow_8524,DISCOVERABLE_EVIDENCE,"{""CHECK_DATA_FLOW"": 1}",activity_3467,,evidence_92,evidence_92
+case_30,search_service,search_9359,DISCOVERABLE_EVIDENCE,"{""DELETE_RECORD"": 1}",activity_3468,,evidence_92,evidence_92
+case_30,security_service,audit_record_1707,TEXT_ABSENT_CHECK_PNG_MANUALLY,{},,,,
+case_30,support_platform,support_6477,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3469,,evidence_92,evidence_92
+case_31,account_service,account_4857,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3682,,,
+case_31,identity_service,tombstone_440,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3687,,evidence_51,evidence_51
+case_31,security_service,audit_record_6909,DISCOVERABLE_EVIDENCE,{},,,evidence_51,evidence_51
+case_32,account_service,account_8858,ACTIVITY_RESOURCE_MATCH_ONLY,"{""DELETE_RECORD"": 1}",activity_3685,,,
+case_32,identity_service,tombstone_9178,DISCOVERABLE_EVIDENCE,"{""REDACT_RECORD"": 1}",activity_3692,,evidence_51,evidence_51
+case_32,security_service,audit_record_7068,DISCOVERABLE_EVIDENCE,{},,,evidence_51,evidence_51

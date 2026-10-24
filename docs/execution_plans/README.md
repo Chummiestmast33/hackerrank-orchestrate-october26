@@ -5,7 +5,7 @@ Each file covers one or more Plan.md phases. Progress is tracked in [PROGRESS.md
 
 | File | Plan.md Phases | Status |
 |---|---|---|
-| [phase_01_02_inspection_and_eval_harness.md](phase_01_02_inspection_and_eval_harness.md) | Phase 1 (Deep Inspection & Ground-Truth Alignment), Phase 2 (Evaluation & Metering Harness) | Planned |
+| [phase_01_02_inspection_and_eval_harness.md](phase_01_02_inspection_and_eval_harness.md) | Phase 1 (Deep Inspection & Ground-Truth Alignment), Phase 2 (Evaluation & Metering Harness) | Complete (mutation score recorded in PROGRESS.md) |
 
 ## Conventions
 

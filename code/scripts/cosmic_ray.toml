@@ -1,0 +1,13 @@
+# Mutation-testing config for the evaluation harness (P2.12).
+# Run all cosmic-ray commands from the REPOSITORY ROOT, e.g.:
+#   cosmic-ray init code/scripts/cosmic_ray.toml code/cache/cr_eval_session.sqlite
+#   cosmic-ray exec code/scripts/cosmic_ray.toml code/cache/cr_eval_session.sqlite
+#   cr-report code/cache/cr_eval_session.sqlite
+[cosmic-ray]
+module-path = "code/src/evaluation"
+timeout = 120.0
+excluded-modules = []
+test-command = ".venv/Scripts/python.exe -m pytest code/tests/test_schema.py code/tests/test_evaluator.py code/tests/test_metering.py code/tests/test_synthetic_cases.py -q -p no:cacheprovider"
+
+[cosmic-ray.distributor]
+name = "local"
