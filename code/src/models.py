@@ -36,6 +36,8 @@ class Provenance(StrEnum):
     NULL_PII_RULE = "NULL_PII_RULE"
     SCOPE_IMPLICIT = "SCOPE_IMPLICIT"
     HANDOVER = "HANDOVER"
+    DOCUMENT_TEXT = "DOCUMENT_TEXT"
+    VISION_TRANSCRIPTION = "VISION_TRANSCRIPTION"
 
 
 @dataclass(frozen=True)
@@ -93,6 +95,45 @@ class EvidenceObservation:
 
 
 @dataclass(frozen=True)
+class ExtractedRecord:
+    """One transcribed record from a PDF page or image; facts only, no state."""
+
+    file_id: str
+    family: str
+    record_index: int
+    fields: tuple[tuple[str, Any], ...]
+    source: str
+    confidence_flags: tuple[str, ...] = ()
+
+    def field(self, name: str) -> Any | None:
+        for key, value in self.fields:
+            if key == name:
+                return value
+        return None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "file_id": self.file_id,
+            "family": self.family,
+            "record_index": self.record_index,
+            "fields": dict(self.fields),
+            "source": self.source,
+            "confidence_flags": list(self.confidence_flags),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ExtractedRecord":
+        return cls(
+            file_id=str(data["file_id"]),
+            family=str(data["family"]),
+            record_index=int(data["record_index"]),
+            fields=tuple((str(key), value) for key, value in dict(data.get("fields", {})).items()),
+            source=str(data.get("source", "")),
+            confidence_flags=tuple(str(flag) for flag in data.get("confidence_flags", [])),
+        )
+
+
+@dataclass(frozen=True)
 class CapturedCollection:
     """Explicit metadata that a snapshot covered a collection (even when empty)."""
 
@@ -131,6 +172,7 @@ class ParseReport:
     captured_collections: list[CapturedCollection] = field(default_factory=list)
     direct_systems: tuple[str, ...] = ()
     ignored_lines: int = 0
+    extracted_records: tuple[ExtractedRecord, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -144,6 +186,7 @@ class ParseReport:
             "captured_collections": [c.to_dict() for c in self.captured_collections],
             "direct_systems": list(self.direct_systems),
             "ignored_lines": self.ignored_lines,
+            "extracted_records": [record.to_dict() for record in self.extracted_records],
         }
 
     @classmethod
@@ -161,6 +204,9 @@ class ParseReport:
             ],
             direct_systems=tuple(str(s) for s in data.get("direct_systems", [])),
             ignored_lines=int(data.get("ignored_lines", 0)),
+            extracted_records=tuple(
+                ExtractedRecord.from_dict(item) for item in data.get("extracted_records", [])
+            ),
         )
 
 

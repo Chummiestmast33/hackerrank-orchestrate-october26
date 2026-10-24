@@ -301,3 +301,47 @@ branch=phase-03-evidence-parsers
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T17:24:30-06:00] Phase 4 multimodal extraction plan and branch
+
+User Prompt (verbatim, secrets redacted):
+Create a md for the 4th phase, One-Time Multimodal Extractions, for the PDF and PNGs, check the Progress.md and create a new branch base on the phase-3 branch
+
+Agent Response Summary:
+Reviewed PROGRESS.md, Phase 3 models/notes and the parsed cache, extracted text from the 4 PDFs with pypdf and viewed two PNGs to ground the plan. Created branch phase-04-multimodal-extraction from phase-03-evidence-parsers and wrote docs/execution_plans/phase_04_multimodal_extraction.md (13 tasks) that separates transcription from deterministic decoding, keeps unmapped values UNKNOWN, uses deterministic PDF parsing and a one-time two-pass metered QwenCloud VL transcription with a committed transcription store. Updated the execution-plan index and PROGRESS.md; changes are uncommitted.
+
+Actions:
+* Read PROGRESS.md, code/src/models.py, docs/findings/phase_03_parser_notes.md
+* Inspected code/cache/parsed_evidence.json placeholders and resource-id vocabulary
+* Extracted PDF text with pypdf; viewed evidence_04 and evidence_14 PNGs
+* git switch -c phase-04-multimodal-extraction phase-03-evidence-parsers
+* Created docs/execution_plans/phase_04_multimodal_extraction.md
+* Edited docs/execution_plans/README.md and PROGRESS.md
+
+Context:
+tool=Antigravity
+model=Claude Opus 5.5 (Medium)
+branch=phase-04-multimodal-extraction
+repo_root=c:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+## [2026-10-24T17:44:09-06:00] Execute Phase 4 slice P4.0-P4.3 (visual inventory, models, PDF extractor, PDF decode)
+
+User Prompt (verbatim, secrets redacted):
+I approve the plan, implement the modification to the plan document and develop the task from P4.0 to P.3
+
+Agent Response Summary:
+Executing the approved Phase 4 slice on branch phase-04-multimodal-extraction: appending the slice section to the phase 4 execution plan, writing the P4.0 visual/DB-relations inventory (11 PNGs + 4 PDFs, relations verified against the Phase 3 cache and LINK activity, metadata-only policy), adding ExtractedRecord/Provenance/ParseReport fields with cache back-compat (P4.1), building the deterministic pypdf/pdfplumber PDF extractor with header-based family detection and timestamp normalization (P4.2), and the PDF decode tables plus relations helper (P4.3), all with unit tests; gates then a single slice commit.
+
+Actions:
+* Appended P4.0-P4.3 development section to docs/execution_plans/phase_04_multimodal_extraction.md
+* Wrote docs/findings/phase_04_multimodal_notes.md; implemented models/pdf_extractor/multimodal_rules + tests
+* Updated PROGRESS/plans README; ran gates; committed the slice
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-04-multimodal-extraction
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

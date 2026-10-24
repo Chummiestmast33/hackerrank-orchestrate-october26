@@ -59,9 +59,20 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P3.12 Closeout — trackers updated, mutation byproducts purged, gates green, single Phase 3 commit on the branch
 - [x] Corpus results: 79 structured files `OK` + 15 binary placeholders, 0 errors, 0 UNKNOWN, 2886 observation records, 70/70 structured golden citations matching
 
-## Phase 4: One-Time Multimodal Extraction (4 PDFs + 11 PNGs)
-- [ ] Task 4.1 PDF extraction (`pypdf` / `pdfplumber`)
-- [ ] Task 4.2 VLM extraction of 11 PNGs → `code/cache/multimodal_evidence.json` (metered)
+## Phase 4: One-Time Multimodal Extraction (4 PDFs + 11 PNGs) — ⏳ In progress (branch `phase-04-multimodal-extraction`, plan `docs/execution_plans/phase_04_multimodal_extraction.md`)
+- [x] P4.0 Visual inventory + DB relations → `docs/findings/phase_04_multimodal_notes.md` (11 PNG families, 4 PDFs, per-family `ExtractedRecord` schemas, verified cache/LINK relations incl. 2 conflicts + 1 drift; metadata-only policy)
+- [x] P4.1 Additive model changes (`Provenance.DOCUMENT_TEXT`/`VISION_TRANSCRIPTION`, frozen `ExtractedRecord`, `ParseReport.extracted_records` with `phase3-v1` cache back-compat) + `test_models.py`
+- [x] P4.2 `pdf_extractor.py` (pypdf → pdfplumber fallback, split-time rejoin, label stripping, header-only family detection) + real-PDF tests (4/4)
+- [x] P4.3 PDF decode tables + relations helper (`support_001` PRESENT+PII, `audit_record_003` PRESENT+retention, `evidence_18`/`27` facts only, diagnostics for missing fields, `relate_to_structured`) + tests
+- [ ] P4.4 `vlm_extractor.py` (QwenCloud VL via openai SDK, transcription-only prompts, metered)
+- [ ] P4.5 Two-pass agreement (disagreement ⇒ `UNKNOWN`)
+- [ ] P4.6 `transcription_validator.py` (regex + identity cross-check, flag not drop)
+- [ ] P4.7 PNG decode tables (health labels ⇒ `UNKNOWN` unless evidence-backed decision)
+- [ ] P4.8 `multimodal_parser.py` + cache/CLI integration (`--extract-images`, `--offline`)
+- [ ] P4.9 One-time extraction run + manual review + committed transcription store
+- [ ] P4.10 Tests (PDF, rules, VLM fake client, validator, census update, `case_07` golden match)
+- [ ] P4.11 Quality gates + cosmic-ray on new modules (recorded)
+- [ ] P4.12 `docs/findings/phase_04_multimodal_notes.md` + closeout
 
 ## Phase 5: Core Audit Engine
 - [ ] Task 5.1 `intent_classifier.py` (CLASSIFY_REQUEST events + batched LLM, injection-safe, cached)
@@ -83,5 +94,5 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers` (parsers + aggressive cache + CLI + 138 tests, corpus census pinned, 70/70 structured golden citations, notes in `docs/findings/phase_03_parser_notes.md`). Src-wide mutation gate deferred to Phase 6 per decision.
-- **Next step:** Phase 4 (PDF text extraction + 11 PNG VLM extraction into `EvidenceObservation`, replacing the binary placeholder cache entries).
+- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 slice P4.0–P4.3 complete** on branch `phase-04-multimodal-extraction` (visual/DB-relations notes, `ExtractedRecord` model with cache back-compat, deterministic PDF extractor for all 4 PDFs, PDF decode tables + relations helper; 155 tests green; 15 binary placeholders intentionally remain until P4.8).
+- **Next step:** P4.4–P4.7 (VLM client + two-pass agreement + transcription validator + PNG decode tables), then P4.8–P4.12 integration/extraction/gates/closeout.
