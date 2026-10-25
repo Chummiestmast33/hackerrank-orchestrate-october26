@@ -33,7 +33,7 @@ class RulesEngine:
 
         # 1. Connectors / DATA_FLOW
         if cat == "DATA_FLOW" or state.system_id == "integration_service":
-            if state.observed_state is ObservationState.ACTIVE:
+            if state.observed_state in (ObservationState.ACTIVE, ObservationState.PRESENT):
                 return PolicyViolation(
                     resource_id=state.resource_id,
                     system_id=state.system_id,
@@ -48,7 +48,7 @@ class RulesEngine:
 
         # 2. Backups / BACKUP_ARCHIVE
         if cat == "BACKUP_ARCHIVE" or state.system_id == "backup_service":
-            if state.observed_state is ObservationState.ACTIVE:
+            if state.observed_state in (ObservationState.ACTIVE, ObservationState.PRESENT):
                 return PolicyViolation(
                     resource_id=state.resource_id,
                     system_id=state.system_id,
@@ -128,6 +128,7 @@ class RulesEngine:
         self,
         is_deletion: bool,
         violations: Sequence[PolicyViolation],
+        states: Sequence[ReconstructedResourceState] = (),
     ) -> str:
         """Decide case status: NOT_APPLICABLE, COMPLETE, or INCOMPLETE."""
         if not is_deletion:

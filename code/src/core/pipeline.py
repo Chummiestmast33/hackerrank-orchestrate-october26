@@ -1,6 +1,7 @@
 """Pipeline orchestrator and CLI runner for Ghost Data Still Exists (AGENTS.md section 1, 6).
 
-Coordinates dataset loading, evidence cache ingestion, batch auditing,
+Coordinates dataset loading, evidence cache ingestion, Hybrid AI Audit Agent
+execution (qwen3.7-max + qwen3-vl-plus + deterministic tool guardrails),
 and output.csv generation and validation.
 """
 
@@ -10,6 +11,7 @@ import argparse
 import csv
 import json
 import re
+import shutil
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -20,6 +22,7 @@ from ..evaluation.evaluator import (
     format_summary,
     load_cases,
 )
+from ..evaluation.metering import Meter
 from ..evaluation.schema import OutputRow, validate_file
 from ..loaders.cache import read_cache
 from ..loaders.cache_bootstrap import CacheBuildError, ensure_evidence_cache
@@ -33,11 +36,12 @@ from ..loaders.csv_loader import (
     load_rules,
 )
 from ..models import CaseAuditResult, EvidenceObservation, ParseReport
+from .agent import AuditOrchestratorAgent
 from .audit_engine import AuditEngine
 
 
 class Pipeline:
-    """End-to-end deletion audit pipeline."""
+    """End-to-end deletion audit pipeline powered by AuditOrchestratorAgent."""
 
     def __init__(
         self,
@@ -46,6 +50,8 @@ class Pipeline:
         code_dir: Path | None = None,
         transcription_store_path: Path | None = None,
         rebuild_cache: bool = False,
+        meter: Meter | None = None,
+        enable_live_llm: bool = False,
     ) -> None:
         self.code_dir = code_dir or Path(__file__).resolve().parent.parent.parent
         self.repo_root = self.code_dir.parent
@@ -54,6 +60,8 @@ class Pipeline:
         self.transcription_store_path = transcription_store_path or (
             self.code_dir / "data" / "multimodal_transcriptions.json"
         )
+        self.meter = meter or Meter(run_id="__full_518_audit__")
+        self.enable_live_llm = enable_live_llm
 
         # Ingest dataset files
         self.identities, _ = load_identities(self.dataset_dir / "user_identities.csv")
@@ -79,10 +87,11 @@ class Pipeline:
         self.reports: dict[str, ParseReport] = {}
         self.trace_subjects: dict[str, set[str]] = {}
         self.trace_resources: dict[str, set[str]] = {}
+        self.trace_captured_at: dict[str, str] = {}
 
         self._load_evidence_cache()
 
-        # Initialize AuditEngine
+        # Initialize AuditEngine and Hybrid AI AuditOrchestratorAgent
         self.engine = AuditEngine(
             identities=self.identities,
             audit_log=self.audit_log,
@@ -92,10 +101,18 @@ class Pipeline:
             reports=self.reports,
             trace_subjects=self.trace_subjects,
             trace_resources=self.trace_resources,
+            trace_captured_at=self.trace_captured_at,
+        )
+        self.agent = AuditOrchestratorAgent(
+            engine=self.engine,
+            dataset_dir=self.dataset_dir,
+            manifest=self.manifest,
+            cache_dir=self.cache_path.parent,
+            meter=self.meter,
         )
 
     def _load_evidence_cache(self) -> None:
-        """Load parsed observations and build log trace maps."""
+        """Load parsed observations and build temporal log trace maps."""
         entries, _warnings = read_cache(self.cache_path)
         if not entries:
             raise CacheBuildError(f"evidence cache is empty or unreadable: {self.cache_path}")
@@ -106,11 +123,16 @@ class Pipeline:
             for obs in entry.observations:
                 self.observations.append(obs)
 
+        captured_by_filename = {
+            Path(row.file_path).name: row.captured_at for row in self.manifest
+        }
+
         # Build bidirectional trace index and resource subject mappings from log files
         token_pattern = re.compile(r'([A-Za-z_][A-Za-z0-9_]*)=("(?:[^"\\]|\\.)*"|\S+)')
         logs_dir = self.dataset_dir / "evidence" / "logs"
         if logs_dir.exists():
             for p in logs_dir.glob("*.log"):
+                file_captured_at = captured_by_filename.get(p.name, "")
                 try:
                     text = p.read_text(encoding="utf-8", errors="ignore")
                 except OSError:
@@ -135,7 +157,6 @@ class Pipeline:
                         or tokens.get("owner_email")
                         or tokens.get("email_hash")
                     )
-                    # Check JSON line payload (e.g. structured_service_events_*.log)
                     if "{" in line and "}" in line:
                         s_idx = line.find("{")
                         e_idx = line.rfind("}")
@@ -153,6 +174,10 @@ class Pipeline:
                         except Exception:
                             pass
 
+                    if tid and file_captured_at:
+                        prev = self.trace_captured_at.get(tid)
+                        if prev is None or file_captured_at < prev:
+                            self.trace_captured_at[tid] = file_captured_at
                     if sub and sub != "null":
                         cleaned = str(sub).strip('"').strip("'").lower()
                         if tid:
@@ -163,18 +188,23 @@ class Pipeline:
     def audit_requests(
         self,
         requests: Sequence[DeletionRequestRow],
+        *,
+        enable_live_llm: bool | None = None,
     ) -> list[CaseAuditResult]:
-        """Audit requests and return results sorted by case_id."""
-        return self.engine.audit_all(requests)
+        """Audit requests via AuditOrchestratorAgent and return results sorted by case_id."""
+        live = self.enable_live_llm if enable_live_llm is None else enable_live_llm
+        return self.agent.audit_all(requests, enable_live_llm=live)
 
     def run(
         self,
         input_path: Path,
         output_path: Path | None = None,
+        *,
+        enable_live_llm: bool | None = None,
     ) -> list[OutputRow]:
         """Run audit pipeline on input CSV and optionally write output CSV."""
         requests, _ = load_deletion_requests(input_path)
-        results = self.audit_requests(requests)
+        results = self.audit_requests(requests, enable_live_llm=enable_live_llm)
 
         rows: list[OutputRow] = []
         for line_no, r in enumerate(results, start=2):
@@ -203,13 +233,22 @@ class Pipeline:
                     f"Generated output.csv violates contract schema: {validation.violations}"
                 )
 
+            # Mirror full 518-case output to dataset/output.csv when writing root output.csv
+            if (
+                output_path.resolve() == (self.repo_root / "output.csv").resolve()
+                and len(rows) == 518
+                and (self.dataset_dir / "deletion_requests.csv").exists()
+            ):
+                dataset_output = self.dataset_dir / "output.csv"
+                shutil.copyfile(output_path, dataset_output)
+
         return rows
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
     """Build command line argument parser for pipeline."""
     parser = argparse.ArgumentParser(
-        description="Ghost Data Still Exists Deletion-Audit Pipeline (AGENTS.md section 1, 6)."
+        description="Ghost Data Still Exists Deletion-Audit Agent (AGENTS.md section 1, 6)."
     )
     parser.add_argument(
         "--input",
@@ -260,6 +299,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Print per-case diffs for mismatched cases during evaluation.",
     )
     parser.add_argument(
+        "--agent-llm",
+        action="store_true",
+        help="Force live Qwen LLM/VLM agent calls during audit orchestration.",
+    )
+    parser.add_argument(
         "--verbose",
         "-v",
         action="store_true",
@@ -287,7 +331,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     output_path = args.output or (repo_root / "output.csv")
 
-    print("[*] Initializing Deletion Audit Pipeline...")
+    print("[*] Initializing Hybrid AI Deletion-Audit Agent...")
     print(f"    Dataset Dir: {dataset_dir}")
     print(f"    Input Path:  {input_path}")
     print(f"    Output Path: {output_path}")
@@ -296,6 +340,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         dataset_dir=dataset_dir,
         cache_path=args.cache,
         rebuild_cache=args.rebuild_cache,
+        enable_live_llm=args.agent_llm,
     )
     stats = pipeline.cache_result.stats
     print(
@@ -303,7 +348,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"observations={stats.observations} hits={stats.hits} misses={stats.misses}"
     )
     print(f"[*] Running audit for {input_path.name}...")
-    pipeline.run(input_path, output_path)
+    pipeline.run(input_path, output_path, enable_live_llm=args.agent_llm)
     print(f"[+] Output written to {output_path}")
 
     if evaluate_mode and gold_path is not None and gold_path.exists():

@@ -10,7 +10,14 @@ from __future__ import annotations
 import json
 from collections.abc import Sequence
 
-from ..models import AuditStep, CaseAuditResult, PolicyViolation, ReconstructedResourceState
+from ..models import (
+    AuditStep,
+    CaseAuditResult,
+    ObservationState,
+    PolicyViolation,
+    Provenance,
+    ReconstructedResourceState,
+)
 
 PHASE_ORDER: dict[str, int] = {
     "FINDING": 1,
@@ -44,7 +51,10 @@ def _target_verification(system_id: str, data_category: str) -> tuple[str, str]:
     """Return (verification_operation, target_state) for a resource category."""
     if data_category in ("SECURITY_AUDIT_LOG", "LEGAL_HOLD_RECORD"):
         return "VERIFY_RECORD_PRESENT", "PRESENT"
-    if data_category == "ACCOUNT_TOMBSTONE" or data_category in ("SUPPORT_MESSAGE", "EMAIL_DELIVERY_LOG"):
+    if data_category == "ACCOUNT_TOMBSTONE" or data_category in (
+        "SUPPORT_MESSAGE",
+        "EMAIL_DELIVERY_LOG",
+    ):
         return "VERIFY_RECORD_REDACTED", "REDACTED"
     if data_category in ("ANALYTICS_PROFILE", "PRODUCT_TELEMETRY"):
         return "VERIFY_RECORD_ANONYMIZED", "ANONYMIZED"
@@ -53,6 +63,33 @@ def _target_verification(system_id: str, data_category: str) -> tuple[str, str]:
     if data_category == "DATA_FLOW" or system_id == "integration_service":
         return "VERIFY_DATA_FLOW_DISABLED", "DISABLED"
     return "VERIFY_RECORD_ABSENT", "ABSENT"
+
+
+def is_target_state_proven(state: ReconstructedResourceState) -> bool:
+    """Return True if the state has an evidence_id that proves its required verification state."""
+    if not state.evidence_id:
+        return False
+    _, target_st = _target_verification(state.system_id, state.data_category)
+    obs = state.observed_state
+    if target_st == "ABSENT":
+        return obs is ObservationState.ABSENT
+    if target_st == "PRESENT":
+        return obs is ObservationState.PRESENT and state.provenance is not Provenance.SCOPE_IMPLICIT
+    if target_st == "REDACTED":
+        return (
+            obs is ObservationState.REDACTED
+            or (obs is ObservationState.PRESENT and not state.pii_exposed)
+        ) and state.provenance is not Provenance.SCOPE_IMPLICIT
+    if target_st == "ANONYMIZED":
+        return (
+            obs is ObservationState.ANONYMIZED
+            or (obs is ObservationState.PRESENT and not state.pii_exposed)
+        ) and state.provenance is not Provenance.SCOPE_IMPLICIT
+    if target_st == "DISABLED":
+        return obs is ObservationState.DISABLED and state.provenance is not Provenance.SCOPE_IMPLICIT
+    if target_st == "BLOCKED":
+        return obs is ObservationState.BLOCKED and state.provenance is not Provenance.SCOPE_IMPLICIT
+    return False
 
 
 class PlannerSorter:
@@ -79,53 +116,66 @@ class PlannerSorter:
         if deletion_status == "COMPLETE":
             # Verification steps only, citing proving evidence_id
             for state in states:
-                if not state.evidence_id:
+                if not is_target_state_proven(state):
                     continue
                 verif_op, target_st = _target_verification(state.system_id, state.data_category)
-                raw_steps.append({
-                    "phase": "VERIFICATION",
-                    "system_id": state.system_id,
-                    "resource_id": state.resource_id,
-                    "operation": verif_op,
-                    "state": target_st,
-                    "evidence_id": state.evidence_id,
-                })
+                raw_steps.append(
+                    {
+                        "phase": "VERIFICATION",
+                        "system_id": state.system_id,
+                        "resource_id": state.resource_id,
+                        "operation": verif_op,
+                        "state": target_st,
+                        "evidence_id": state.evidence_id,
+                    }
+                )
         else:
             # INCOMPLETE: Findings, Remediation, and Verification
             # 1. Findings
             for viol in violations:
-                finding_state = "ACTIVE" if viol.finding_operation in ("REPORT_ACTIVE_DATA_FLOW", "REPORT_RESTORE_RISK") else "PRESENT"
-                raw_steps.append({
-                    "phase": "FINDING",
-                    "system_id": viol.system_id,
-                    "resource_id": viol.resource_id,
-                    "operation": viol.finding_operation,
-                    "state": finding_state,
-                    "evidence_id": viol.evidence_id,
-                })
+                finding_state = (
+                    "ACTIVE"
+                    if viol.finding_operation
+                    in ("REPORT_ACTIVE_DATA_FLOW", "REPORT_RESTORE_RISK")
+                    else "PRESENT"
+                )
+                raw_steps.append(
+                    {
+                        "phase": "FINDING",
+                        "system_id": viol.system_id,
+                        "resource_id": viol.resource_id,
+                        "operation": viol.finding_operation,
+                        "state": finding_state,
+                        "evidence_id": viol.evidence_id,
+                    }
+                )
 
             # 2. Remediation (evidence_id is empty)
             for viol in violations:
-                raw_steps.append({
-                    "phase": "REMEDIATION",
-                    "system_id": viol.system_id,
-                    "resource_id": viol.resource_id,
-                    "operation": viol.remediation_operation,
-                    "state": viol.target_state,
-                    "evidence_id": "",
-                })
+                raw_steps.append(
+                    {
+                        "phase": "REMEDIATION",
+                        "system_id": viol.system_id,
+                        "resource_id": viol.resource_id,
+                        "operation": viol.remediation_operation,
+                        "state": viol.target_state,
+                        "evidence_id": "",
+                    }
+                )
 
             # 3. Verification for all resources (evidence_id is empty)
             for state in states:
                 verif_op, target_st = _target_verification(state.system_id, state.data_category)
-                raw_steps.append({
-                    "phase": "VERIFICATION",
-                    "system_id": state.system_id,
-                    "resource_id": state.resource_id,
-                    "operation": verif_op,
-                    "state": target_st,
-                    "evidence_id": "",
-                })
+                raw_steps.append(
+                    {
+                        "phase": "VERIFICATION",
+                        "system_id": state.system_id,
+                        "resource_id": state.resource_id,
+                        "operation": verif_op,
+                        "state": target_st,
+                        "evidence_id": "",
+                    }
+                )
 
         # Canonical 4-Key Sort
         raw_steps.sort(

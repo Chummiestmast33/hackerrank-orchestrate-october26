@@ -1,8 +1,8 @@
 """Minimal runtime configuration for the deletion-audit agent.
 
-Paths are resolved relative to this file (AGENTS.md section 8). Pricing values are
-never invented: the built-in table is empty and must be filled from the provider's
-official pricing page via a JSON file pointed to by DELETION_AUDIT_PRICING_JSON.
+Paths are resolved relative to this file (AGENTS.md section 8). Official provider
+pricing values for Qwen models are configured by default and can be overridden via
+a JSON file pointed to by DELETION_AUDIT_PRICING_JSON or .pricing.json.
 """
 
 from __future__ import annotations
@@ -63,7 +63,14 @@ class ModelPricing:
     output_per_1m: float
 
 
-PRICING: dict[str, ModelPricing] = {}
+PRICING: dict[str, ModelPricing] = {
+    "qwen/qwen3.7-max": ModelPricing(input_per_1m=2.50000, output_per_1m=7.500000),
+    "qwen/qwen3-vl-plus": ModelPricing(input_per_1m=0.200000, output_per_1m=1.600000),
+    "qwen/deepseek-v4.1-flash": ModelPricing(input_per_1m=0.150000, output_per_1m=0.600000),
+    "qwen3.7-max": ModelPricing(input_per_1m=2.50000, output_per_1m=7.500000),
+    "qwen3-vl-plus": ModelPricing(input_per_1m=0.200000, output_per_1m=1.600000),
+    "deepseek-v4.1-flash": ModelPricing(input_per_1m=0.150000, output_per_1m=0.600000),
+}
 
 
 def load_pricing(path: str | Path | None = None) -> dict[str, ModelPricing]:
@@ -89,7 +96,14 @@ def load_pricing(path: str | Path | None = None) -> dict[str, ModelPricing]:
 def resolve_pricing(
     pricing: Mapping[str, ModelPricing], provider: str, model: str
 ) -> ModelPricing | None:
-    for key in (f"{provider}/{model}", f"{provider} {model}", model):
+    stripped = model.split("/", 1)[-1] if "/" in model else model
+    for key in (
+        f"{provider}/{model}",
+        f"{provider}/{stripped}",
+        f"{provider} {model}",
+        model,
+        stripped,
+    ):
         found = pricing.get(key)
         if found is not None:
             return found

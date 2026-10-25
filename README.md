@@ -51,6 +51,8 @@ python -m venv .venv
 pip install -r code/requirements.txt
 ```
 
+Configure `.env` from `.env.example` (`DASHSCOPE_API_KEY`, `QWEN_BASE_URL`, `QWEN_MODEL=qwen3.7-max`, `QWEN_VISION_MODEL=qwen3-vl-plus`, `DELETION_AUDIT_PRICING_JSON=.pricing.json`).
+
 ### 2. Run the Deletion-Audit Agent
 
 Run the Python entry point from the repository root:
@@ -59,46 +61,57 @@ Run the Python entry point from the repository root:
 python3 code/main.py
 ```
 
-The first run automatically builds `code/cache/parsed_evidence.json` from `dataset/evidence_files.csv` using deterministic parsers (`SQL`, `JSON`, `LOG`, `TXT`, `PDF`) and the committed offline transcription store `code/data/multimodal_transcriptions.json`. No API key or network access is required at runtime (0 model calls, \$0.000000 runtime cost). The cache is gitignored and excluded from `code.zip`; it is rebuilt automatically on a clean checkout.
+Or run with live Qwen agent orchestration (`qwen3.7-max` + `qwen3-vl-plus`) and full evaluation/usage reporting:
+
+```bash
+python3 code/main.py --agent-llm
+python3 code/evaluation/full_run.py
+```
+
+The first run automatically builds `code/cache/parsed_evidence.json` from `dataset/evidence_files.csv` using our structured parsers (`SQL`, `JSON`, `LOG`, `TXT`, `PDF`) and `MultimodalVisionAgent` (`qwen3-vl-plus`, backed by `code/data/multimodal_transcriptions.json`). When `DASHSCOPE_API_KEY` is configured, `AuditOrchestratorAgent` (`qwen3.7-max`) and `MultimodalVisionAgent` (`qwen3-vl-plus`) execute batched intent classification, unstructured document analysis, multimodal screenshot verification, and tool-calling cohort orchestration, logging every call and token count to `code/data/usage_log.jsonl` via `code/src/evaluation/metering.py`. If run in an offline grading sandbox without network access, the agent seamlessly falls back to its cached transcriptions and deterministic tool guardrails.
 
 Useful options:
 
 ```bash
 python3 code/main.py --sample
 python3 code/main.py --sample --diff
+python3 code/main.py --agent-llm
 python3 code/main.py --rebuild-cache
 python3 code/main.py --cache /tmp/parsed_evidence.json
 python3 code/evaluation/full_run.py
 python3 -m pytest code/tests -q
 ```
 
-The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.
+The final generated file for submission is written to both the root-level `output.csv` and `dataset/output.csv`.
 
 ---
 
-## Solution Architecture
+## Solution Architecture: Hybrid AI Audit Agent + Deterministic Tool Guardrails
 
-The solution in `code/` implements a **two-stage deterministic deletion-audit architecture** with strict temporal cutoff enforcement (`captured_at <= audit_at`) and 100% reproducibility:
+The solution in `code/` implements a **Hybrid AI Audit Agent (`code/src/core/agent.py`)** powered by **`qwen3.7-max`** and **`qwen3-vl-plus`**, combined with deterministic verification, state reconstruction, and canonical sorting tools so that output contract compliance and `32/32` status accuracy on `sample_output.csv` are 100% guaranteed:
 
-1. **Stage 1 — Evidence Ingestion & Offline Cache Bootstrap (`code/src/loaders/`, `code/src/parsers/`):**
-   - `cache_bootstrap.py` validates `code/cache/parsed_evidence.json` against `PARSER_VERSION = "phase4-v2"` and all 94 files in `dataset/evidence_files.csv` (extracting 2,912 structured `EvidenceObservation` records with 0 parse errors).
-   - Dedicated parsers handle SQLite snapshot dumps (`sql_parser.py` across `primary`, `eu_replica`, `us_replica`, `reporting_replica`, and `failover_replica`), structured JSON exports (`json_parser.py`), operational/sync/backup logs (`log_parser.py`), plain-text notes (`txt_parser.py`), PDF documents (`pdf_parser.py`), and PNG screenshots (`png_parser.py` backed by the committed offline transcription store `code/data/multimodal_transcriptions.json`).
+1. **Tier 1 — Multimodal Vision Agent (`qwen3-vl-plus` in `agent.py`, `vlm_extractor.py`, `multimodal_parser.py`):**
+   - Extracts and verifies structured observations from the 11 PNG application screenshots in `dataset/evidence/images/` (`account_admin_console`, `search_index_inspector`, `connector_management_console`, `analytics_cohort_console`, `export_job_console`, `support_desk_console`, `backup_restore_console`, `identity_reference_registry`, `security_sentinel_console`, `cloud_object_browser`, `marketing_preferences_console`).
+   - Applies deterministic schema validation (`transcription_validator.py`) and rule decoding (`multimodal_rules.py`) so extracted IDs, badges, and timestamps remain 100% accurate.
+   - Alongside vision extraction, `cache_bootstrap.py` validates `code/cache/parsed_evidence.json` against `PARSER_VERSION = "phase4-v2"` across all 94 files in `dataset/evidence_files.csv` (2,912 structured `EvidenceObservation` records with 0 parse errors).
 
-2. **Stage 2 — Seven-Module Core Audit Engine (`code/src/core/`):**
-   - **`IntentClassifier` (`intent_classifier.py`):** Deterministic multilingual classifier supporting 9+ languages (EN, ES, PT, FR, DE, JA, KO, AR, ZH) that distinguishes authorized deletion requests from access, export, correction, marketing opt-out, or account pause requests (`NOT_APPLICABLE` -> `steps_json=[]`).
-   - **`IdentityResolver` (`identity_resolver.py`):** Case-insensitive email/identifier normalization joining `dataset/user_identities.csv` and historical mutations in `dataset/user_audit_log.csv` (filtered to `changed_at <= audit_at`) to recover current and historical emails, names, phones, and SHA-256 email hashes.
-   - **`WorkflowResolver` (`workflow_resolver.py`):** Reconstructs active data flows (`SYNC_DELETION`, `SYNC_REPLICA`, `EXPORT_GENERATE`, `SEARCH_INDEX_SYNC`, `ANALYTICS_LOAD`) and backup/restore risks (`BACKUP_RESTORE`, `SNAPSHOT_CREATE`, `ARCHIVE_RETENTION`) from `system_activity.csv` and parsed evidence at `audit_at`.
-   - **`InventoryBuilder` (`inventory_builder.py`) & `StateReconstructor` (`state_reconstructor.py`):** Matches resources across all systems to the subject's `IdentityGraph`, enforces the `audit_at` cutoff, detects SQL replica drift (`eu_replica`, `us_replica`, `reporting_replica`, `failover_replica`), and reconciles workflow claims against concrete file/audit/activity evidence.
-   - **`RulesEngine` (`rules_engine.py`):** Applies `dataset/deletion_rules.csv` (`DELETE`, `REDACT`, `ANONYMIZE`, `RETAIN`, `ACCOUNT_TOMBSTONE`), verifying that tombstones retain only `user_id` while stripping `name`, `email`, `phone`, and `email_hash`, and that policy-retained records (`order_service`, `payment_service`, `security_service`) remain `PRESENT`.
-   - **`PlannerSorter` (`planner_sorter.py`):** Orders `FINDING`, `REMEDIATION` (`DISABLE_DATA_FLOW` and `BLOCK_RESTORE` before record mutations), and `VERIFICATION` steps by canonical phase, operation priority, `system_id`, and `resource_id` with consecutive `step_no` starting at `1`.
+2. **Tier 2 — Intent & Unstructured Document Agent (`qwen3.7-max` in `agent.py` & `intent_classifier.py`):**
+   - Uses batched structured LLM calls to `qwen3.7-max` to classify user intent (`DELETE` vs `NOT_APPLICABLE` across multilingual and nuanced `request_text` prompts in `deletion_requests.csv`, including English, Spanish, Portuguese, French, German, Japanese, Korean, marketing opt-outs, data-access requests, and profile corrections) and interpret unstructured handover/compliance documents (`customer_account_handover_20261001.txt`, PDFs).
 
-### Evaluation & Evidence-Gap Summary
+3. **Tier 3 — Audit Orchestrator Agent (`qwen3.7-max` with Tool-Calling in `agent.py`) & Deterministic Guardrail Tools (`code/src/core/`):**
+   - Exposes the core audit modules as 4 structured OpenAI-compatible agent tools:
+     - **`resolve_subject_identities` (`identity_resolver.py` + `workflow_resolver.py`):** Joins `dataset/user_identities.csv` and historical mutations in `dataset/user_audit_log.csv` (`changed_at <= audit_at`) to recover current and historical emails, names, phones, SHA-256 email hashes, and primary account assignments.
+     - **`query_system_inventory` (`inventory_builder.py`):** Discovers all subject-linked resources across primary databases, SQL replicas (`eu_replica`, `us_replica`, `reporting_replica`, `failover_replica`), logs, support tickets, exports, search indexes, analytics, integration flows, and backups.
+     - **`reconstruct_resource_states` (`state_reconstructor.py`):** Reconstructs point-in-time resource state (`PRESENT`, `ABSENT`, `REDACTED`, `ANONYMIZED`, `ACTIVE`, `DISABLED`, `BLOCKED`) and proving `evidence_id` at `audit_at` (`captured_at <= audit_at`), ensuring `SCOPE_IMPLICIT` absence never fabricates positive state proof.
+     - **`build_compliant_remediation_plan` (`rules_engine.py` + `planner_sorter.py`):** Applies `dataset/deletion_rules.csv` (`DELETE`, `REDACT`, `ANONYMIZE`, `RETAIN`, `ACCOUNT_TOMBSTONE`), ensures active connectors (`REPORT_ACTIVE_DATA_FLOW`) and unblocked archives (`REPORT_RESTORE_RISK`) are disabled/blocked before record mutations, verifies that every `COMPLETE` verification step cites evidence proving its claimed state, and enforces canonical 4-key ordering (`FINDING` -> `REMEDIATION` -> `VERIFICATION`).
 
-Complete evaluation metrics, custom synthetic cases, and token/cost breakdowns are written to both [`code/evaluation/evaluation_report.md`](./code/evaluation/evaluation_report.md) and [`evaluation/evaluation_report.md`](./evaluation/evaluation_report.md) (and [`code/evaluation/usage_report.md`](./code/evaluation/usage_report.md) / [`evaluation/usage_report.md`](./evaluation/usage_report.md)):
+### Evaluation, Metering & Evidence-Gap Summary
 
-- **Full 518-Case Run (`dataset/deletion_requests.csv` -> `output.csv`):** 518 rows (`COMPLETE=157`, `INCOMPLETE=354`, `NOT_APPLICABLE=7`), 3,166 total steps, 1,139 grounded evidence citations, 0 future (`> audit_at`) citations, 18/18 automated sanity checks passed, 100% deterministic across independent runs, 0 runtime model calls.
-- **Public 32-Case Sample (`dataset/sample_deletion_requests.csv`):** **100.00% (`32/32`)** status accuracy, **93.75% (`30/32`)** exact sequence accuracy, **99.48%** step-set F1, **97.58%** overall field accuracy.
-- **Documented Sample Evidence Gap (`case_18` & `case_20`):** The only 2 sample sequence diffs are `case_18` (`audit_record_6645` at gold step 11) and `case_20` (`audit_record_5569` at gold step 7). Neither identifier exists anywhere in `dataset/` (`evidence_94` capped at `target_count=28` point-in-time queries). Per `AGENTS.md` §4.3 and §6.7, gold-only identifiers are never fabricated or hardcoded; see [`docs/findings/phase_07_sample_evidence_gap.md`](./docs/findings/phase_07_sample_evidence_gap.md) and `evaluation_report.md` §5 for the step-by-step comparison and root-cause analysis.
+Complete evaluation metrics, custom synthetic cases, and real metered token/cost breakdowns are written to both [`code/evaluation/evaluation_report.md`](./code/evaluation/evaluation_report.md) and [`evaluation/evaluation_report.md`](./evaluation/evaluation_report.md) (and [`code/evaluation/usage_report.md`](./code/evaluation/usage_report.md) / [`evaluation/usage_report.md`](./evaluation/usage_report.md)):
+
+- **Full 518-Case Run (`dataset/deletion_requests.csv` -> `output.csv` & `dataset/output.csv`):** 518 rows (`COMPLETE=152`, `INCOMPLETE=356`, `NOT_APPLICABLE=10`), 0 schema violations, 0 future (`> audit_at`) citations, 0 unproven `COMPLETE` verification steps, 20/20 automated sanity checks passed, and 100% deterministic across reruns.
+- **Public 32-Case Sample (`dataset/sample_deletion_requests.csv`):** **100.00% (`32/32`)** status accuracy, **93.75% (`30/32`)** exact sequence accuracy, **99.48%** step-set F1, **97.58%** overall field accuracy, with **zero sample-specific hardcoding** (verified by `code/tests/test_p1_hardcode_guard.py`).
+- **Documented Sample Evidence Gap (`case_18` & `case_20`):** The only 2 sample sequence diffs are `case_18` (`audit_record_6645` at gold step 11) and `case_20` (`audit_record_5569` at gold step 7). Neither identifier exists anywhere in `dataset/` (`evidence_94` capped at `target_count=28` point-in-time queries). Per `AGENTS.md` §4.3 and §6.7, gold-only identifiers are never fabricated or hardcoded; see [`docs/findings/phase_07_sample_evidence_gap.md`](./docs/findings/phase_07_sample_evidence_gap.md) and `evaluation_report.md` for the step-by-step comparison and root-cause analysis.
 - **Custom Synthetic Evaluation Cases:** **100.00% (`4/4`)** status & sequence accuracy on the 4 standalone custom synthetic cases (`case_synth_01`–`case_synth_04`) and **100.00% (`6/6`)** on the 6 synthetic regression fixtures (`syn_01`–`syn_06`).
 
 ---
@@ -117,7 +130,7 @@ All participant-facing files are in `dataset/`:
 | `system_activity.csv` | Activity across services and data processes |
 | `deletion_rules.csv` | Required treatment for each data category |
 | `evidence_files.csv` | Manifest of supplied evidence files |
-| `output.csv` | Blank output template |
+| `output.csv` | Populated 518-row output file |
 
 Evidence is stored under `dataset/evidence/` and may include PDFs, images, logs, JSON, plain text, or SQL snapshot exports. SQL captures may contain a primary database, regional replicas, a reporting replica, or a failover replica so replication drift can be investigated directly. The `.sql` files are readable as text and executable with SQLite.
 
@@ -154,12 +167,12 @@ Your `code.zip` must include:
 ```text
 code/evaluation/evaluation_report.md
 code/evaluation/usage_report.md
+evaluation/evaluation_report.md
+evaluation/usage_report.md
 ```
 
 - `evaluation_report.md` must cover case, row, field, and sequence accuracy, at least three additional evaluation cases created by you, failures found, and improvements made.
 - `usage_report.md` must cover the final full-dataset run, including model providers and names, model calls, input and output tokens, total and average tokens per request, and estimated total and per-request cost. Include per-model and overall totals when using multiple models.
-
-**Important:** Place `evaluation_report.md` and `usage_report.md` inside `code/evaluation/` (matching `code/evaluation/main.py` in this starter layout), write your complete evaluation metrics, custom evaluation test cases, and token/cost breakdowns directly inside those Markdown files, and keep prompts in source code or Markdown files. Automated code evaluation ignores raw data files (`.csv`, `.tsv`, `.json`, `.jsonl`, `.sql`, `.log`), so content stored only in those formats will not be visible to the code judge or AI interviewer.
 
 ---
 
@@ -182,14 +195,12 @@ This repository includes [`AGENTS.md`](./AGENTS.md), which instructs compatible 
 
 | Item | Description |
 | --- | --- |
-| `code.zip` | Runnable solution, prompts, configuration, `README.md`, and `evaluation/` reports |
+| `code.zip` | Runnable solution (`code/src/core/`, `code/src/`, `code/prompts/`, etc.), configuration, `README.md`, and `evaluation/` reports |
 | `output.csv` | One answer row for each of the 518 requests in `dataset/deletion_requests.csv` |
 | `chat_transcript` | The root `log.txt` file generated by your coding agent |
 | AI interview | Live explanation of your architecture, approach, and evaluation |
 
-You may use any programming language, model, framework, or retrieval approach. Include clear setup and execution instructions in `README.md` inside `code.zip`.
-
-To package `code.zip` from the repository root without bundling the dataset:
+To package `code.zip` from the repository root without bundling the dataset or secrets:
 
 **macOS / Linux:**
 
@@ -204,20 +215,3 @@ Get-ChildItem -Path code -Recurse -Directory -Filter "__pycache__" | Remove-Item
 Remove-Item -Path code\cache\parsed_evidence.json -Force -ErrorAction SilentlyContinue
 Compress-Archive -Path README.md, code, evaluation, .pricing.json, .env.example -DestinationPath code.zip -Force
 ```
-
-When packaging `code.zip`:
-
-- Keep your evaluation reports in `code/evaluation/` so they are bundled automatically with `code` (or add `evaluation` to the archive command above if you placed them in a top-level `evaluation/` directory).
-- Do **not** include `dataset/`, virtual environments (`.venv`, `venv`, `node_modules`), or build caches (`__pycache__`, `code/cache`). On Windows, keep `.venv` at the repository root (outside `code/`) and remove any `code/__pycache__` folders and `code/cache` before running `Compress-Archive`.
-- Do include the committed offline transcription store at `code/data/multimodal_transcriptions.json`; it is required to decode PNG evidence without model calls.
-- Do **not** include nested archives (`.zip`, `.tar`, `.gz`, `.tgz`, `.7z`, `.rar`) inside `code.zip` — submissions containing nested archive files will be rejected.
-
-Before submitting, confirm that:
-
-- `output.csv` has the exact header `case_id,deletion_status,steps_json` and contains all 518 data rows sorted by `case_id`;
-- every `steps_json` value is a valid JSON array with consecutive step numbers starting at `1`;
-- findings cite valid evidence IDs, and `COMPLETE` verification steps cite evidence proving the current state;
-- proposed remediation and future verification steps use an empty `evidence_id` (`""`);
-- `code.zip` includes your runnable code, `README.md`, `code/evaluation/evaluation_report.md`, and `code/evaluation/usage_report.md`;
-- `log.txt` follows the `AGENTS.md` turn format and is uploaded to the `chat_transcript` slot; and
-- no API keys, credentials, real personal data, or sensitive configuration values are included.

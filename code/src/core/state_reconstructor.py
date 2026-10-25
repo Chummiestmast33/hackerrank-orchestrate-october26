@@ -18,6 +18,7 @@ from ..models import (
     ReconstructedResourceState,
     ResourceItem,
 )
+from .planner_sorter import _target_verification
 
 
 class StateReconstructor:
@@ -87,19 +88,22 @@ class StateReconstructor:
                     )
                 )
             else:
-                # Scoped implicit absence check
+                # Scoped implicit absence check: only valid when required target state is ABSENT.
+                # Scope-only evidence may prove absence, never presence/redaction/anonymization/disabled/blocked.
+                _, target_st = _target_verification(res.system_id, res.data_category)
                 proving_file_id = ""
-                # Look for scoped files covering system_id <= audit_at
-                eligible_files = [
-                    (fid, rep) for fid, rep in self.reports.items()
-                    if rep.captured_at <= audit_at and (
-                        res.system_id in rep.direct_systems
-                        or any(c.data_store == res.system_id for c in rep.captured_collections)
-                    )
-                ]
-                if eligible_files:
-                    eligible_files.sort(key=lambda item: item[1].captured_at, reverse=True)
-                    proving_file_id = eligible_files[0][0]
+                if target_st == "ABSENT":
+                    # Look for scoped files covering system_id <= audit_at
+                    eligible_files = [
+                        (fid, rep) for fid, rep in self.reports.items()
+                        if rep.captured_at <= audit_at and (
+                            res.system_id in rep.direct_systems
+                            or any(c.data_store == res.system_id for c in rep.captured_collections)
+                        )
+                    ]
+                    if eligible_files:
+                        eligible_files.sort(key=lambda item: item[1].captured_at, reverse=True)
+                        proving_file_id = eligible_files[0][0]
 
                 obs_st = ObservationState.ABSENT
                 states.append(

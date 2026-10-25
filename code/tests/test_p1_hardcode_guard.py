@@ -48,6 +48,7 @@ def test_production_source_has_no_sample_literals() -> None:
 
 def test_core_does_not_read_sample_gold() -> None:
     audit_modules = (
+        "agent.py",
         "audit_engine.py",
         "identity_resolver.py",
         "intent_classifier.py",

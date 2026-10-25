@@ -23,11 +23,13 @@ class InventoryBuilder:
         activity_events: Sequence[ActivityRow] | None = None,
         trace_subjects: dict[str, set[str]] | None = None,
         trace_resources: dict[str, set[str]] | None = None,
+        trace_captured_at: dict[str, str] | None = None,
     ) -> None:
         self.observations = list(observations or [])
         self.activity_events = list(activity_events or [])
         self.trace_subjects = trace_subjects or {}
         self.trace_resources = trace_resources or {}
+        self.trace_captured_at = trace_captured_at or {}
 
         # Precompute resource_to_subjects via trace_id
         self._res_to_subjects: dict[str, set[str]] = {}
@@ -77,7 +79,10 @@ class InventoryBuilder:
             if "attachment" in resource_id:
                 return "SUPPORT_ATTACHMENT"
             return "SUPPORT_MESSAGE"
-        if system_id in ("email_delivery_service", "notification_service") or resource_id.startswith("email_delivery_"):
+        if system_id in (
+            "email_delivery_service",
+            "notification_service",
+        ) or resource_id.startswith("email_delivery_"):
             return "EMAIL_DELIVERY_LOG"
         return "USER_PROFILE"
 

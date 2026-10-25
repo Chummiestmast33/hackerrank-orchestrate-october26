@@ -61,6 +61,16 @@
     },
     {
       "detail": "",
+      "name": "complete_verifications_prove_state",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "incomplete_findings_prove_state",
+      "passed": true
+    },
+    {
+      "detail": "",
       "name": "citations_exist_in_manifest",
       "passed": true
     },
@@ -75,8 +85,8 @@
       "passed": true
     },
     {
-      "detail": "0",
-      "name": "zero_model_calls",
+      "detail": "calls=69, cost=$0.446428",
+      "name": "agent_model_calls_metered",
       "passed": true
     },
     {
@@ -95,27 +105,30 @@
       "passed": true
     },
     {
-      "detail": "{'INCOMPLETE': 354, 'COMPLETE': 157, 'NOT_APPLICABLE': 7}",
+      "detail": "{'INCOMPLETE': 356, 'COMPLETE': 152, 'NOT_APPLICABLE': 10}",
       "name": "all_status_enums_expected",
       "passed": true
     }
   ],
-  "citation_count": 1139,
+  "citation_count": 1124,
+  "combined_cost_usd": 0.446428,
+  "combined_model_calls": 69,
+  "combined_total_tokens": 199341,
   "command": "code/evaluation/full_run.py",
-  "commit": "6d20522",
+  "commit": "77e9fee",
   "deterministic": true,
   "empty_step_cases": [],
   "future_citations": [],
-  "generated_at": "2026-10-25T10:05:18+00:00",
+  "generated_at": "2026-10-25T12:30:29+00:00",
   "input": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\dataset\\deletion_requests.csv",
   "max_steps": 19,
   "min_steps": 0,
   "missing_citations": [],
-  "model_calls": 0,
+  "model_calls": 47,
   "output": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\output.csv",
-  "output_sha256": "f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542",
+  "output_sha256": "1740be44af3d597ea111b9da3094e91e2112efa81cd4c75ea57c996cfc52beac",
   "request_count": 518,
-  "runtime_seconds": 3.0520278999993025,
+  "runtime_seconds": 341.5892099999983,
   "sample_metrics": {
     "mismatches": [
       "case_18",
@@ -128,15 +141,17 @@
     "status_accuracy": 1.0
   },
   "status_counts": {
-    "COMPLETE": 157,
-    "INCOMPLETE": 354,
-    "NOT_APPLICABLE": 7
+    "COMPLETE": 152,
+    "INCOMPLETE": 356,
+    "NOT_APPLICABLE": 10
   },
   "synthetic_metrics": {
     "sequence_accuracy": 1.0,
     "set_f1": 1.0,
     "status_accuracy": 1.0
   },
-  "total_steps": 3166,
+  "total_steps": 3161,
+  "unproven_complete": [],
+  "unproven_findings": [],
   "validation_violations": []
 }

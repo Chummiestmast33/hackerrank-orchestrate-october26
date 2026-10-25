@@ -42,6 +42,7 @@ class AuditEngine:
         reports: dict[str, ParseReport] | None = None,
         trace_subjects: dict[str, set[str]] | None = None,
         trace_resources: dict[str, set[str]] | None = None,
+        trace_captured_at: dict[str, str] | None = None,
         intent_classifier: IntentClassifier | None = None,
     ) -> None:
         self.identities = list(identities)
@@ -52,6 +53,7 @@ class AuditEngine:
         self.reports = reports or {}
         self.trace_subjects = trace_subjects or {}
         self.trace_resources = trace_resources or {}
+        self.trace_captured_at = trace_captured_at or {}
 
         # Initialize sub-components
         self.intent_classifier = intent_classifier or IntentClassifier()
@@ -70,6 +72,7 @@ class AuditEngine:
             self.activity_events,
             trace_subjects=trace_subjects,
             trace_resources=trace_resources,
+            trace_captured_at=trace_captured_at,
         )
         self.state_reconstructor = StateReconstructor(
             self.observations,
@@ -115,7 +118,7 @@ class AuditEngine:
 
         # 5. Policy rules evaluation
         violations = self.rules_engine.evaluate_all(states)
-        status = self.rules_engine.decide_status(intent.is_deletion, violations)
+        status = self.rules_engine.decide_status(intent.is_deletion, violations, states)
 
         # 6. Planning and canonical sort
         return self.planner_sorter.build_case_result(

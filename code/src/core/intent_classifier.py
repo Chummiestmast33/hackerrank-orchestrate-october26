@@ -5,13 +5,14 @@ non-deletion request (access, correction, export, marketing opt-out, account rec
 or adversarial prompt-injection), in which case the request is ``NOT_APPLICABLE``.
 
 Features:
-1. Fast-path deterministic regex rules for 7 languages (en, fr, pt, es, de, ja, ko)
+1. Fast-path deterministic regex rules for 7+ languages (en, fr, pt, es, de, ja, ko)
    and explicit negation detection.
 2. Intake activity check against ``CLASSIFY_REQUEST`` events in ``system_activity.csv``.
 3. Prompt-injection isolation and rejection.
 4. Aggressive disk-caching (``code/cache/intent_classifications.json``) to prevent
-   unnecessary LLM calls.
-5. Metered LLM fallback when ambiguous and cache is absent.
+   redundant LLM calls.
+5. Metered batched LLM agent classification (``qwen3.7-max``) for nuanced or
+   multi-clause requests.
 """
 
 from __future__ import annotations
@@ -41,6 +42,9 @@ _NEGATED_DELETION_RE = re.compile(
     r"(?:"
     r"do\s+not\s+(?:close|delete|remove|erase|purge)|"
     r"don'?t\s+(?:close|delete|remove|erase|purge)|"
+    r"not\s+(?:asking\s+for\s+deletion|a\s+request\s+to\s+(?:erase|delete|close))|"
+    r"still\s+need\s+(?:the\s+|my\s+)?account|"
+    r"still\s+want\s+receipts\s+and\s+service\s+messages\s+for\s+this\s+account|"
     r"leave\s+(?:the\s+|my\s+)?account\s+active|"
     r"leave\s+(?:the\s+|my\s+)?(?:profile|purchase|history|records)\s+in\s+place|"
     r"keep\s+(?:the\s+|my\s+)?account\s+(?:as\s+it\s+is|active|open)|"
@@ -61,14 +65,15 @@ _CORRECTION_RE = re.compile(
 
 _ACCESS_EXPORT_RE = re.compile(
     r"(?:download\s+my\s+account\s+information|portable\s+format|copy\s+of\s+(?:last\s+year'?s\s+)?invoices|"
-    r"export\s+my\s+data|request\s+access\s+to\s+my\s+data|send\s+me\s+my\s+data|"
+    r"export\s+my\s+data|request\s+access\s+to\s+my\s+data|send\s+me\s+(?:my\s+data|a\s+copy\s+of\s+the\s+information)|"
+    r"what\s+personal\s+information\s+you\s+hold\s+about\s+me|information\s+request|"
     r"acceder\s+a\s+(?:una\s+copia|mis\s+datos)|auskunft\s+[uü]ber\s+meine\s+daten)",
     re.IGNORECASE,
 )
 
 _MARKETING_OPTOUT_RE = re.compile(
-    r"(?:unsubscribe\s+me|stop\s+(?:the\s+)?marketing\s+emails|opt[- ]out\s+of\s+marketing|"
-    r"newsletter\s+unsubscribe)",
+    r"(?:unsubscribe\s+me|stop\s+(?:the\s+)?(?:marketing|promotional)\s+emails|opt[- ]out\s+of\s+marketing|"
+    r"remove\s+me\s+from\s+marketing\s+lists\s+only|newsletter\s+unsubscribe)",
     re.IGNORECASE,
 )
 
@@ -82,9 +87,14 @@ _ACCOUNT_HELP_RE = re.compile(
 _DELETION_PATTERNS = {
     "en": re.compile(
         r"(?:"
-        r"close\s+(?:my\s+)?account|"
-        r"delete\s+(?:all\s+)?(?:my\s+)?(?:personal\s+)?(?:data|records|profile|account)|"
-        r"remove\s+(?:the\s+|my\s+)?(?:profile|personal\s+details|data|records)|"
+        r"close\s+(?:my\s+|this\s+)?account|"
+        r"delete\s+(?:all\s+)?(?:my\s+|this\s+)?(?:personal\s+)?(?:data|records|profile|account)|"
+        r"permanently\s+delete(?:d)?\s+(?:the\s+account)?|"
+        r"permanent\s+account[- ]deletion|"
+        r"erase\s+the\s+account|associated\s+with\s+this\s+address\s+to\s+be\s+erased|"
+        r"requesting\s+deletion\s+of\s+the\s+account|"
+        r"begin\s+the\s+deletion\s+process\s+for\s+the\s+account|"
+        r"remove\s+(?:the\s+|my\s+)?(?:account|profile|personal\s+details|data|records)|"
         r"purge\s+(?:my\s+)?(?:records|data)|"
         r"erasure\s+request|"
         r"right\s+to\s+be\s+forgotten|"
@@ -153,6 +163,16 @@ class IntentClassifier:
         tmp.write_text(json.dumps(self._cache, indent=2, sort_keys=True), encoding="utf-8")
         os.replace(tmp, path)
 
+    def record_agent_verdict(self, request_text: str, verdict: IntentVerdict) -> None:
+        """Persist an agent-adjudicated intent verdict in the cache."""
+        content_hash = hashlib.sha256(request_text.strip().encode("utf-8")).hexdigest()
+        self._cache[content_hash] = {
+            "is_deletion": verdict.is_deletion,
+            "category": verdict.category,
+            "confidence": verdict.confidence,
+            "reason": verdict.reason,
+        }
+
     def classify_text_fast_path(self, text: str) -> IntentVerdict | None:
         """Deterministic, rule-based classification."""
         cleaned = text.strip()
@@ -173,7 +193,7 @@ class IntentClassifier:
                 reason="adversarial prompt-injection attempt detected",
             )
 
-        # 2. Negated deletion (e.g. 'do not close', 'leave active')
+        # 2. Negated deletion (e.g. 'do not close', 'leave active', 'not asking for deletion')
         if _NEGATED_DELETION_RE.search(cleaned):
             return IntentVerdict(
                 is_deletion=False,
@@ -264,8 +284,7 @@ class IntentClassifier:
                 reason=f"cached: {entry.get('reason', '')}",
             )
 
-        # 4. Ambiguous and uncached: if in offline mode / no model available,
-        # fail safe to non-deletion if suspicious or deletion if neutral
+        # 4. Ambiguous and uncached: fail safe to deletion default
         return IntentVerdict(
             is_deletion=True,
             category="DELETION_DEFAULT",

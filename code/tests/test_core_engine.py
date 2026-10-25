@@ -1,9 +1,11 @@
-"""Unit tests for Phase 5 Core Audit Engine (tasks P5.0 - P5.6)."""
+"""Unit tests for Phase 5 Core Audit Engine and Hybrid AI Agent Tools."""
 
 import hashlib
 import json
 from pathlib import Path
 
+from src.core.agent import AGENT_TOOL_SCHEMAS, AuditAgentTools
+from src.core.audit_engine import AuditEngine
 from src.core.identity_resolver import IdentityResolver
 from src.core.intent_classifier import IntentClassifier
 from src.core.inventory_builder import InventoryBuilder
@@ -55,9 +57,12 @@ def test_intent_negations_and_non_deletion() -> None:
     non_deletion_cases = [
         ("Please do not close my account, just update my phone number.", False, "NEGATED_DELETION"),
         ("Leave my account active, I want to continue using the service.", False, "NEGATED_DELETION"),
+        ("Please stop the promotional emails. I still need the account and my order history, so I am not asking for deletion.", False, "NEGATED_DELETION"),
         ("My email address is out of date, please change the email address to new@mail.com.", False, "CORRECTION"),
         ("I need a copy of last year's invoices in a portable format.", False, "ACCESS"),
+        ("Can you tell me what personal information you hold about me? This is an information request, not a request to erase it.", False, "NEGATED_DELETION"),
         ("Please unsubscribe me from the weekly newsletter.", False, "MARKETING_OPTOUT"),
+        ("Please remove me from marketing lists only. I still want receipts and service messages for this account.", False, "NEGATED_DELETION"),
         ("I forgot my password and can't access my profile, please help with resetting.", False, "ACCOUNT_HELP"),
     ]
 
@@ -264,6 +269,12 @@ def test_state_reconstructor_scoped_proof() -> None:
         data_category="USER_PROFILE",
         discovery_source="test",
     )
+    res_retained = ResourceItem(
+        system_id="security_service",
+        resource_id="audit_record_missing",
+        data_category="SECURITY_AUDIT_LOG",
+        discovery_source="test",
+    )
 
     report = ParseReport(
         file_id="evidence_replica",
@@ -271,16 +282,19 @@ def test_state_reconstructor_scoped_proof() -> None:
         captured_at="2026-08-15T00:00:00Z",
         sha256="abc",
         status=ParseStatus.OK,
-        direct_systems=("account_service",),
+        direct_systems=("account_service", "security_service"),
     )
 
     reconstructor = StateReconstructor([], reports={"evidence_replica": report})
-    states = reconstructor.reconstruct_states([res], "2026-09-01T00:00:00Z")
+    states = reconstructor.reconstruct_states([res, res_retained], "2026-09-01T00:00:00Z")
 
-    assert len(states) == 1
+    assert len(states) == 2
     assert states[0].observed_state is ObservationState.ABSENT
     assert states[0].evidence_id == "evidence_replica"
     assert states[0].provenance is Provenance.SCOPE_IMPLICIT
+    # Retained record requiring PRESENT must not get SCOPE_IMPLICIT citation
+    assert states[1].evidence_id == ""
+    assert states[1].provenance is Provenance.SCOPE_IMPLICIT
 
 
 # ---------------------------------------------------------------------------
@@ -340,9 +354,34 @@ def test_rules_engine_violations() -> None:
     )
     assert engine.evaluate_resource(s3) is None
 
+    # 4. Connector and backup PRESENT states are recreation risks
+    s4 = ReconstructedResourceState(
+        resource_id="data_flow_99",
+        system_id="integration_service",
+        data_category="DATA_FLOW",
+        observed_state=ObservationState.PRESENT,
+        pii_exposed=False,
+        evidence_id="ev_4",
+        provenance=Provenance.VISION_TRANSCRIPTION,
+    )
+    v4 = engine.evaluate_resource(s4)
+    assert v4 is not None and v4.finding_operation == "REPORT_ACTIVE_DATA_FLOW"
+
+    s5 = ReconstructedResourceState(
+        resource_id="backup_99",
+        system_id="backup_service",
+        data_category="BACKUP_ARCHIVE",
+        observed_state=ObservationState.PRESENT,
+        pii_exposed=False,
+        evidence_id="ev_5",
+        provenance=Provenance.VISION_TRANSCRIPTION,
+    )
+    v5 = engine.evaluate_resource(s5)
+    assert v5 is not None and v5.finding_operation == "REPORT_RESTORE_RISK"
+
 
 # ---------------------------------------------------------------------------
-# P5.6: Planner & Sorter Tests
+# P5.6: Planner & Sorter + Agent Tools Tests
 # ---------------------------------------------------------------------------
 
 
@@ -404,3 +443,46 @@ def test_planner_not_applicable() -> None:
     assert result.deletion_status == "NOT_APPLICABLE"
     assert result.steps == ()
     assert result.steps_json == "[]"
+
+
+def test_agent_tool_schemas_and_dispatch() -> None:
+    assert len(AGENT_TOOL_SCHEMAS) == 4
+    names = {t["function"]["name"] for t in AGENT_TOOL_SCHEMAS}
+    assert names == {
+        "resolve_subject_identities",
+        "query_system_inventory",
+        "reconstruct_resource_states",
+        "build_compliant_remediation_plan",
+    }
+    engine = AuditEngine(
+        identities=[
+            IdentityRow(
+                user_id="user_999",
+                name="Test Subject",
+                email="subject@example.org",
+                phone="+1 555-0000",
+                email_hash="hash_999",
+                updated_at="2026-01-01T00:00:00Z",
+            )
+        ],
+        audit_log=(),
+        activity_events=(),
+        rules=(),
+        observations=(),
+    )
+    tools = AuditAgentTools(engine)
+    id_res = tools.dispatch(
+        "resolve_subject_identities",
+        {"email": "subject@example.org", "audit_at": "2026-09-01T00:00:00Z"},
+    )
+    assert id_res["user_id"] == "user_999"
+    plan_res = tools.dispatch(
+        "build_compliant_remediation_plan",
+        {
+            "request_id": "req_1",
+            "email": "subject@example.org",
+            "request_text": "Please delete my account.",
+            "audit_at": "2026-09-01T00:00:00Z",
+        },
+    )
+    assert plan_res["deletion_status"] == "COMPLETE"
