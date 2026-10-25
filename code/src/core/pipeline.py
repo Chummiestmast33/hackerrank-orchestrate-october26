@@ -38,6 +38,7 @@ from ..loaders.csv_loader import (
 from ..models import CaseAuditResult, EvidenceObservation, ParseReport
 from .agent import AuditOrchestratorAgent
 from .audit_engine import AuditEngine
+from .intent_classifier import IntentClassifier
 
 
 class Pipeline:
@@ -102,6 +103,10 @@ class Pipeline:
             trace_subjects=self.trace_subjects,
             trace_resources=self.trace_resources,
             trace_captured_at=self.trace_captured_at,
+            intent_classifier=IntentClassifier(
+                cache_dir=self.cache_path.parent,
+                meter=self.meter,
+            ),
         )
         self.agent = AuditOrchestratorAgent(
             engine=self.engine,

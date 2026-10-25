@@ -1,6 +1,6 @@
 # Usage Report -- Deletion Audit Agent
 
-- Generated at (UTC): 2026-10-25T12:36:11+00:00
+- Generated at (UTC): 2026-10-25T13:28:24+00:00
 - Full-run request denominator: 518
 - Usage log: `C:\Users\corte\Downloads\hackerrank-orchestrate-october26\code\data\usage_log.jsonl`
 - Pricing file: `C:\Users\corte\Downloads\hackerrank-orchestrate-october26\.pricing.json` (public values; no secrets)
@@ -24,34 +24,34 @@ Live metered calls executed by `AuditOrchestratorAgent`, `IntentDocumentAgent` (
 
 ### Model-call counts
 
-- Total calls: 47
-- Uncached calls: 47
+- Total calls: 39
+- Uncached calls: 39
 - Cache-hit calls: 0
 
 ### Input and output tokens
 
-- Input tokens: 122052
-- Output tokens: 18803
-- Total tokens: 140855
-- Total tokens per request (denominator 518): 271.92
+- Input tokens: 140936
+- Output tokens: 20805
+- Total tokens: 161741
+- Total tokens per request (denominator 518): 312.24
 
 ### Estimated cost
 
-- Estimated total cost: $0.423948
-- Estimated cost per request: $0.00081843
+- Estimated total cost: $0.434657
+- Estimated cost per request: $0.00083911
 
 ### Per-model totals
 
 | provider | model | calls | cached | input tokens | output tokens | total tokens | cost (USD) |
 |---|---|---|---|---|---|---|---|
-| qwen | qwen3-vl-plus | 3 | 0 | 7230 | 945 | 8175 | 0.002958 |
-| qwen | qwen3.7-max | 44 | 0 | 114822 | 17858 | 132680 | 0.420990 |
+| qwen | qwen3-vl-plus | 11 | 0 | 26137 | 2306 | 28443 | 0.008917 |
+| qwen | qwen3.7-max | 28 | 0 | 114799 | 18499 | 133298 | 0.425740 |
 
 ### Overall totals
 
-- Calls: 47 (cached 0)
-- Tokens: 140855 (input 122052 / output 18803)
-- Cost: $0.423948
+- Calls: 39 (cached 0)
+- Tokens: 161741 (input 140936 / output 20805)
+- Cost: $0.434657
 
 ## Phase 4 Multimodal Screenshot Extraction (`phase4-extraction`)
 
@@ -95,9 +95,9 @@ Two-pass `qwen3-vl-plus` visual transcription run across all 11 PNG console scre
 
 | provider | model | calls | cached calls | input tokens | output tokens | total tokens | avg tokens / req (518) | total cost (USD) | cost / req (USD) |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| `qwen` | `qwen3-vl-plus` | 25 | 0 | 58014 | 8647 | 66661 | 128.69 | $0.025438 | $0.00004911 |
-| `qwen` | `qwen3.7-max` | 44 | 0 | 114822 | 17858 | 132680 | 256.14 | $0.420990 | $0.00081272 |
-| **OVERALL** | **All Models** | **69** | **0** | **172836** | **26505** | **199341** | **384.83** | **$0.446428** | **$0.00086183** |
+| `qwen` | `qwen3-vl-plus` | 33 | 0 | 76921 | 10008 | 86929 | 167.82 | $0.031397 | $0.00006061 |
+| `qwen` | `qwen3.7-max` | 28 | 0 | 114799 | 18499 | 133298 | 257.33 | $0.425740 | $0.00082189 |
+| **OVERALL** | **All Models** | **61** | **0** | **191720** | **28507** | **220227** | **425.15** | **$0.457137** | **$0.00088250** |
 
 ## Hybrid AI Agent & Smart Batching Architecture
 

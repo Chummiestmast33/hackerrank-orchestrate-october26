@@ -820,3 +820,37 @@ branch=phase-07-p1-hardcode-cleanup
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+
+## [2026-10-25T07:31:00-06:00] Implement AI-Proposal -> Deterministic-Verification -> Canonical-Output Agent Flow
+
+User Prompt (verbatim, secrets redacted):
+update the deletion audit of the proyect:
+C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+
+Read AGENTS.md, problem_statement.md, README.md, PROGRESS.md, and the Phase 7 findings/plans before changing anything. Respect AGENTS.md sections 4, 6, and 7.
+
+## Objective
+
+Make the project a true Hybrid AI Audit Agent, not merely a deterministic engine with an AI wrapper.
+
+The final audit decisions must be materially influenced by the AI agents, while deterministic tools remain the authority that validates evidence, enforces policy, and guarantees the output contract.
+
+Agent Response Summary:
+Refactored `code/src/core/agent.py`, `code/src/core/intent_classifier.py`, `code/src/core/pipeline.py`, and `code/evaluation/full_run.py` to implement a complete AI-proposal -> deterministic-verification -> canonical-output architecture (`AgentCaseProposal`, `ProposalValidationResult`, `AgentInfluenceSummary`, and `DeterministicProposalVerifier`). Updated `MultimodalVisionAgent` to process all 11 PNGs by default when live, extended `IntentDocumentAgent` to analyze all 5 unstructured documents (1 TXT + 4 PDFs via `pdf_extractor.py`) and classify all 375 unique request texts (persisting verified verdicts via `IntentClassifier._save_cache()`), wired tool-calling and batch adjudication into `DeterministicProposalVerifier`, and persisted per-case decisions and influence metrics to `code/cache/agent_decisions.json`. Added 11 unit tests in `code/tests/test_agent.py` using a fake OpenAI client (0 network calls), verified all 6 verification commands (`249/249` pytest tests, `ruff`, `mypy`, live `full_run.py`, `full_run.py --offline`, `verify_clean_run.py`), updated `README.md` and `PROGRESS.md`, and repackaged `code.zip` (90 entries).
+
+Actions:
+* Updated `code/src/core/agent.py` with `AgentCaseProposal`, `ProposalValidationResult`, `AgentInfluenceSummary`, `DeterministicProposalVerifier`, 11-PNG default coverage, TXT+PDF document analysis, tool-call persistence, and `agent_decisions.json` persistence
+* Updated `code/src/core/intent_classifier.py` (`record_agent_verdict` calls `_save_cache()`) and `code/src/core/pipeline.py`
+* Added `code/tests/test_agent.py` (11 unit tests with fake OpenAI client)
+* Updated `code/evaluation/full_run.py` to separate current-run AI calls from Phase 4 setup calls and report AI influence metrics
+* Ran `pytest` (249 passed), `ruff` (0 errors), `mypy` (0 issues in 65 files), `full_run.py --offline` (21/21 checks, 0 calls), `full_run.py` live (21/21 checks, 39 live calls + 22 Phase 4 calls = 61 calls, 220,227 tokens, $0.457137 USD), and `verify_clean_run.py` (PASS)
+* Updated `README.md` and `PROGRESS.md`, and repackaged `code.zip`
+
+Context:
+tool=Antigravity
+model=gemini-3.8-flash
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

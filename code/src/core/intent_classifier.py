@@ -172,6 +172,7 @@ class IntentClassifier:
             "confidence": verdict.confidence,
             "reason": verdict.reason,
         }
+        self._save_cache()
 
     def classify_text_fast_path(self, text: str) -> IntentVerdict | None:
         """Deterministic, rule-based classification."""

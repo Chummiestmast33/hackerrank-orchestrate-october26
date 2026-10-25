@@ -1,4 +1,23 @@
 {
+  "agent_influence": {
+    "adjudication_batches_run": 8,
+    "cohorts_orchestrated": 5,
+    "deterministic_fallbacks": 0,
+    "documents_analyzed": 5,
+    "live_llm_enabled": true,
+    "not_applicable_proposals": 10,
+    "pdf_documents_analyzed": 4,
+    "proposals_accepted": 518,
+    "proposals_evaluated": 518,
+    "proposals_rejected": 0,
+    "rejection_reasons": {},
+    "tool_calls_executed": 8,
+    "total_cases": 518,
+    "txt_documents_analyzed": 1,
+    "unique_intents_classified": 375,
+    "vision_files_total": 11,
+    "vision_files_verified": 11
+  },
   "branch": "phase-07-p1-hardcode-cleanup",
   "cache": {
     "census_files": 94,
@@ -85,8 +104,13 @@
       "passed": true
     },
     {
-      "detail": "calls=69, cost=$0.446428",
-      "name": "agent_model_calls_metered",
+      "detail": "mode=live, calls=39, cost=$0.434657, accepted=518, rejected=0, fallbacks=0, vision=11/11, docs=5",
+      "name": "current_run_ai_calls_valid",
+      "passed": true
+    },
+    {
+      "detail": "calls=22, cost=$0.022480",
+      "name": "phase4_setup_calls_metered",
       "passed": true
     },
     {
@@ -111,24 +135,30 @@
     }
   ],
   "citation_count": 1124,
-  "combined_cost_usd": 0.446428,
-  "combined_model_calls": 69,
-  "combined_total_tokens": 199341,
+  "combined_cost_usd": 0.457137,
+  "combined_model_calls": 61,
+  "combined_total_tokens": 220227,
   "command": "code/evaluation/full_run.py",
-  "commit": "77e9fee",
+  "commit": "e67af2d",
+  "current_run_cost_usd": 0.434657,
+  "current_run_tokens": 161741,
   "deterministic": true,
   "empty_step_cases": [],
   "future_citations": [],
-  "generated_at": "2026-10-25T12:30:29+00:00",
+  "generated_at": "2026-10-25T13:22:40+00:00",
   "input": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\dataset\\deletion_requests.csv",
+  "live_llm": true,
   "max_steps": 19,
   "min_steps": 0,
   "missing_citations": [],
-  "model_calls": 47,
+  "model_calls": 39,
   "output": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\output.csv",
   "output_sha256": "1740be44af3d597ea111b9da3094e91e2112efa81cd4c75ea57c996cfc52beac",
+  "phase4_setup_calls": 22,
+  "phase4_setup_cost_usd": 0.02248,
+  "phase4_setup_tokens": 58486,
   "request_count": 518,
-  "runtime_seconds": 341.5892099999983,
+  "runtime_seconds": 344.4530246000031,
   "sample_metrics": {
     "mismatches": [
       "case_18",
