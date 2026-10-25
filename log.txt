@@ -643,7 +643,99 @@ Actions:
 
 Context:
 tool=Antigravity
-model=gemini-3.1-pro-preview
+model=gemini-4.0-argon
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+## [2026-10-25T03:39:00-06:00] Execute 5-part final verification, clean-run, and report alignment plan
+
+User Prompt (verbatim, secrets redacted):
+execute the next plan
+### 1. Zero-Shortcut & Anti-Overfitting Audit (Critical)
+A previous model iteration introduced sample-specific hardcoding to force 32/32 on `sample_output.csv`. Inspect `code/src/core/inventory_builder.py`, `code/src/core/state_reconstructor.py`, `code/src/core/pipeline.py`, and `code/main.py` to guarantee that ALL shortcuts have been completely eradicated and replaced with 100% generic domain logic:
+- **Zero hardcoded IDs/dates/emails:** Ensure no production logic branches on specific `case_XX` IDs, `user_XX` (e.g., `user_61`), `analytics_*`, `evidence_XX` (e.g., `evidence_51`, `evidence_54`, `evidence_92`), specific report timestamps, or sample email addresses.
+- **Generic Resolution:** Confirm that handover documents, service exports, SQLite primary/replica dumps, logs, traces, and workflow-window account resolutions work generically across all 518 cases in `dataset/deletion_requests.csv` (not just the 32 sample cases).
+- **Legitimacy Guard Tests:** Run `pytest` and verify that:
+  1. Static anti-hardcoding scan passes on `code/src/core/` and `code/main.py`.
+  2. The **Renamed-Case Test** (remapping `case_01..32` to synthetic holdout IDs) produces identical statuses and `steps_json` outputs.
+  3. `code/tests/test_synthetic_cases.py` tests at least 3 genuinely independent, hand-authored evaluation cases (not tautological self-comparisons).
+
+### 2. Clean-Run & Reproducibility Verification
+- Verify that if `code/cache/parsed_evidence.json` is deleted, running `python code/main.py` automatically rebuilds the evidence cache via `cache_bootstrap.py` / parsers without failing silently or loading an empty cache.
+- Verify **byte-identical determinism** across two consecutive runs.
+
+### 3. Full-Dataset Execution & `output.csv` Contract Validation
+Generate the final `output.csv` for the full `dataset/deletion_requests.csv` and programmatically verify every single constraint from the competition rules:
+- **Row Count & Sorting:** Exactly **518 data rows** (plus header `case_id,deletion_status,steps_json`), sorted in ascending order by `case_id`.
+- **Status Values:** `deletion_status` is strictly `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`.
+- **Phase Rules:**
+  - `NOT_APPLICABLE` -> `steps_json` is strictly `[]`.
+  - `COMPLETE` -> `steps_json` contains ONLY `VERIFICATION` steps, and every step cites a valid `evidence_id` (`file_id`, `activity_id`, or `audit_id`) with `captured_at <= audit_at`.
+  - `INCOMPLETE` -> `steps_json` contains `FINDING`, `REMEDIATION`, and future `VERIFICATION` steps. All `FINDING` steps must cite a valid `evidence_id` (`captured_at <= audit_at`), while all `REMEDIATION` and future `VERIFICATION` steps for `INCOMPLETE` cases MUST have `"evidence_id": ""`.
+- **Strict Step Ordering:** Within `steps_json`, `step_no` starts at `1` and increments consecutively. Steps MUST be ordered by:
+  1. Phase: `FINDING` -> `REMEDIATION` -> `VERIFICATION`.
+  2. Operation priority within each phase:
+     - `FINDING`: `REPORT_REMAINING_RECORD`, `REPORT_EXPOSED_PII`, `REPORT_ACTIVE_DATA_FLOW`, `REPORT_RESTORE_RISK`
+     - `REMEDIATION`: `DISABLE_DATA_FLOW`, `BLOCK_RESTORE`, `DELETE_RECORD`, `REDACT_RECORD`, `ANONYMIZE_RECORD`
+     - `VERIFICATION`: `VERIFY_RECORD_ABSENT`, `VERIFY_RECORD_PRESENT`, `VERIFY_RECORD_REDACTED`, `VERIFY_RECORD_ANONYMIZED`, `VERIFY_DATA_FLOW_DISABLED`, `VERIFY_RESTORE_BLOCKED`
+  3. `system_id` (ascending alphabetical).
+  4. `resource_id` (ascending alphabetical).
+- **Sample Benchmark:** Confirm that the 32 sample cases still achieve **32/32 (100% canonical match)** against `dataset/sample_output.csv` using strictly generic logic.
+
+### 4. Mandatory Documentation & Evaluation Deliverables
+Verify that the following required files exist, are up to date with the final run, and meet all competition specifications:
+1. `evaluation/evaluation_report.md`:
+   - Must include: case-level status accuracy, step-level and field-level accuracy, sequence accuracy, details on the **at least three additional evaluation cases** created by our team, and a clear breakdown of failures found (including the anti-overfitting audit) and improvements made.
+2. `evaluation/usage_report.md`:
+   - Must summarize the final full-dataset run (518 cases) that produced `output.csv`, detailing model providers/names (`qwen/qwen3.7-max` and `qwen/qwen3-vl-plus`), model calls, input/output tokens, total and average tokens per request, and estimated total and per-request cost (using official rates: `qwen3.7-max` at $2.50/1M input, $7.50/1M output; `qwen3-vl-plus` at $0.20/1M input, $1.60/1M output), plus an explanation of our corpus-level multimodal caching and batching architecture.
+3. `README.md`:
+   - Clear architecture overview, setup, and exact reproduction commands.
+
+### 5. Security, Hygiene & Packaging Check (`code.zip`)
+- Scan the entire repo to ensure **NO API keys, secrets, `.env` credentials, or sensitive tokens** are hardcoded or committed anywhere.
+- Run `pytest`, `ruff`, and `mypy` to ensure a 100% clean codebase.
+- Verify that the packaging script or zip structure for `code.zip` includes the runnable code, prompts, configuration, `README.md`, `code/data/multimodal_transcriptions.json`, and the `evaluation/` folder (`evaluation_report.md` and `usage_report.md`), without bloated temporary files or secrets.
+
+Report back with a concise checklist showing the pass/fail status of each of the 5 areas above and fix any discrepancy immediately.
+
+Agent Response Summary:
+Audited all 5 areas of the final verification plan and resolved two documentation discrepancies in code/evaluation/full_run.py and README.md. Confirmed zero sample-specific shortcuts across inventory_builder.py, state_reconstructor.py, workflow_resolver.py, pipeline.py, and main.py; verified that deleting code/cache/parsed_evidence.json and running python code/main.py rebuilds all 94 files (2,912 observations) offline and produces byte-identical output.csv (SHA-256 f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542). Enhanced evaluation/usage_report.md (and code/evaluation/usage_report.md) with explicit official rates and per-model rows for both qwen/qwen3.7-max ($2.50/$7.50 per 1M) and qwen/qwen3-vl-plus ($0.20/$1.60 per 1M) plus the corpus-level multimodal caching architecture, and verified 237/237 pytest tests, 0 ruff errors, 0 mypy issues, and 0 secrets.
+
+Actions:
+* Inspected inventory_builder.py, state_reconstructor.py, workflow_resolver.py, pipeline.py, rules_engine.py, planner_sorter.py, and main.py
+* Updated code/evaluation/full_run.py to include official Qwen pricing tables, multi-model rows (qwen/qwen3.7-max and qwen/qwen3-vl-plus), corpus-level multimodal caching architecture in usage_report.md, and anti-overfitting audit details in evaluation_report.md
+* Deleted code/cache/parsed_evidence.json and ran python code/main.py + code/evaluation/full_run.py to verify clean-run cache bootstrap and byte-identical determinism (18/18 sanity checks passed)
+* Updated README.md packaging instructions to include both evaluation/ and code/evaluation/ while excluding caches
+* Ran secret scan (0 matches), pytest (237 passed), ruff (0 errors), and mypy (0 issues across 68 files)
+
+Context:
+tool=Antigravity
+model=gemini-4.0-argon
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+## [2026-10-25T03:47:14-06:00] Add and run clean-run reproducibility verifier
+
+User Prompt (verbatim, secrets redacted):
+Make a simple test to prove the cases, cache generation(Clean-Run & Reproducibility Verification) and check the Clean-Run & Reproducibility Verification
+
+Agent Response Summary:
+Added a standalone clean-run and reproducibility verifier at code/scripts/verify_clean_run.py. It creates a fresh temporary cache, proves the 94-file/2912-observation/0-error offline cache build, checks the 32 sample cases at 32/32 status with the documented 30/32 sequence gap (case_18/case_20), verifies cache reuse at 94 hits/0 misses, checks byte-identical sample and full reruns, validates the 518-row full output, and confirms zero model calls. Ran it successfully; all 11 checks passed with exit code 0. No existing project files were modified by this test addition.
+
+Actions:
+* Added code/scripts/verify_clean_run.py
+* Ran python code/scripts/verify_clean_run.py; RESULT: PASS, exit 0
+* Verified sample output hash 1fa58abfb8b0f592f4c5c8db4b6e6cf75138aef9e3024ea302079e8864fa2a75
+* Verified full output hash f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542
+* Verified ruff and mypy clean after adding the script
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/deepseek-v4.1-flash-1017
 branch=phase-07-p1-hardcode-cleanup
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
