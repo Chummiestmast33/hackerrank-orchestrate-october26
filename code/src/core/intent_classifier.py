@@ -54,13 +54,15 @@ _NEGATED_DELETION_RE = re.compile(
 # Specific non-deletion categories
 _CORRECTION_RE = re.compile(
     r"(?:out\s+of\s+date|replace\s+it\s+with\s+the\s+new\s+one|misspelled|correct\s+it|"
-    r"change\s+the\s+email\s+address|update\s+my\s+(?:phone|mobile|email|name))",
+    r"change\s+the\s+email\s+address|update\s+my\s+(?:phone|mobile|email|name)|"
+    r"corregir\s+mis\s+datos|actualizar\s+mi\s+direcci[oó]n|daten\s+korrigieren)",
     re.IGNORECASE,
 )
 
 _ACCESS_EXPORT_RE = re.compile(
     r"(?:download\s+my\s+account\s+information|portable\s+format|copy\s+of\s+(?:last\s+year'?s\s+)?invoices|"
-    r"export\s+my\s+data|request\s+access\s+to\s+my\s+data|send\s+me\s+my\s+data)",
+    r"export\s+my\s+data|request\s+access\s+to\s+my\s+data|send\s+me\s+my\s+data|"
+    r"acceder\s+a\s+(?:una\s+copia|mis\s+datos)|auskunft\s+[uü]ber\s+meine\s+daten)",
     re.IGNORECASE,
 )
 
@@ -101,6 +103,10 @@ _DELETION_PATTERNS = {
     ),
     "es": re.compile(
         r"(?:eliminaci[oó]n\s+permanente|borrar\s+(?:mi\s+cuenta|mis\s+datos)|suprimir\s+mis\s+datos)",
+        re.IGNORECASE,
+    ),
+    "de": re.compile(
+        r"(?:vollst[aä]ndige\s+l[oö]schung|konto\s+l[oö]schen|daten\s+l[oö]schen|alle\s+meine\s+daten\s+l[oö]schen|unwiderruflich\s+l[oö]schen|benutzerkonto.*l[oö]schen)",
         re.IGNORECASE,
     ),
     "ja": re.compile(

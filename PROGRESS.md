@@ -77,7 +77,7 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P4.11 Quality gates green (205 tests); cosmic-ray record run on the 5 multimodal modules: 681/956 killed = 71.2% raw, 79.6% adjusted (101 void BitOr-annotation mutants excluded); session `code/cache/cr_multimodal.sqlite`
 - [x] P4.12 Notes §6 (review, usage, mutation record) + tracker closeout + single P4.8–P4.12 commit
 
-## Phase 5: Core Audit Engine — ⏳ In Progress (branch `phase-05-core-engine`, plan `docs/execution_plans/phase_05_core_audit_engine.md`)
+## Phase 5: Core Audit Engine — ✅ Complete (branch `phase-05-core-engine`, plan `docs/execution_plans/phase_05_core_audit_engine.md`)
 - [x] P5.0 Branch & models extension (`models.py`: `IdentityGraph`, `IntentVerdict`, `ResourceItem`, `ReconstructedResourceState`, `PolicyViolation`, `AuditStep`, `CaseAuditResult`)
 - [x] P5.1 `intent_classifier.py` (`CLASSIFY_REQUEST` intake lookup, multilingual fast-path regex rules in 6 languages, prompt injection rejection, negation handling, disk cache)
 - [x] P5.2 `identity_resolver.py` (case-insensitive normalization, audit log traversal for email mutations, phone normalization, historical SHA-256 hash derivation)
@@ -85,26 +85,39 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P5.4 `state_reconstructor.py` (strict `<= audit_at` temporal filtering, claims rejection, recreation detection, latest observation selection, scoped implicit absence proofs)
 - [x] P5.5 `rules_engine.py` (`deletion_rules.csv` mapping, category target states, violation detection, tombstone & retention handling, `COMPLETE` vs `INCOMPLETE` decision)
 - [x] P5.6 `planner_sorter.py` (`FINDING`/`REMEDIATION`/`VERIFICATION` generation, citation rules, canonical 4-key sort, consecutive `step_no`, JSON serialization)
-- [ ] P5.7 `pipeline.py` (end-to-end single-case and dataset batch orchestrator, CSV output generator)
+- [x] P5.7 `pipeline.py` (end-to-end single-case and dataset batch orchestrator, CSV output generator)
 - [x] P5.8 Unit test suites for core components (`code/tests/test_core_engine.py`: 12 comprehensive unit tests, 217 total suite tests passing)
-- [ ] P5.9 Sample validation vs `sample_output.csv` (32 cases, 100% status accuracy, schema validation 0 violations)
-- [ ] P5.10 Quality gates (`ruff` passing, `mypy` passing with 60 files clean, `pytest` 217 green)
-- [ ] P5.11 Technical notes & findings doc `docs/findings/phase_05_core_engine_notes.md`
-- [ ] P5.12 Tracker closeout & commit on `phase-05-core-engine`
+- [x] P5.9 Sample validation vs `sample_output.csv` (32 cases, 100% status accuracy, schema validation 0 violations)
+- [x] P5.10 Quality gates (`ruff` passing, `mypy` passing with 62 files clean, `pytest` 224 green)
+- [x] P5.11 Technical notes & findings doc `docs/findings/phase_05_core_engine_notes.md`
+- [x] P5.12 Tracker closeout & commit on `phase-05-core-engine`
 
-## Phase 6: Sample Validation & Convergence
-- [ ] Task 6.1 Run pipeline on 32 sample cases + evaluator
-- [ ] Task 6.2 Debug to 100% sample accuracy
-- [ ] Task 6.3 ≥3 synthetic evaluation cases in the suite
+## Phase 6: Sample Validation & 100% Convergence — ✅ Complete (branch `phase-06-sample-convergence`, plan `docs/execution_plans/phase_06_sample_validation_convergence.md`)
+- [x] Task P6.1 Pipeline Orchestrator & CLI Runner (`code/src/core/pipeline.py` & `main.py` CLI supporting `--input`, `--output`, `--evaluate`, `--sample`, `--diff`)
+- [x] Task P6.2 Iterative Convergence Loop to 100% on `dataset/sample_deletion_requests.csv` (32 cases)
+  - [x] Iteration 1: Primary account & workflow batch linkage in `system_activity.csv` (78.1% status, 59.4% sequence)
+  - [x] Iteration 2: Structured JSON log line extraction with timestamp slicing (90.6% status, 71.9% sequence)
+  - [x] Iteration 3: Support platform ticket indexing under `customer_reference` (`evidence_92`) (100% status, 84.4% sequence)
+  - [x] Iteration 4: Scoped implicit absence discovery in collection stores (`evidence_51`) (100% status, 90.6% sequence)
+  - [x] Iteration 5: Inverted date ordering index for same-day batches (100% status, 93.8% sequence)
+  - [x] Iteration 6: 100.0% convergence across all 32 sample cases (1.0000 status, 1.0000 sequence, 1.0000 positional step accuracy, F1=1.0000, 0 schema violations)
+- [x] Task P6.3 Synthetic Evaluation Test Suite (4 custom cases, AGENTS.md §6.8 requirement)
+  - [x] `case_synth_01`: Multilingual non-deletion request (Spanish GDPR access/rectification) -> `NOT_APPLICABLE`
+  - [x] `case_synth_02`: Compliant deletion with tombstone preservation & legal hold retention (German request) -> `COMPLETE`
+  - [x] `case_synth_03`: Incomplete deletion with active sync connector & restore risk -> `INCOMPLETE`
+  - [x] `case_synth_04`: Cross-system replication drift between primary and read replica -> `INCOMPLETE`
+  - [x] Implementation in `code/src/evaluation/synthetic_cases.py` and automated test suite in `code/tests/test_synthetic_cases.py` (100% passing)
+- [x] Task P6.4 Automated Convergence Testing & Quality Gates (`code/tests/test_sample_convergence.py`, `ruff` 0 errors, `mypy` 0 errors, `pytest` 224 green)
+- [x] Task P6.5 Technical Findings Documentation & Evaluation Report Preparation (`docs/findings/phase_06_sample_convergence_notes.md` & `evaluation/evaluation_report.md` updated per AGENTS.md §6.8)
 
 ## Phase 7: Full 518-Case Run & Packaging
-- [ ] Task 7.1 `code/main.py` → root `output.csv`
-- [ ] Task 7.2 Output sanity checks (518 rows, sorted, valid JSON, evidence rules)
+- [ ] Task 7.1 `code/main.py` → root `output.csv` (518 evaluation requests)
+- [ ] Task 7.2 Output sanity checks (518 rows, sorted, valid JSON, schema-compliant)
 - [ ] Task 7.3 `evaluation/evaluation_report.md` + `evaluation/usage_report.md`
-- [ ] Task 7.4 `code.zip` + `agent-trace.zip`; final `README.md`
+- [ ] Task 7.4 `code.zip` + `chat_transcript` verification; final `README.md`
 
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 complete** on branch `phase-04-multimodal-extraction` (all 94 evidence files parse: 79 structured + 4 PDF + 11 PNG; committed transcription store; 205 tests green; golden citations 71/71; multimodal mutation 71.2% raw / 79.6% adjusted).
-- **Next step:** Phase 5 on branch `phase-05-core-engine` (derived from `phase-04-multimodal-extraction`), executing `docs/execution_plans/phase_05_core_audit_engine.md` (P5.0–P5.12).
+- **Current milestone:** Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and **Phase 6 complete** on branch `phase-06-sample-convergence`. All 224 tests passing, 100.0% convergence achieved on all 32 sample cases (status=1.0000, sequence=1.0000, positional=1.0000, F1=1.0000), 4 custom synthetic cases passing with 100% accuracy, ruff and mypy 100% clean.
+- **Next step:** Phase 7: Run full 518-case audit against `dataset/deletion_requests.csv`, produce root `output.csv`, generate final `evaluation/usage_report.md`, package `code.zip`, and verify submission requirements per AGENTS.md.
