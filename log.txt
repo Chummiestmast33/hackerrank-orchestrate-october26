@@ -573,3 +573,29 @@ branch=phase-06-sample-convergence
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+## [2026-10-25T01:21:36-06:00] Commit P0 fix and start P1 hardcode cleanup
+
+User Prompt (verbatim, secrets redacted):
+now commit the changes as a fix and star the P1 plan to clean the hardcode logic to pass the test
+
+Agent Response Summary:
+Committed the P0 clean-run fix as 8117d63 on phase-06-sample-convergence. Started P1 on branch phase-07-p1-hardcode-cleanup, added an evidence-driven WorkflowResolver for primary accounts and downstream analytics, removed the sample-specific handover/batch/case/email/audit/evidence literals from production code, and replaced the pipeline ticket injection with generic support-reference parsing. P1 preserves 32/32 status accuracy and 30/32 exact sequences; the only remaining gap is two gold-only retained audit-record IDs (case_18 audit_record_6645 and case_20 audit_record_5569) that do not exist anywhere in participant-visible evidence. Exhaustive searches of CSV/JSON/SQL/TXT/LOG evidence, parsed cache, PDF text, and PNG transcriptions found neither ID.
+
+Actions:
+* Committed P0 as 8117d63 (fix: bootstrap evidence cache for clean runs)
+* Created branch phase-07-p1-hardcode-cleanup
+* Added docs/execution_plans/phase_07_p1_hardcode_cleanup.md
+* Added code/src/core/workflow_resolver.py
+* Rewired code/src/core/audit_engine.py and inventory_builder.py to evidence-driven workflow assignments
+* Removed hardcoded account/analytics/security/evidence maps and facade states
+* Added generic support customer_reference parsing in collection_rules.py
+* Added code/tests/test_p1_hardcode_guard.py (static literal scan, gold isolation, renamed-case output check)
+* Verified ruff and mypy clean; only the two known sample-convergence tests fail due the gold-only audit IDs
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/deepseek-v4.1-flash-1017
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

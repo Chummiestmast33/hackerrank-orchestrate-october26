@@ -32,14 +32,7 @@ from ..loaders.csv_loader import (
     load_identities,
     load_rules,
 )
-from ..models import (
-    CaseAuditResult,
-    EvidenceObservation,
-    ObservationState,
-    ParseReport,
-    ParseStatus,
-    Provenance,
-)
+from ..models import CaseAuditResult, EvidenceObservation, ParseReport
 from .audit_engine import AuditEngine
 
 
@@ -166,45 +159,6 @@ class Pipeline:
                             self.trace_subjects.setdefault(tid, set()).add(cleaned)
                     if rid and tid:
                         self.trace_resources.setdefault(tid, set()).add(str(rid).strip('"'))
-
-        # Add support tickets customer_reference from service_resource_export (evidence_92)
-        ev92_path = (
-            self.dataset_dir
-            / "evidence"
-            / "records"
-            / "service_resource_export_20260915_114455.json"
-        )
-        if ev92_path.exists():
-            try:
-                ev92_data = json.loads(ev92_path.read_text(encoding="utf-8", errors="ignore"))
-                tickets = (
-                    ev92_data.get("service_exports", {})
-                    .get("support_platform", {})
-                    .get("tickets", [])
-                )
-                for t in tickets:
-                    c_ref = t.get("customer_reference")
-                    r_id = t.get("resource_id")
-                    if c_ref and r_id:
-                        self.observations.append(
-                            EvidenceObservation(
-                                file_id="evidence_92",
-                                system_id="support_platform",
-                                resource_id=r_id,
-                                data_category="SUPPORT_MESSAGE",
-                                state=ObservationState.REDACTED,
-                                pii_exposed=False,
-                                captured_at=t.get("observed_at", "2026-09-15T11:44:55Z"),
-                                provenance=Provenance.EXPLICIT_FIELD,
-                                locator=f"support_platform/tickets/{r_id}",
-                                identifiers=(str(c_ref),),
-                                reason="ticket_redacted",
-                                parse_status=ParseStatus.OK,
-                                state_inputs=(),
-                            )
-                        )
-            except Exception:
-                pass
 
     def audit_requests(
         self,

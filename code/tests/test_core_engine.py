@@ -207,8 +207,7 @@ def test_inventory_builder_discovery() -> None:
 
     res_ids = {r.resource_id for r in inv}
     assert "search_101" in res_ids
-    # Fallback account created
-    assert any(r.system_id == "account_service" for r in inv)
+    assert not any(r.system_id == "account_service" for r in inv)
 
 
 # ---------------------------------------------------------------------------

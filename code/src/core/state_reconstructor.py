@@ -100,18 +100,8 @@ class StateReconstructor:
                 if eligible_files:
                     eligible_files.sort(key=lambda item: item[1].captured_at, reverse=True)
                     proving_file_id = eligible_files[0][0]
-                elif res.system_id == "account_service":
-                    # Scoped snapshot bundle (evidence_51) or failover replica (evidence_54)
-                    if audit_at >= "2026-09-15T12:00:00Z":
-                        proving_file_id = "evidence_51"
-                    else:
-                        proving_file_id = "evidence_54"
 
-                obs_st = (
-                    ObservationState.PRESENT
-                    if res.data_category in ("SECURITY_AUDIT_LOG", "LEGAL_HOLD_RECORD")
-                    else ObservationState.ABSENT
-                )
+                obs_st = ObservationState.ABSENT
                 states.append(
                     ReconstructedResourceState(
                         resource_id=res.resource_id,

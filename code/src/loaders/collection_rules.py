@@ -151,8 +151,10 @@ def decode_support_record(record: dict[str, object]) -> DecodedRecord:
         "requester_email": record.get("requester_email"),
         "requester_phone": record.get("requester_phone"),
     }
-    reference = record.get("subject_reference")
-    result = decode_support(fields, reference)
+    subject_reference = record.get("subject_reference")
+    customer_reference = record.get("customer_reference")
+    result = decode_support(fields, subject_reference)
+    reference = subject_reference if not is_null(subject_reference) else customer_reference
     exposed = any(not is_null(value) for value in fields.values())
     return _decoded(
         "SUPPORT_MESSAGE",
