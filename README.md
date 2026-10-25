@@ -70,19 +70,63 @@ python3 code/evaluation/full_run.py
 
 The first run automatically builds `code/cache/parsed_evidence.json` from `dataset/evidence_files.csv` using our structured parsers (`SQL`, `JSON`, `LOG`, `TXT`, `PDF`) and `MultimodalVisionAgent` (`qwen3-vl-plus`, backed by `code/data/multimodal_transcriptions.json`). When `DASHSCOPE_API_KEY` is configured, `AuditOrchestratorAgent` (`qwen3.7-max`) and `MultimodalVisionAgent` (`qwen3-vl-plus`) execute batched intent classification, unstructured document analysis, multimodal screenshot verification, and tool-calling cohort orchestration, logging every call and token count to `code/data/usage_log.jsonl` via `code/src/evaluation/metering.py`. If run in an offline grading sandbox without network access, the agent seamlessly falls back to its cached transcriptions and deterministic tool guardrails.
 
-Useful options:
+Useful options (use `python` instead of `python3` on Windows; every entry point also accepts `--help`):
 
-```bash
-python3 code/main.py --sample
-python3 code/main.py --sample --diff
-python3 code/main.py --agent-llm
-python3 code/main.py --rebuild-cache
-python3 code/main.py --cache /tmp/parsed_evidence.json
-python3 code/evaluation/full_run.py
-python3 -m pytest code/tests -q
-```
+| Command | Purpose |
+| --- | --- |
+| `python3 code/main.py` | Audit all 518 requests and write the root `output.csv` (mirrored to `dataset/output.csv`) |
+| `python3 code/main.py --sample -o build/sample_predictions.csv` | Audit the 32 public samples and score against `dataset/sample_output.csv`. Always pass `-o`: without it, `--sample` overwrites the root `output.csv` |
+| `python3 code/main.py --sample --diff -o build/sample_predictions.csv` | Same, printing per-case diffs for mismatched cases |
+| `python3 code/main.py --agent-llm` | Force live Qwen LLM/VLM agent calls during audit orchestration |
+| `python3 code/main.py --rebuild-cache` | Ignore the existing evidence cache and re-parse every evidence file |
+| `python3 code/main.py --cache path/to/parsed_evidence.json` | Use a custom evidence-cache path |
+| `python3 code/main.py -i path/to/requests.csv -o path/to/output.csv` | Custom input/output paths (missing parent directories are created) |
+| `python3 code/main.py -g path/to/gold.csv -e --diff` | Generate predictions, then evaluate against a ground-truth CSV |
+| `python3 code/main.py -v` | Verbose output |
+| `python3 code/evaluation/full_run.py` | Full 518-case run + 21 sanity checks + evaluation/usage report generation |
+| `python3 code/evaluation/full_run.py --offline` | Same with zero model calls (deterministic fallback path) |
+| `python3 code/evaluation/main.py` | Run the evaluation suite and regenerate reports |
+| `python3 -m pytest code/tests -q` | Run the full test suite (249 tests) |
+| `python3 code/scripts/verify_clean_run.py` | Verify a clean-checkout run (cache auto-build + determinism) |
 
 The final generated file for submission is written to both the root-level `output.csv` and `dataset/output.csv`.
+
+---
+
+## Repository Layout
+
+```text
+.
+├── code/
+│   ├── main.py                          # CLI entry point (flags above)
+│   ├── requirements.txt                 # Runtime + tooling dependencies
+│   ├── src/
+│   │   ├── config.py                    # Paths, model names, pricing, sort-rank constants
+│   │   ├── models.py                    # Dataclasses/enums (EvidenceObservation, AuditStep, ...)
+│   │   ├── loaders/                     # CSV/SQL/JSON/TXT/LOG parsers, PDF + VLM extraction, cache
+│   │   ├── core/                        # agent.py (hybrid orchestrator + proposal verifier),
+│   │   │                                # audit_engine.py, intent_classifier.py, identity_resolver.py,
+│   │   │                                # inventory_builder.py, state_reconstructor.py, rules_engine.py,
+│   │   │                                # planner_sorter.py, workflow_resolver.py, pipeline.py
+│   │   └── evaluation/                  # evaluator.py, metering.py, schema.py, synthetic_cases.py
+│   ├── prompts/                         # 11 per-family VLM transcription prompts
+│   ├── data/                            # Committed artifacts: multimodal_transcriptions.json, usage_log.jsonl
+│   ├── cache/                           # Gitignored build artifacts: parsed_evidence.json,
+│   │                                    # intent_classifications.json, agent_decisions.json
+│   ├── scripts/verify_clean_run.py      # Clean-checkout verification script
+│   ├── evaluation/                      # full_run.py, main.py + mirrored evaluation/usage reports
+│   └── tests/                           # 249 pytest tests (incl. test_p1_hardcode_guard.py)
+├── evaluation/                          # Submitted evaluation_report.md, usage_report.md, sanity_checks.json
+├── docs/
+│   ├── execution_plans/                 # Per-phase execution plans (Phases 1-7)
+│   └── findings/                        # Per-phase findings (incl. phase_07_sample_evidence_gap.md)
+├── dataset/                             # Participant-facing challenge data (never bundled in code.zip)
+├── output.csv                           # Final 518-row submission file
+├── problem_statement.md                 # Official challenge specification
+├── AGENTS.md                            # Agent contract (logging, rules, output contract)
+├── Plan.md                              # Original technical specification (see deviation note below)
+└── PROGRESS.md                          # Phase tracker / shared memory
+```
 
 ---
 
@@ -105,7 +149,9 @@ The solution in `code/` implements a **Hybrid AI Audit Agent (`code/src/core/age
      - **Schema & Phase Rules:** Validates allowed statuses (`COMPLETE`, `INCOMPLETE`, `NOT_APPLICABLE`), legal operation/phase/state triples, and canonical 4-key step ordering (`FINDING` -> `REMEDIATION` -> `VERIFICATION`).
      - **Manifest & Temporal Cutoffs:** Confirms every cited `evidence_id` exists in `dataset/evidence_files.csv` and satisfies `captured_at <= audit_at`.
      - **Semantic Proof Rules:** Confirms every `COMPLETE` verification step cites an observation (or scoped absence report) proving its target state (`is_target_state_proven`), every `INCOMPLETE` finding cites `PRESENT`/`ACTIVE` violation evidence, and future remediation/verification steps use `evidence_id=""`.
-     - **Policy Completeness & Fallback:** Accepts validated proposals into `output.csv`; any invalid or unverified proposal (or offline run via `--offline`) is rejected with a traceable per-case reason (`invalid_evidence_id`, `future_evidence`, `state_mismatch`, `schema_violation`, `malformed_model_json`, `model_call_error`, or `offline_mode_no_live_llm`) and falls back to the deterministic engine (`AuditEngine`). All per-case outcomes and `AgentInfluenceSummary` metrics are persisted in `code/cache/agent_decisions.json`.
+     - **Policy Completeness & Fallback:** Accepts validated proposals into `output.csv`; any invalid or unverified proposal (or an offline run — `code/evaluation/full_run.py --offline`, or `code/main.py` without `DASHSCOPE_API_KEY`) is rejected with a traceable per-case reason (`invalid_evidence_id`, `future_evidence`, `state_mismatch`, `schema_violation`, `malformed_model_json`, `model_call_error`, or `offline_mode_no_live_llm`) and falls back to the deterministic engine (`AuditEngine`). All per-case outcomes and `AgentInfluenceSummary` metrics are persisted in `code/cache/agent_decisions.json`.
+
+> **Relationship to [`Plan.md`](./Plan.md):** `Plan.md` is the original technical specification; the implementation intentionally evolved beyond it in two documented ways. (1) The Tier-3 orchestrator does use LLM tool-calling, but batched at cohort level (`batch_size=65`) with the `DeterministicProposalVerifier` as the sole authority for the output contract — not a per-case free-form loop. (2) Sample sequence accuracy is 30/32 rather than the planned 32/32 because the gold steps for `case_18`/`case_20` cite two audit-record IDs that exist nowhere in participant-facing data; per AGENTS.md §4.3/§6.7 they are never fabricated or hardcoded (see [`docs/findings/phase_07_sample_evidence_gap.md`](./docs/findings/phase_07_sample_evidence_gap.md)). Minor structure drift (e.g., `code/data/multimodal_transcriptions.json` instead of the planned `code/cache/multimodal_evidence.json`, and test-file naming) is reflected in the Repository Layout above.
 
 ### Evaluation, Metering & Evidence-Gap Summary
 
@@ -217,7 +263,17 @@ zip -r code.zip README.md code evaluation .pricing.json .env.example -x "*/__pyc
 **Windows (PowerShell):**
 
 ```powershell
-Get-ChildItem -Path code -Recurse -Directory -Filter "__pycache__" | Remove-Item -Recurse -Force
-Remove-Item -Path code\cache\parsed_evidence.json -Force -ErrorAction SilentlyContinue
-Compress-Archive -Path README.md, code, evaluation, .pricing.json, .env.example -DestinationPath code.zip -Force
+# Stage a clean copy so no caches, pytest temp dirs, or secrets are bundled
+$stage = Join-Path $env:TEMP "code_zip_staging"
+Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Path $stage | Out-Null
+Copy-Item README.md, .pricing.json, .env.example -Destination $stage
+Copy-Item evaluation -Destination "$stage\evaluation" -Recurse
+Copy-Item code -Destination "$stage\code" -Recurse
+Remove-Item "$stage\code\cache" -Recurse -Force -ErrorAction SilentlyContinue
+Get-ChildItem -Path $stage -Recurse -Directory -Filter "__pycache__" | Remove-Item -Recurse -Force
+Compress-Archive -Path "$stage\*" -DestinationPath code.zip -Force
+Remove-Item $stage -Recurse -Force
 ```
+
+Verify the archive afterwards: it should contain ~90 entries — `README.md`, `.pricing.json`, `.env.example`, the three `evaluation/` report files, and `code/` (including `code/data/multimodal_transcriptions.json`, which the offline fallback requires, and the 11 `code/prompts/` files) — and must contain **no** `dataset/`, `code/cache/`, `.env`, or `__pycache__` entries.
