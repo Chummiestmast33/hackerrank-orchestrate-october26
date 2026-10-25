@@ -12,7 +12,7 @@ Read [`problem_statement.md`](./problem_statement.md) for the complete challenge
 
 ---
 
-## Quick Start
+## Quick Start & Setup
 
 Clone the repository and move into the project directory:
 
@@ -31,24 +31,77 @@ Your solution must:
 - Generate one prediction row for every request in `dataset/deletion_requests.csv`
 - Write the final predictions to `output.csv` in the repository root
 
-Run the starter Python entry point with:
+### 1. Environment Setup
+
+Requires **Python 3.10+**. Create a virtual environment at the repository root and install the pinned dependencies:
+
+**macOS / Linux:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r code/requirements.txt
+```
+
+**Windows (PowerShell):**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r code/requirements.txt
+```
+
+### 2. Run the Deletion-Audit Agent
+
+Run the Python entry point from the repository root:
 
 ```bash
 python3 code/main.py
 ```
 
-The first run automatically builds `code/cache/parsed_evidence.json` from `dataset/evidence_files.csv` using the committed offline transcription store `code/data/multimodal_transcriptions.json`. No API key or network access is required. The cache is gitignored and excluded from `code.zip`; it is rebuilt automatically on a clean checkout.
+The first run automatically builds `code/cache/parsed_evidence.json` from `dataset/evidence_files.csv` using deterministic parsers (`SQL`, `JSON`, `LOG`, `TXT`, `PDF`) and the committed offline transcription store `code/data/multimodal_transcriptions.json`. No API key or network access is required at runtime (0 model calls, \$0.000000 runtime cost). The cache is gitignored and excluded from `code.zip`; it is rebuilt automatically on a clean checkout.
 
 Useful options:
 
 ```bash
 python3 code/main.py --sample
+python3 code/main.py --sample --diff
 python3 code/main.py --rebuild-cache
 python3 code/main.py --cache /tmp/parsed_evidence.json
+python3 code/evaluation/full_run.py
+python3 -m pytest code/tests -q
 ```
 
 The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.
 
+---
+
+## Solution Architecture
+
+The solution in `code/` implements a **two-stage deterministic deletion-audit architecture** with strict temporal cutoff enforcement (`captured_at <= audit_at`) and 100% reproducibility:
+
+1. **Stage 1 — Evidence Ingestion & Offline Cache Bootstrap (`code/src/loaders/`, `code/src/parsers/`):**
+   - `cache_bootstrap.py` validates `code/cache/parsed_evidence.json` against `PARSER_VERSION = "phase4-v2"` and all 94 files in `dataset/evidence_files.csv` (extracting 2,912 structured `EvidenceObservation` records with 0 parse errors).
+   - Dedicated parsers handle SQLite snapshot dumps (`sql_parser.py` across `primary`, `eu_replica`, `us_replica`, `reporting_replica`, and `failover_replica`), structured JSON exports (`json_parser.py`), operational/sync/backup logs (`log_parser.py`), plain-text notes (`txt_parser.py`), PDF documents (`pdf_parser.py`), and PNG screenshots (`png_parser.py` backed by the committed offline transcription store `code/data/multimodal_transcriptions.json`).
+
+2. **Stage 2 — Seven-Module Core Audit Engine (`code/src/core/`):**
+   - **`IntentClassifier` (`intent_classifier.py`):** Deterministic multilingual classifier supporting 9+ languages (EN, ES, PT, FR, DE, JA, KO, AR, ZH) that distinguishes authorized deletion requests from access, export, correction, marketing opt-out, or account pause requests (`NOT_APPLICABLE` -> `steps_json=[]`).
+   - **`IdentityResolver` (`identity_resolver.py`):** Case-insensitive email/identifier normalization joining `dataset/user_identities.csv` and historical mutations in `dataset/user_audit_log.csv` (filtered to `changed_at <= audit_at`) to recover current and historical emails, names, phones, and SHA-256 email hashes.
+   - **`WorkflowResolver` (`workflow_resolver.py`):** Reconstructs active data flows (`SYNC_DELETION`, `SYNC_REPLICA`, `EXPORT_GENERATE`, `SEARCH_INDEX_SYNC`, `ANALYTICS_LOAD`) and backup/restore risks (`BACKUP_RESTORE`, `SNAPSHOT_CREATE`, `ARCHIVE_RETENTION`) from `system_activity.csv` and parsed evidence at `audit_at`.
+   - **`InventoryBuilder` (`inventory_builder.py`) & `StateReconstructor` (`state_reconstructor.py`):** Matches resources across all systems to the subject's `IdentityGraph`, enforces the `audit_at` cutoff, detects SQL replica drift (`eu_replica`, `us_replica`, `reporting_replica`, `failover_replica`), and reconciles workflow claims against concrete file/audit/activity evidence.
+   - **`RulesEngine` (`rules_engine.py`):** Applies `dataset/deletion_rules.csv` (`DELETE`, `REDACT`, `ANONYMIZE`, `RETAIN`, `ACCOUNT_TOMBSTONE`), verifying that tombstones retain only `user_id` while stripping `name`, `email`, `phone`, and `email_hash`, and that policy-retained records (`order_service`, `payment_service`, `security_service`) remain `PRESENT`.
+   - **`PlannerSorter` (`planner_sorter.py`):** Orders `FINDING`, `REMEDIATION` (`DISABLE_DATA_FLOW` and `BLOCK_RESTORE` before record mutations), and `VERIFICATION` steps by canonical phase, operation priority, `system_id`, and `resource_id` with consecutive `step_no` starting at `1`.
+
+### Evaluation & Evidence-Gap Summary
+
+Complete evaluation metrics, custom synthetic cases, and token/cost breakdowns are written to both [`code/evaluation/evaluation_report.md`](./code/evaluation/evaluation_report.md) and [`evaluation/evaluation_report.md`](./evaluation/evaluation_report.md) (and [`code/evaluation/usage_report.md`](./code/evaluation/usage_report.md) / [`evaluation/usage_report.md`](./evaluation/usage_report.md)):
+
+- **Full 518-Case Run (`dataset/deletion_requests.csv` -> `output.csv`):** 518 rows (`COMPLETE=157`, `INCOMPLETE=354`, `NOT_APPLICABLE=7`), 3,166 total steps, 1,139 grounded evidence citations, 0 future (`> audit_at`) citations, 18/18 automated sanity checks passed, 100% deterministic across independent runs, 0 runtime model calls.
+- **Public 32-Case Sample (`dataset/sample_deletion_requests.csv`):** **100.00% (`32/32`)** status accuracy, **93.75% (`30/32`)** exact sequence accuracy, **99.48%** step-set F1, **97.58%** overall field accuracy.
+- **Documented Sample Evidence Gap (`case_18` & `case_20`):** The only 2 sample sequence diffs are `case_18` (`audit_record_6645` at gold step 11) and `case_20` (`audit_record_5569` at gold step 7). Neither identifier exists anywhere in `dataset/` (`evidence_94` capped at `target_count=28` point-in-time queries). Per `AGENTS.md` §4.3 and §6.7, gold-only identifiers are never fabricated or hardcoded; see [`docs/findings/phase_07_sample_evidence_gap.md`](./docs/findings/phase_07_sample_evidence_gap.md) and `evaluation_report.md` §5 for the step-by-step comparison and root-cause analysis.
+- **Custom Synthetic Evaluation Cases:** **100.00% (`4/4`)** status & sequence accuracy on the 4 standalone custom synthetic cases (`case_synth_01`–`case_synth_04`) and **100.00% (`6/6`)** on the 6 synthetic regression fixtures (`syn_01`–`syn_06`).
+
+---
 
 ## Dataset
 

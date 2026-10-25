@@ -1,0 +1,142 @@
+{
+  "branch": "phase-07-p1-hardcode-cleanup",
+  "cache": {
+    "census_files": 94,
+    "errors": 0,
+    "files": 94,
+    "observations": 2912,
+    "parser_version": "phase4-v2",
+    "unsupported": 0
+  },
+  "checks": [
+    {
+      "detail": "",
+      "name": "request_count_518",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "row_count_518",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_request_load_errors",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_manifest_load_errors",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "schema_violations_zero",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "case_ids_exact",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "duplicate_case_ids_none",
+      "passed": true
+    },
+    {
+      "detail": "lexicographic",
+      "name": "sort_mode_valid",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "not_applicable_steps_empty",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "complete_steps_evidence_backed",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "citations_exist_in_manifest",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "citations_within_audit_at",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "deterministic_rerun",
+      "passed": true
+    },
+    {
+      "detail": "0",
+      "name": "zero_model_calls",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "cache_complete_94",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "cache_observations_2912",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "cache_errors_zero",
+      "passed": true
+    },
+    {
+      "detail": "{'INCOMPLETE': 354, 'COMPLETE': 157, 'NOT_APPLICABLE': 7}",
+      "name": "all_status_enums_expected",
+      "passed": true
+    }
+  ],
+  "citation_count": 1139,
+  "command": "code/evaluation/full_run.py",
+  "commit": "03b2278",
+  "deterministic": true,
+  "empty_step_cases": [],
+  "future_citations": [],
+  "generated_at": "2026-10-25T08:39:03+00:00",
+  "input": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\dataset\\deletion_requests.csv",
+  "max_steps": 19,
+  "min_steps": 0,
+  "missing_citations": [],
+  "model_calls": 0,
+  "output": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\output.csv",
+  "output_sha256": "f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542",
+  "request_count": 518,
+  "runtime_seconds": 3.0163025999991078,
+  "sample_metrics": {
+    "mismatches": [
+      "case_18",
+      "case_20"
+    ],
+    "overall_field_accuracy": 0.9758203799654577,
+    "positional_step_accuracy": 0.9689119170984456,
+    "sequence_accuracy": 0.9375,
+    "set_f1": 0.9947916666666666,
+    "status_accuracy": 1.0
+  },
+  "status_counts": {
+    "COMPLETE": 157,
+    "INCOMPLETE": 354,
+    "NOT_APPLICABLE": 7
+  },
+  "synthetic_metrics": {
+    "sequence_accuracy": 1.0,
+    "set_f1": 1.0,
+    "status_accuracy": 1.0
+  },
+  "total_steps": 3166,
+  "validation_violations": []
+}

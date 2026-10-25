@@ -113,13 +113,13 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 ## Phase 7: Full 518-Case Run & Packaging
 - [x] P7.0 Clean-run hardening (`code/src/loaders/cache_bootstrap.py`): offline auto-build/refresh of the evidence cache from the manifest and committed transcription store, loud failure on incomplete/unsafe parses, pipeline `--cache` / `--rebuild-cache`, clean-run tests (94 files / 2912 observations / 0 errors, 32/32 sample metrics, schema-valid 518-row smoke run)
 - [x] P7.0a P1 hardcode cleanup (`workflow_resolver.py`, `inventory_builder.py`, `state_reconstructor.py`, `pipeline.py`, `collection_rules.py`): all sample-specific literals removed; evidence-gap documented in `docs/findings/phase_07_sample_evidence_gap.md`; `PARSER_VERSION=phase4-v2`; sample result is 32/32 status, 30/32 sequence (only the two gold-only audit records in `case_18`/`case_20`); 237 tests green
-- [ ] Task 7.1 `code/main.py` → root `output.csv` (518 evaluation requests)
-- [ ] Task 7.2 Output sanity checks (518 rows, sorted, valid JSON, schema-compliant)
-- [ ] Task 7.3 `evaluation/evaluation_report.md` + `evaluation/usage_report.md`
-- [ ] Task 7.4 `code.zip` + `chat_transcript` verification; final `README.md`
+- [x] Task 7.1 Root `output.csv`: `code/evaluation/full_run.py` ran all 518 requests; deterministic rerun matched; output SHA-256 `f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542`
+- [x] Task 7.2 Output sanity checks: 18/18 passed, 0 schema violations, 1139 valid evidence citations, 0 future citations, statuses COMPLETE=157 / INCOMPLETE=354 / NOT_APPLICABLE=7
+- [x] Task 7.3 Reports: `evaluation/evaluation_report.md`, `evaluation/usage_report.md`, and `evaluation/sanity_checks.json` generated; sample 32/32 status and 30/32 sequence with documented `case_18`/`case_20` evidence gap; full run 0 model calls; Phase 4 setup 22 calls / 50,784 input / 7,702 output / $0.022480
+- [ ] Task 7.4 `code.zip` + `chat_transcript` verification; final `README.md` — intentionally skipped (no packaging)
 
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1 through Phase 6 complete, plus Phase 7 **P7.0 clean-run hardening** and **P7.0a P1 hardcode cleanup**, on branch `phase-07-p1-hardcode-cleanup`. All 237 tests passing; sample result is status 32/32, sequence 30/32 (documented evidence gap only); clean-cache bootstrap verified at 94 files / 2912 observations / 0 errors; `PARSER_VERSION=phase4-v2`; ruff and mypy clean.
-- **Next step:** Complete the remaining Phase 7 run: produce root `output.csv` for all 518 requests, run schema/sanity checks, generate `evaluation/evaluation_report.md`, `evaluation/usage_report.md`, and `evaluation/sanity_checks.json`; packaging remains intentionally out of scope.
+- **Current milestone:** Phase 1 through Phase 6 complete, plus Phase 7 **P7.0 clean-run hardening**, **P7.0a P1 hardcode cleanup**, and the **Full 518-Case Run & Reports** (excluding packaging), on branch `phase-07-p1-hardcode-cleanup`. All 237 tests passing; sample result is status 32/32, sequence 30/32 (documented evidence gap only); full run produced 518 schema-valid rows, 18/18 sanity checks, 0 future citations, and deterministic output; `PARSER_VERSION=phase4-v2`; ruff and mypy clean.
+- **Next step:** Review `output.csv` and the generated `evaluation/` reports. Packaging (`code.zip` / chat transcript) is intentionally out of scope per user request.

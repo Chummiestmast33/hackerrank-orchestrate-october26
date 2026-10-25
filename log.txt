@@ -599,3 +599,52 @@ branch=phase-07-p1-hardcode-cleanup
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+## [2026-10-25T01:58:55-06:00] Complete Phase 7 full 518-case run and reports
+
+User Prompt (verbatim, secrets redacted):
+ready, i already commit the pricing.json for you, execute the plan to complete the phase 7
+
+Agent Response Summary:
+Closed P1 with a documented sample evidence gap, parser-version invalidation, isolated clean-cache tests, and a green 237-test suite; committed the closeout as 03b2278. Added the Phase 7 execution plan and a full-run report/sanity tool, then generated root output.csv for all 518 requests. The run produced 518 schema-valid rows, deterministic identical reruns, 18/18 sanity checks, 1139 manifest-backed citations with zero future citations, and zero audit-time model calls. Regenerated evaluation/evaluation_report.md, evaluation/usage_report.md, and evaluation/sanity_checks.json; documented sample status 32/32, sequence 30/32 (only case_18/case_20 gold-only audit IDs), and Phase 4 setup cost 0.022480 USD from the committed pricing file.
+
+Actions:
+* Bumped PARSER_VERSION to phase4-v2 and rebuilt the evidence cache (94 files / 2912 observations / 0 errors)
+* Added docs/findings/phase_07_sample_evidence_gap.md
+* Updated sample and clean-run tests to the documented 30/32 evidence gap; added sample_expectations.py
+* Committed P1 closeout as 03b2278
+* Added docs/execution_plans/phase_07_full_518_run.md
+* Added code/evaluation/full_run.py
+* Generated output.csv (518 rows), evaluation/evaluation_report.md, evaluation/usage_report.md, evaluation/sanity_checks.json
+* Verified 237 tests, ruff, mypy, 18/18 sanity checks, deterministic output hash f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542
+* Updated PROGRESS.md and execution-plan status
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/deepseek-v4.1-flash-1017
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+## [2026-10-25T02:41:00-06:00] Verify repository, document case_18/case_20 evidence gap, and align README
+
+User Prompt (verbatim, secrets redacted):
+Verify is everything is fine, aswell check if you can manage the Evidence Gap Documentation: Detailed breakdown of case_18 (audit_record_6645) and case_20 (audit_record_5569). and check if everything acomplish of the README,md
+
+Agent Response Summary:
+Verified all Phase 7 repository checks (518-row output.csv, 18/18 sanity checks, 237/237 pytest suite, ruff, mypy, P1 hardcode removal, and clean-cache bootstrap). Audited all 24 sample audit_record_* IDs across CSVs, SQL snapshots, JSONs, logs, PDFs, and PNG transcriptions, confirming that audit_record_6645 (case_18) and audit_record_5569 (case_20) are absent from participant evidence due to the 28-query point-in-time cap in evidence_94. Enriched docs/findings/phase_07_sample_evidence_gap.md and code/evaluation/full_run.py with the complete step-by-step alignment tables and root-cause proof, mirrored reports to both evaluation/ and code/evaluation/, and updated README.md with complete setup, CLI, architecture, and evaluation documentation.
+
+Actions:
+* Audited dataset/, PDFs, and PNG transcriptions for audit_record_6645 and audit_record_5569
+* Updated docs/findings/phase_07_sample_evidence_gap.md with full step-by-step comparison and evidence_94 root cause
+* Updated code/evaluation/full_run.py to include the detailed breakdown and mirror reports to code/evaluation/
+* Updated README.md with setup, CLI commands, architecture overview, and evaluation/evidence-gap summary
+* Ran code/evaluation/full_run.py (18/18 checks pass, SHA-256 f466688b40f14731c4e9ad1f9e8e324b51d83fdbfaf6813ce40e813e7e70e542), pytest (237 passed), ruff (0 errors), and mypy (0 errors)
+
+Context:
+tool=Antigravity
+model=gemini-3.1-pro-preview
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
