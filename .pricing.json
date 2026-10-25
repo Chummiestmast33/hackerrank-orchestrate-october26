@@ -1,0 +1,10 @@
+{
+  "qwen/qwen3.7-max": {
+    "input_per_1m": 2.500000,
+    "output_per_1m": 7.500000
+  },
+  "qwen/qwen3-vl-plus": {
+    "input_per_1m": 0.200000,
+    "output_per_1m": 1.600000
+  }
+}
