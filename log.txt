@@ -365,3 +365,44 @@ branch=phase-04-multimodal-extraction
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+## [2026-10-24T18:52:04-06:00] Execute Phase 4 closeout P4.8-P4.12 (integration, extraction run, census, gates)
+
+User Prompt (verbatim, secrets redacted):
+excute the plan
+
+Agent Response Summary:
+Executing the approved P4.8-P4.12 plan on branch phase-04-multimodal-extraction: multimodal_parser wiring (PDF facts + PNG store/model path, validator, decode), cache/cli integration with PARSER_VERSION phase4-v1 and --extract-images/--transcription-store, one metered Qwen two-pass extraction run with manual review, census/golden regeneration (case_07 becomes a real match), gates plus a record-only mutation run on the four multimodal modules, and a single closeout commit.
+
+Actions:
+* Implementing loaders/multimodal_parser.py; updating cache.py/cli.py; tests
+* Running parse-all --extract-images (22 metered calls), reviewing transcriptions vs images
+* Regenerating corpus fixture/golden test; gates; mutation run; closeout docs/commit
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-04-multimodal-extraction
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+## [2026-10-24T19:42:08-06:00] Phase 4 closeout P4.8-P4.12 complete
+
+User Prompt (verbatim, secrets redacted):
+excute the plan
+
+Agent Response Summary:
+Completed P4.8-P4.12 on branch phase-04-multimodal-extraction. Integrated multimodal_parser into cache/cli with PARSER_VERSION phase4-v1, offline-strict defaults and --extract-images/--transcription-store. Diagnosed and corrected the vision endpoint (key valid on dashscope-intl, model qwen3-vl-plus), ran the metered two-pass extraction (22 calls, 50,784 input / 7,702 output tokens), reviewed all 11 transcriptions against the images, normalized placeholder glyphs and re-merged offline, and committed the 47 KB transcription store. Corpus now parses 94/94 files OK with 2912 observations and 71/71 golden citations (the former PDF exemption is a real match; 4 scope absences remain Phase 5). Gates green (205 tests, ruff/mypy); record-only cosmic-ray on the five multimodal modules: 681/956 killed raw 71.2%, 79.6% adjusted excluding 101 void BitOr annotation mutants. Docs/trackers updated; single P4.8-P4.12 commit created.
+
+Actions:
+* Updated .env base URL + vision model (non-secret settings); corrected prompts to p4-v2 schema; validator placeholder/file-name fixes
+* Built loaders/multimodal_parser.py; wired cache.py/cli.py; added tests (205 total)
+* Ran parse-all --extract-images (22 metered calls); manual review; offline rerun 94/94 hits, 0 calls
+* Regenerated corpus_census.json; updated golden test to 71 matches; cosmic-ray session cr_multimodal.sqlite; docs/PROGRESS/README; committed
+
+Context:
+tool=opencode
+model=qwencloud-token-plan-personal/qwen3.8-max
+branch=phase-04-multimodal-extraction
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

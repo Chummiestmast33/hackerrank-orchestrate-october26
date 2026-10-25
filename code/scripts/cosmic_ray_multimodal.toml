@@ -1,0 +1,25 @@
+# Mutation-testing config for the Phase 4 multimodal modules (P4.11).
+# Run from the REPOSITORY ROOT:
+#   cosmic-ray init code/scripts/cosmic_ray_multimodal.toml code/cache/cr_multimodal.sqlite
+#   cosmic-ray exec code/scripts/cosmic_ray_multimodal.toml code/cache/cr_multimodal.sqlite
+#   cr-report code/cache/cr_multimodal.sqlite
+[cosmic-ray]
+module-path = "code/src/loaders"
+timeout = 180.0
+excluded-modules = [
+    "code/src/loaders/__init__.py",
+    "code/src/loaders/cache.py",
+    "code/src/loaders/cli.py",
+    "code/src/loaders/collection_rules.py",
+    "code/src/loaders/common.py",
+    "code/src/loaders/csv_loader.py",
+    "code/src/loaders/json_txt_parser.py",
+    "code/src/loaders/log_parser.py",
+    "code/src/loaders/multimodal_parser.py",
+    "code/src/loaders/sql_parser.py",
+    "code/src/loaders/state_vocab.py",
+]
+test-command = ".venv/Scripts/python.exe -m pytest code/tests/test_pdf_extractor.py code/tests/test_multimodal_rules.py code/tests/test_transcription_validator.py code/tests/test_vlm_extractor.py code/tests/test_transcription_store.py code/tests/test_multimodal_parser.py -q -p no:cacheprovider"
+
+[cosmic-ray.distributor]
+name = "local"

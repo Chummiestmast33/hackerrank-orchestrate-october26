@@ -170,3 +170,57 @@ link them through order references or `user_*`, which this slice does not do.
   vision key). Offline behavior raises `TranscriptionUnavailable`; P4.8 will map
   that to `UNSUPPORTED_FORMAT(extraction_unavailable)` until P4.9 commits the
   transcription store.
+
+---
+
+## 6. P4.9 extraction run, manual review and P4.10 results
+
+**Run configuration.** Provider `qwen` via the OpenAI-compatible endpoint
+`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`, model `qwen3-vl-plus`
+for both passes (pass B = same model, reversed field-order prompt), prompt
+version `p4-v2` (schemas with explicit JSON types and nested keys), temperature
+0. The first attempt against the token-plan base URL was rejected (HTTP 401
+`InvalidApiKey`); after correcting the base URL and model ID the run succeeded.
+Failed-attempt artifacts (cache, usage log, store) were discarded.
+
+**Usage.** 22 calls (11 images × 2 passes), 50,784 input tokens, 7,702 output
+tokens, all recorded in `code/cache/usage_log.jsonl`. Store:
+`code/data/multimodal_transcriptions.json` (47 KB, both raw passes + merged
+facts, zero disagreements after placeholder normalization).
+
+**Manual review (each merged transcription compared field-by-field with the
+screenshot).**
+
+| file | verdict | notes |
+|---|---|---|
+| evidence_04 | exact | account/user/support ids, email, phone, orders, address |
+| evidence_09 | exact | both search rows incl. reference-less row; dash glyphs normalized to null in merge only |
+| evidence_14 | exact | data_flow_1121/9846 + selectors, modes, health label; two non-resource connector rows are not ids and are retained as facts only |
+| evidence_19 | exact | analytics_7438, user_20, metrics/attributes |
+| evidence_23 | exact | four export ids, statuses, owner emails (staff emails flagged `identifier_unverified` as designed) |
+| evidence_28 | exact | support_1034, ticket, order, messages |
+| evidence_32 | exact | four backup ids, account emails, retention |
+| evidence_37 | exact | six audit ids, subject user_03 |
+| evidence_42 | exact | links/facts; REDACTED (no direct identifiers visible); tombstone id resolved via LINK_4011 |
+| evidence_46 | exact | object list; intentionally facts-only (no resource ids) |
+| evidence_60 | minor omission | visible `Live` badge not transcribed (badges null); no state impact |
+
+One merge-rule adjustment was needed and is documented here: placeholder glyphs
+(`-`, `—`, `–`, `N/A`, `None`) normalize to null during agreement and are ignored
+as name identifiers. Raw passes remain untouched in the store.
+
+**Offline verification.** A subsequent run reads only the committed store:
+94/94 cache hits, **0 model calls**, 0 errors, 2912 observations.
+
+**P4.10 results.** Census: 94 files `OK` (79 structured + 4 PDF + 11 PNG),
+0 `UNSUPPORTED_FORMAT`, 0 errors; corpus fixture regenerated. Golden citation
+cross-check: **71/71 structured+multimodal citations match** (the former
+`case_07 → evidence_58` exemption is now a real match); the 4 scope-based
+absences remain Phase 5 work.
+
+**P4.11 mutation record (record-only).** cosmic-ray over the multimodal modules
+(`pdf_extractor`, `multimodal_rules`, `transcription_validator`, `vlm_extractor`,
+`transcription_store`): 956 mutants, **681 killed = 71.2% raw**; 101 survivors are
+void `|`-annotation `BitOr` mutants that never execute, giving **79.6% adjusted**.
+Session: `code/cache/cr_multimodal.sqlite` (gitignored). The src-wide mutation gate
+remains scheduled for Phase 6 per the earlier decision.

@@ -51,11 +51,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:account_console",
+    "observations": 2,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 2
+    },
+    "status": "OK"
   },
   "evidence_05": {
     "captured_collections": 0,
@@ -125,11 +127,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:search_inspector",
+    "observations": 2,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 2
+    },
+    "status": "OK"
   },
   "evidence_10": {
     "captured_collections": 0,
@@ -194,11 +198,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:connector_console",
+    "observations": 2,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 2
+    },
+    "status": "OK"
   },
   "evidence_15": {
     "captured_collections": 0,
@@ -251,21 +257,23 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.pdf",
+    "family": "pdf:customer_statement",
     "observations": 0,
     "scope": [],
     "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "status": "OK"
   },
   "evidence_19": {
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:analytics_profile",
+    "observations": 1,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 1
+    },
+    "status": "OK"
   },
   "evidence_20": {
     "captured_collections": 0,
@@ -322,11 +330,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:export_console",
+    "observations": 4,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 4
+    },
+    "status": "OK"
   },
   "evidence_24": {
     "captured_collections": 0,
@@ -379,21 +389,23 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.pdf",
+    "family": "pdf:retention_register",
     "observations": 0,
     "scope": [],
     "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "status": "OK"
   },
   "evidence_28": {
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:support_console",
+    "observations": 1,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 1
+    },
+    "status": "OK"
   },
   "evidence_29": {
     "captured_collections": 0,
@@ -448,11 +460,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:backup_console",
+    "observations": 4,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 4
+    },
+    "status": "OK"
   },
   "evidence_33": {
     "captured_collections": 0,
@@ -519,11 +533,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:sentinel_events",
+    "observations": 6,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 6
+    },
+    "status": "OK"
   },
   "evidence_38": {
     "captured_collections": 0,
@@ -585,11 +601,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:reference_registry",
+    "observations": 1,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "REDACTED": 1
+    },
+    "status": "OK"
   },
   "evidence_43": {
     "captured_collections": 0,
@@ -643,11 +661,11 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
+    "family": "png:object_storage",
     "observations": 0,
     "scope": [],
     "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "status": "OK"
   },
   "evidence_47": {
     "captured_collections": 0,
@@ -762,11 +780,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.pdf",
-    "observations": 0,
+    "family": "pdf:compliance_journal",
+    "observations": 1,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 1
+    },
+    "status": "OK"
   },
   "evidence_56": {
     "captured_collections": 0,
@@ -799,11 +819,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.pdf",
-    "observations": 0,
+    "family": "pdf:support_attachment",
+    "observations": 1,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 1
+    },
+    "status": "OK"
   },
   "evidence_59": {
     "captured_collections": 0,
@@ -821,11 +843,13 @@
     "captured_collections": 0,
     "direct_systems": [],
     "errors": 0,
-    "family": "binary:.png",
-    "observations": 0,
+    "family": "png:marketing_profile",
+    "observations": 1,
     "scope": [],
-    "states": {},
-    "status": "UNSUPPORTED_FORMAT"
+    "states": {
+      "PRESENT": 1
+    },
+    "status": "OK"
   },
   "evidence_61": {
     "captured_collections": 0,

@@ -11,7 +11,7 @@ from typing import Any
 
 from ..models import EvidenceObservation
 from .csv_loader import AuditLogRow, IdentityRow
-from .multimodal_rules import EMAIL_TOKEN, RESOURCE_TOKEN, USER_TOKEN
+from .multimodal_rules import EMAIL_TOKEN, USER_TOKEN
 from .vlm_extractor import FAMILY_FIELDS, LIST_FIELDS, MAP_FIELDS
 
 PHONE_TOKEN = re.compile(r"\+\d[\d\s()-]{7,}\d")
@@ -130,16 +130,9 @@ def validate_transcription(
             token = user.group(0)
             if token.lower() not in known_identifiers:
                 flags.add(f"identifier_unverified:{token}")
-        for resource in RESOURCE_TOKEN.finditer(stripped):
-            token = resource.group(0)
-            if not RESOURCE_FULL.match(token):
-                report.errors.append(f"invalid_resource_token:{token}")
-        for candidate in RESOURCE_LIKE.finditer(stripped):
-            token = candidate.group(0)
-            if token.startswith("user_"):
-                continue
-            if not RESOURCE_FULL.match(token):
-                report.errors.append(f"invalid_resource_prefix:{token}")
+        if RESOURCE_LIKE.fullmatch(stripped) and not stripped.startswith("user_"):
+            if not RESOURCE_FULL.match(stripped):
+                report.errors.append(f"invalid_resource_prefix:{stripped}")
 
     report.flags = sorted(flags)
     report.errors = sorted(set(report.errors))

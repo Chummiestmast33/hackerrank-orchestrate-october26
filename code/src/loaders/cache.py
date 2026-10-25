@@ -15,17 +15,19 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from ..evaluation.metering import Meter
 from ..models import EvidenceObservation, ParseReport, ParseStatus
 from . import PARSER_VERSION
 from .common import file_sha256
-from .csv_loader import EvidenceFileRow
+from .csv_loader import ActivityRow, EvidenceFileRow
 from .json_txt_parser import parse_json_txt_file
 from .log_parser import parse_log_file
+from .multimodal_parser import parse_multimodal_file
 from .sql_parser import parse_sql_file
+from .vlm_extractor import VisionConfig
 
 CACHE_SCHEMA = 1
 SUPPORTED_SUFFIXES = {".sql", ".json", ".txt", ".log"}
-BINARY_SUFFIXES = {".pdf", ".png"}
 
 
 @dataclass
@@ -130,7 +132,15 @@ def write_cache(
 
 
 def _parse_file(
-    row: EvidenceFileRow, dataset_dir: Path
+    row: EvidenceFileRow,
+    dataset_dir: Path,
+    *,
+    allow_model_calls: bool = False,
+    vision_config: VisionConfig | None = None,
+    meter: Meter | None = None,
+    transcription_store_path: Path | None = None,
+    activity: Sequence[ActivityRow] = (),
+    known_identifiers: frozenset[str] | set[str] = frozenset(),
 ) -> tuple[list[EvidenceObservation], ParseReport]:
     path = dataset_dir / row.file_path
     suffix = path.suffix.lower()
@@ -140,24 +150,18 @@ def _parse_file(
         return parse_json_txt_file(row.file_id, path, row.captured_at)
     if suffix == ".log":
         return parse_log_file(row.file_id, path, row.captured_at)
-    if suffix in BINARY_SUFFIXES:
-        report = ParseReport(
-            file_id=row.file_id,
-            family=f"binary:{suffix}",
-            captured_at=row.captured_at,
-            sha256=file_sha256(path),
-            status=ParseStatus.UNSUPPORTED_FORMAT,
-        )
-        return [], report
-    report = ParseReport(
-        file_id=row.file_id,
-        family="binary:unknown",
-        captured_at=row.captured_at,
-        sha256=file_sha256(path),
-        status=ParseStatus.UNSUPPORTED_FORMAT,
-        errors=[f"unsupported_suffix:{suffix or '<none>'}"],
+    return parse_multimodal_file(
+        row.file_id,
+        path,
+        row.captured_at,
+        origin=row.origin,
+        allow_model_calls=allow_model_calls,
+        vision_config=vision_config,
+        meter=meter,
+        store_path=transcription_store_path,
+        activity=activity,
+        known_identifiers=known_identifiers,
     )
-    return [], report
 
 
 def parse_all(
@@ -167,6 +171,12 @@ def parse_all(
     cache_path: Path | None,
     force: bool = False,
     persist: bool = True,
+    allow_model_calls: bool = False,
+    vision_config: VisionConfig | None = None,
+    meter: Meter | None = None,
+    transcription_store_path: Path | None = None,
+    activity: Sequence[ActivityRow] = (),
+    known_identifiers: frozenset[str] | set[str] = frozenset(),
 ) -> ParseAllResult:
     cached: dict[str, CacheEntry] = {}
     if cache_path is not None and not force:
@@ -187,7 +197,16 @@ def parse_all(
             stats.hits += 1
         else:
             try:
-                observations, report = _parse_file(row, dataset_dir)
+                observations, report = _parse_file(
+                    row,
+                    dataset_dir,
+                    allow_model_calls=allow_model_calls,
+                    vision_config=vision_config,
+                    meter=meter,
+                    transcription_store_path=transcription_store_path,
+                    activity=activity,
+                    known_identifiers=known_identifiers,
+                )
             except Exception as exc:  # noqa: BLE001 - a bad file must not abort the batch
                 report = ParseReport(
                     file_id=row.file_id,

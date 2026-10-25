@@ -60,7 +60,7 @@ def usage_entries(tmp_path: Path) -> list[dict]:
 
 
 def test_prompt_version_and_prompt_files() -> None:
-    assert vlm_extractor.PROMPT_VERSION == "p4-v1"
+    assert vlm_extractor.PROMPT_VERSION == "p4-v2"
     for family, fields in vlm_extractor.FAMILY_FIELDS.items():
         prompt_path = vlm_extractor.PROMPTS_DIR / f"vlm_{family}.md"
         assert prompt_path.exists(), family

@@ -112,6 +112,18 @@ def test_invalid_resource_prefix_is_an_error() -> None:
     assert any(error.startswith("invalid_resource_prefix:banana_12") for error in report.errors)
 
 
+def test_file_names_are_not_resource_prefix_errors() -> None:
+    report = validate_transcription(
+        "export_console",
+        full_fields(
+            "export_console",
+            jobs=[{"resource_id": "export_1", "file_name": "customer_export_1258.zip"}],
+        ),
+        known(),
+    )
+    assert not any(error.startswith("invalid_resource_prefix:") for error in report.errors)
+
+
 def test_unknown_family_is_an_error() -> None:
     report = validate_transcription("mystery", {"x": 1}, known())
     assert "unknown_family:mystery" in report.errors

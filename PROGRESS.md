@@ -59,7 +59,7 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P3.12 Closeout — trackers updated, mutation byproducts purged, gates green, single Phase 3 commit on the branch
 - [x] Corpus results: 79 structured files `OK` + 15 binary placeholders, 0 errors, 0 UNKNOWN, 2886 observation records, 70/70 structured golden citations matching
 
-## Phase 4: One-Time Multimodal Extraction (4 PDFs + 11 PNGs) — ⏳ In progress (branch `phase-04-multimodal-extraction`, plan `docs/execution_plans/phase_04_multimodal_extraction.md`)
+## Phase 4: One-Time Multimodal Extraction (4 PDFs + 11 PNGs) — ✅ Complete (branch `phase-04-multimodal-extraction`)
 - [x] P4.0 Visual inventory + DB relations → `docs/findings/phase_04_multimodal_notes.md` (11 PNG families, 4 PDFs, per-family `ExtractedRecord` schemas, verified cache/LINK relations incl. 2 conflicts + 1 drift; metadata-only policy)
 - [x] P4.1 Additive model changes (`Provenance.DOCUMENT_TEXT`/`VISION_TRANSCRIPTION`, frozen `ExtractedRecord`, `ParseReport.extracted_records` with `phase3-v1` cache back-compat) + `test_models.py`
 - [x] P4.2 `pdf_extractor.py` (pypdf → pdfplumber fallback, split-time rejoin, label stripping, header-only family detection) + real-PDF tests (4/4)
@@ -68,11 +68,11 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P4.5 Two-pass agreement (second model via `QWEN_VISION_MODEL_PASS_B`, reversed-order fallback) + `transcription_store.py` (sha256+version+models keyed, both passes + merged) + tests
 - [x] P4.6 `transcription_validator.py` (schema/format errors, identity cross-check flags, no drops) + tests
 - [x] P4.7 PNG decode tables (explicit status vocabulary, presence+PII, health labels ⇒ UNKNOWN, LINK-resolved registry, sentinel existence; no real calls) + tests
-- [ ] P4.8 `multimodal_parser.py` + cache/CLI integration (`--extract-images`, `--offline`)
-- [ ] P4.9 One-time extraction run + manual review + committed transcription store
-- [ ] P4.10 Tests (PDF, rules, VLM fake client, validator, census update, `case_07` golden match)
-- [ ] P4.11 Quality gates + cosmic-ray on new modules (recorded)
-- [ ] P4.12 `docs/findings/phase_04_multimodal_notes.md` + closeout
+- [x] P4.8 `multimodal_parser.py` + cache/CLI integration (`--extract-images` opt-in, offline-strict default, `--transcription-store`, `PARSER_VERSION → phase4-v1`, census multimodal summary)
+- [x] P4.9 Extraction run: 11 images × 2 passes = 22 calls / 50,784 in / 7,702 out tokens (`qwen3-vl-plus`, dashscope-intl); manual review passed (one `Live` badge omission recorded); store committed (47 KB); offline rerun 94/94 hits, 0 calls
+- [x] P4.10 Tests/census: 94 files OK, 0 errors, 2912 observations; corpus fixture regenerated; golden cross-check 71 matched + 4 scope-deferred; double offline parse byte-identical
+- [x] P4.11 Quality gates green (205 tests); cosmic-ray record run on the 5 multimodal modules: 681/956 killed = 71.2% raw, 79.6% adjusted (101 void BitOr-annotation mutants excluded); session `code/cache/cr_multimodal.sqlite`
+- [x] P4.12 Notes §6 (review, usage, mutation record) + tracker closeout + single P4.8–P4.12 commit
 
 ## Phase 5: Core Audit Engine
 - [ ] Task 5.1 `intent_classifier.py` (CLASSIFY_REQUEST events + batched LLM, injection-safe, cached)
@@ -94,5 +94,5 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 slices P4.0–P4.7 complete** on branch `phase-04-multimodal-extraction` (visual/DB-relations notes, `ExtractedRecord` model with cache back-compat, deterministic PDF extraction/decoding, VLM client with two-pass agreement + transcription store, validator, PNG decode tables; 190 tests green; 15 binary placeholders intentionally remain until P4.8/P4.9).
-- **Next step:** P4.8–P4.12 (cache/CLI integration with `multimodal_parser.py`, one-time extraction run with credentials, census/golden updates, gates, closeout).
+- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 complete** on branch `phase-04-multimodal-extraction` (all 94 evidence files parse: 79 structured + 4 PDF + 11 PNG; committed transcription store; 205 tests green; golden citations 71/71; multimodal mutation 71.2% raw / 79.6% adjusted).
+- **Next step:** Phase 5 (identity resolver, inventory builder, state reconstruction, rules engine and planner), consuming the Phase 3/4 observation index.

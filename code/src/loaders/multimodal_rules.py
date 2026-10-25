@@ -237,6 +237,7 @@ STATUS_TOKENS: dict[str, ObservationState] = {
 STATUS_KEY_HINTS = ("status", "mode", "state", "restore", "opt_in", "badge", "integrity")
 PHONE_TOKEN = re.compile(r"\+\d[\d\s()-]{7,}\d")
 NAME_KEYS = ("name", "customer_name", "display_name", "requester_name")
+PLACEHOLDER_VALUES = {"-", "--", "\u2014", "\u2013", "n/a", "na", "none", "null"}
 
 
 @dataclass
@@ -281,7 +282,7 @@ def _pii_from(mapping: Mapping[str, Any]) -> tuple[str, ...]:
     for key, value in mapping.items():
         if isinstance(value, str):
             if any(part == key.lower() or part in key.lower() for part in NAME_KEYS):
-                if value.strip():
+                if value.strip() and value.strip().casefold() not in PLACEHOLDER_VALUES:
                     found.append(value.strip())
             found.extend(match.group(0) for match in EMAIL_TOKEN.finditer(value))
             found.extend(match.group(0) for match in PHONE_TOKEN.finditer(value))
