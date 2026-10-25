@@ -37,6 +37,16 @@ Run the starter Python entry point with:
 python3 code/main.py
 ```
 
+The first run automatically builds `code/cache/parsed_evidence.json` from `dataset/evidence_files.csv` using the committed offline transcription store `code/data/multimodal_transcriptions.json`. No API key or network access is required. The cache is gitignored and excluded from `code.zip`; it is rebuilt automatically on a clean checkout.
+
+Useful options:
+
+```bash
+python3 code/main.py --sample
+python3 code/main.py --rebuild-cache
+python3 code/main.py --cache /tmp/parsed_evidence.json
+```
+
 The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.
 
 
@@ -143,7 +153,8 @@ Compress-Archive -Path README.md, code -DestinationPath code.zip -Force
 When packaging `code.zip`:
 
 - Keep your evaluation reports in `code/evaluation/` so they are bundled automatically with `code` (or add `evaluation` to the archive command above if you placed them in a top-level `evaluation/` directory).
-- Do **not** include `dataset/`, virtual environments (`.venv`, `venv`, `node_modules`), or build caches (`__pycache__`). On Windows, keep `.venv` at the repository root (outside `code/`) and remove any `code/__pycache__` folders before running `Compress-Archive`.
+- Do **not** include `dataset/`, virtual environments (`.venv`, `venv`, `node_modules`), or build caches (`__pycache__`, `code/cache`). On Windows, keep `.venv` at the repository root (outside `code/`) and remove any `code/__pycache__` folders and `code/cache` before running `Compress-Archive`.
+- Do include the committed offline transcription store at `code/data/multimodal_transcriptions.json`; it is required to decode PNG evidence without model calls.
 - Do **not** include nested archives (`.zip`, `.tar`, `.gz`, `.tgz`, `.7z`, `.rar`) inside `code.zip` — submissions containing nested archive files will be rejected.
 
 Before submitting, confirm that:

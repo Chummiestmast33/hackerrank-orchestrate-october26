@@ -22,6 +22,7 @@ from ..evaluation.evaluator import (
 )
 from ..evaluation.schema import OutputRow, validate_file
 from ..loaders.cache import read_cache
+from ..loaders.cache_bootstrap import CacheBuildError, ensure_evidence_cache
 from ..loaders.csv_loader import (
     DeletionRequestRow,
     load_activity,
@@ -50,27 +51,34 @@ class Pipeline:
         dataset_dir: Path | None = None,
         cache_path: Path | None = None,
         code_dir: Path | None = None,
+        transcription_store_path: Path | None = None,
+        rebuild_cache: bool = False,
     ) -> None:
         self.code_dir = code_dir or Path(__file__).resolve().parent.parent.parent
         self.repo_root = self.code_dir.parent
         self.dataset_dir = dataset_dir or (self.repo_root / "dataset")
         self.cache_path = cache_path or (self.code_dir / "cache" / "parsed_evidence.json")
+        self.transcription_store_path = transcription_store_path or (
+            self.code_dir / "data" / "multimodal_transcriptions.json"
+        )
 
         # Ingest dataset files
-        self.identities, _ = load_identities(
-            self.dataset_dir / "user_identities.csv"
-        )
-        self.audit_log, _ = load_audit_log(
-            self.dataset_dir / "user_audit_log.csv"
-        )
-        self.activity_events, _ = load_activity(
-            self.dataset_dir / "system_activity.csv"
-        )
-        self.rules, _ = load_rules(
-            self.dataset_dir / "deletion_rules.csv"
-        )
-        self.manifest, _ = load_evidence_manifest(
-            self.dataset_dir / "evidence_files.csv"
+        self.identities, _ = load_identities(self.dataset_dir / "user_identities.csv")
+        self.audit_log, _ = load_audit_log(self.dataset_dir / "user_audit_log.csv")
+        self.activity_events, _ = load_activity(self.dataset_dir / "system_activity.csv")
+        self.rules, _ = load_rules(self.dataset_dir / "deletion_rules.csv")
+        self.manifest, _ = load_evidence_manifest(self.dataset_dir / "evidence_files.csv")
+
+        # Build the evidence cache when it is missing, stale, or incomplete.
+        self.cache_result = ensure_evidence_cache(
+            dataset_dir=self.dataset_dir,
+            cache_path=self.cache_path,
+            manifest=self.manifest,
+            activity=self.activity_events,
+            identities=self.identities,
+            audit_log=self.audit_log,
+            transcription_store_path=self.transcription_store_path,
+            force=rebuild_cache,
         )
 
         # Ingest parsed evidence cache
@@ -96,6 +104,8 @@ class Pipeline:
     def _load_evidence_cache(self) -> None:
         """Load parsed observations and build log trace maps."""
         entries, _warnings = read_cache(self.cache_path)
+        if not entries:
+            raise CacheBuildError(f"evidence cache is empty or unreadable: {self.cache_path}")
 
         for file_id, entry in entries.items():
             if entry.report is not None:
@@ -137,7 +147,7 @@ class Pipeline:
                         s_idx = line.find("{")
                         e_idx = line.rfind("}")
                         try:
-                            obj = json.loads(line[s_idx:e_idx + 1])
+                            obj = json.loads(line[s_idx : e_idx + 1])
                             tid = tid or obj.get("trace_id")
                             rid = rid or obj.get("resource_id")
                             sub = (
@@ -158,11 +168,20 @@ class Pipeline:
                         self.trace_resources.setdefault(tid, set()).add(str(rid).strip('"'))
 
         # Add support tickets customer_reference from service_resource_export (evidence_92)
-        ev92_path = self.dataset_dir / "evidence" / "records" / "service_resource_export_20260915_114455.json"
+        ev92_path = (
+            self.dataset_dir
+            / "evidence"
+            / "records"
+            / "service_resource_export_20260915_114455.json"
+        )
         if ev92_path.exists():
             try:
                 ev92_data = json.loads(ev92_path.read_text(encoding="utf-8", errors="ignore"))
-                tickets = ev92_data.get("service_exports", {}).get("support_platform", {}).get("tickets", [])
+                tickets = (
+                    ev92_data.get("service_exports", {})
+                    .get("support_platform", {})
+                    .get("tickets", [])
+                )
                 for t in tickets:
                     c_ref = t.get("customer_reference")
                     r_id = t.get("resource_id")
@@ -226,7 +245,9 @@ class Pipeline:
             # Validate against contract schema
             validation = validate_file(output_path, expected_case_ids=[r.case_id for r in requests])
             if not validation.ok:
-                raise ValueError(f"Generated output.csv violates contract schema: {validation.violations}")
+                raise ValueError(
+                    f"Generated output.csv violates contract schema: {validation.violations}"
+                )
 
         return rows
 
@@ -249,6 +270,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
         type=Path,
         default=None,
         help="Path to output CSV destination (defaults to root output.csv).",
+    )
+    parser.add_argument(
+        "--cache",
+        type=Path,
+        default=None,
+        help="Evidence cache path (defaults to code/cache/parsed_evidence.json).",
+    )
+    parser.add_argument(
+        "--rebuild-cache",
+        action="store_true",
+        help="Ignore the existing evidence cache and parse every evidence file again.",
     )
     parser.add_argument(
         "--sample",
@@ -306,7 +338,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"    Input Path:  {input_path}")
     print(f"    Output Path: {output_path}")
 
-    pipeline = Pipeline(dataset_dir=dataset_dir)
+    pipeline = Pipeline(
+        dataset_dir=dataset_dir,
+        cache_path=args.cache,
+        rebuild_cache=args.rebuild_cache,
+    )
+    stats = pipeline.cache_result.stats
+    print(
+        f"[+] Evidence cache ready: files={stats.files} "
+        f"observations={stats.observations} hits={stats.hits} misses={stats.misses}"
+    )
     print(f"[*] Running audit for {input_path.name}...")
     pipeline.run(input_path, output_path)
     print(f"[+] Output written to {output_path}")

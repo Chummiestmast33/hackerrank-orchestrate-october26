@@ -111,6 +111,7 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] Task P6.5 Technical Findings Documentation & Evaluation Report Preparation (`docs/findings/phase_06_sample_convergence_notes.md` & `evaluation/evaluation_report.md` updated per AGENTS.md §6.8)
 
 ## Phase 7: Full 518-Case Run & Packaging
+- [x] P7.0 Clean-run hardening (`code/src/loaders/cache_bootstrap.py`): offline auto-build/refresh of the evidence cache from the manifest and committed transcription store, loud failure on incomplete/unsafe parses, pipeline `--cache` / `--rebuild-cache`, clean-run tests (94 files / 2912 observations / 0 errors, 32/32 sample metrics, schema-valid 518-row smoke run)
 - [ ] Task 7.1 `code/main.py` → root `output.csv` (518 evaluation requests)
 - [ ] Task 7.2 Output sanity checks (518 rows, sorted, valid JSON, schema-compliant)
 - [ ] Task 7.3 `evaluation/evaluation_report.md` + `evaluation/usage_report.md`
@@ -119,5 +120,5 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and **Phase 6 complete** on branch `phase-06-sample-convergence`. All 224 tests passing, 100.0% convergence achieved on all 32 sample cases (status=1.0000, sequence=1.0000, positional=1.0000, F1=1.0000), 4 custom synthetic cases passing with 100% accuracy, ruff and mypy 100% clean.
-- **Next step:** Phase 7: Run full 518-case audit against `dataset/deletion_requests.csv`, produce root `output.csv`, generate final `evaluation/usage_report.md`, package `code.zip`, and verify submission requirements per AGENTS.md.
+- **Current milestone:** Phase 1 through Phase 6 complete, plus Phase 7 **P7.0 clean-run hardening**, on branch `phase-06-sample-convergence`. All 234 tests passing, 100.0% sample convergence preserved (status=1.0000, sequence=1.0000, positional=1.0000, F1=1.0000), clean-cache bootstrap verified at 94 files / 2912 observations / 0 errors, and a fresh 518-case run is schema-valid. Ruff and mypy 100% clean.
+- **Next step:** Remove the P1 sample-specific shortcuts (case/email/account/date/evidence hardcoding), then complete Phase 7: produce root `output.csv`, regenerate `evaluation/` reports, package `code.zip`, and verify submission requirements per AGENTS.md.

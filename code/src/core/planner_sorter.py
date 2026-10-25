@@ -79,6 +79,8 @@ class PlannerSorter:
         if deletion_status == "COMPLETE":
             # Verification steps only, citing proving evidence_id
             for state in states:
+                if not state.evidence_id:
+                    continue
                 verif_op, target_st = _target_verification(state.system_id, state.data_category)
                 raw_steps.append({
                     "phase": "VERIFICATION",
