@@ -740,3 +740,51 @@ branch=phase-07-p1-hardcode-cleanup
 repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-25T04:08:45-06:00] Execute codebase cleanup, docstring corrections, and structure polish
+
+User Prompt (verbatim, secrets redacted):
+/plan make a plan to clean the code, correct Docs comments, erase unessesary files, check if .git covers the necessary, the folder structure and the names.
+
+Agent Response Summary:
+Executed the approved cleanup and polish plan: purged ~31.1 MB of stale Cosmic-Ray SQLite mutation files and scratch outputs from code/cache/; deleted 16 dead Phase 1 exploration scripts, outputs, and configs from code/scripts/ (retaining solely verify_clean_run.py); preserved code/cache/usage_log.jsonl in tracked code/data/usage_log.jsonl with config.py fallbacks; eliminated all Phase 2 TODO comments from code/evaluation/main.py; updated docstrings in models.py, intent_classifier.py (6 -> 7 languages), loaders/__init__.py, loaders/cache.py, test_synthetic_cases.py, and PROGRESS.md; hardened .gitignore with !.env.example and *.sqlite; and verified clean runs (verify_clean_run.py 10/10 PASS, full_run.py 18/18 PASS, 237 pytest tests passing, ruff 0 errors, mypy 0 issues).
+
+Actions:
+* Deleted code/cache/cr_*.sqlite and scratch outputs
+* Copied code/cache/usage_log.jsonl to code/data/usage_log.jsonl
+* Deleted code/scripts/out/ (8 files) and code/scripts/explore_*.py, _paths.py, cosmic_ray*.toml
+* Updated code/src/config.py with fallback to code/data/usage_log.jsonl and default pricing loading
+* Cleaned code/evaluation/main.py (removed 3 TODOs, added completed synthetic cases and evidence gap summary)
+* Corrected docstrings in code/src/models.py, intent_classifier.py, loaders/__init__.py, loaders/cache.py, test_synthetic_cases.py, and PROGRESS.md
+* Hardened .gitignore and pyproject.toml
+* Verified verify_clean_run.py (PASS), full_run.py (18/18 PASS), pytest (237/237 PASS), ruff (0 errors), mypy (0 issues)
+
+Context:
+tool=Antigravity
+model=gemini-3.8-flash
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+## [2026-10-25T04:19:30-06:00] Clean .env.example and remove unused environment variables
+
+User Prompt (verbatim, secrets redacted):
+Make a cleanup of the .env example, just including the Keys what we are gonna by using, and erase the unused Env
+
+Agent Response Summary:
+Cleaned .env.example and local .env to only include actively used configuration keys for QwenCloud / DashScope (DASHSCOPE_API_KEY, QWEN_BASE_URL, QWEN_VISION_MODEL, QWEN_VISION_MODEL_PASS_B, and DELETION_AUDIT_PRICING_JSON). Erased all unused provider placeholders (Gemini, OpenAI, Anthropic) and dead caching/logging options (USE_CACHE, CACHE_DIR, LOG_LEVEL, VISION_MODEL_PROVIDER). Verified that git status tracks only .env.example while .env remains ignored, and confirmed all 237 pytest tests, ruff, and mypy pass with zero errors.
+
+Actions:
+* Rewrote .env.example with only the active QwenCloud / DashScope and pricing configuration keys
+* Cleaned local .env to match .env.example while preserving user's DASHSCOPE_API_KEY and DELETION_AUDIT_PRICING_JSON
+* Verified git status (only .env.example tracked; .env safely ignored)
+* Ran pytest (237 passed), ruff (0 errors), and mypy (0 issues across 63 files)
+
+Context:
+tool=Antigravity
+model=gemini-3.8-flash
+branch=phase-07-p1-hardcode-cleanup
+repo_root=C:\Users\corte\Downloads\hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

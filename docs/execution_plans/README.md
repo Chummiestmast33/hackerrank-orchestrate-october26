@@ -11,7 +11,7 @@ Each file covers one or more Plan.md phases. Progress is tracked in [PROGRESS.md
 | [phase_05_core_audit_engine.md](phase_05_core_audit_engine.md) | Phase 5 (Core Audit Engine: Identity, Inventory, State, Rules, Planner) | Complete on branch `phase-05-core-engine` (core engine green, 217 tests passing) |
 | [phase_06_sample_validation_convergence.md](phase_06_sample_validation_convergence.md) | Phase 6 (Sample Validation & 100% Convergence) | Complete on branch `phase-06-sample-convergence` (32/32 status; sample evidence gap documented in P1) |
 | [phase_07_p1_hardcode_cleanup.md](phase_07_p1_hardcode_cleanup.md) | P1 hardcode cleanup | Complete on branch `phase-07-p1-hardcode-cleanup` (generic workflow resolver; 32/32 status, 30/32 sequence; gap documented) |
-| [phase_07_full_518_run.md](phase_07_full_518_run.md) | Phase 7 (Full 518-Case Run & Reports) | Complete except packaging: 518 schema-valid rows, 18/18 sanity checks, reports generated |
+| [phase_07_full_518_run.md](phase_07_full_518_run.md) | Phase 7 (Full 518-Case Run & Reports) | Complete on branch `phase-07-p1-hardcode-cleanup` (518 schema-valid rows, 18/18 sanity checks, dual-path reports generated) |
 
 ## Conventions
 

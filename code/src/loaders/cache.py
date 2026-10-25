@@ -263,7 +263,7 @@ def build_census(entries: dict[str, CacheEntry]) -> dict[str, dict[str, Any]]:
 def load_evidence_index(
     cache_path: Path,
 ) -> tuple[dict[str, tuple[list[EvidenceObservation], ParseReport]], list[str]]:
-    """Phase 5 API: read the on-disk cache into observation/report pairs."""
+    """Read the on-disk evidence cache into observation/report pairs."""
     entries, warnings = read_cache(cache_path)
     index = {
         file_id: (entry.observations, entry.report)

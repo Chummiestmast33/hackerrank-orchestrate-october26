@@ -1,7 +1,8 @@
-"""Synthetic evaluation cases (P2.11): schema + self-consistency checks.
+"""Synthetic evaluation cases and self-consistency tests (AGENTS.md section 6.8).
 
-Grounded in docs/findings/phase_01_ground_truth.md; engine inputs are wired in
-Phase 6. Here we only pin the expected gold rows.
+Covers:
+1. Grounded regression fixtures (syn_01..06 in tests/fixtures/synthetic/).
+2. Participant-created core engine synthetic cases (case_synth_01..04 in src/evaluation/synthetic_cases.py).
 """
 
 from __future__ import annotations

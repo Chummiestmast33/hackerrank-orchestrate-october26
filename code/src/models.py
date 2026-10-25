@@ -1,9 +1,10 @@
-"""Typed evidence observations shared by every Phase 3 parser.
+"""Core domain models and typed evidence observations (AGENTS.md section 6).
 
-No state is ever inferred here: an observation either carries a state decoded
-from an explicit field or the explicit ``UNKNOWN`` state with a reason. File or
-record failures are represented by ``ParseStatus.PARSE_ERROR``; families owned by
-Phase 4 (PDF/PNG) are ``UNSUPPORTED_FORMAT``.
+Covers:
+1. Stage 1 Evidence Ingestion: ObservationState, ParseStatus, Provenance,
+   EvidenceObservation, ExtractedRecord, CapturedCollection, ParseReport.
+2. Stage 2 Audit Engine: IdentityGraph, IntentVerdict, ResourceItem,
+   ReconstructedResourceState, PolicyViolation, AuditStep, CaseAuditResult.
 """
 
 from dataclasses import dataclass, field
@@ -323,13 +324,13 @@ class AuditStep:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            'step_no': self.step_no,
-            'phase': self.phase,
-            'system_id': self.system_id,
-            'resource_id': self.resource_id,
-            'operation': self.operation,
-            'state': self.state,
-            'evidence_id': self.evidence_id,
+            "step_no": self.step_no,
+            "phase": self.phase,
+            "system_id": self.system_id,
+            "resource_id": self.resource_id,
+            "operation": self.operation,
+            "state": self.state,
+            "evidence_id": self.evidence_id,
         }
 
 

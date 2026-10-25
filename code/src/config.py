@@ -19,10 +19,13 @@ REPO_ROOT = CODE_DIR.parent
 DATASET_DIR = REPO_ROOT / "dataset"
 EVIDENCE_DIR = DATASET_DIR / "evidence"
 CACHE_DIR = CODE_DIR / "cache"
+DATA_DIR = CODE_DIR / "data"
 
 SAMPLE_REQUESTS_CSV = DATASET_DIR / "sample_deletion_requests.csv"
 SAMPLE_OUTPUT_CSV = DATASET_DIR / "sample_output.csv"
 EVAL_REQUESTS_CSV = DATASET_DIR / "deletion_requests.csv"
+DEFAULT_PRICING_PATH = REPO_ROOT / ".pricing.json"
+COMMITTED_USAGE_LOG_PATH = DATA_DIR / "usage_log.jsonl"
 
 DEFAULT_REQUEST_COUNT = 518
 
@@ -42,9 +45,14 @@ _load_dotenv()
 EVALUATION_DIR = Path(os.environ.get("DELETION_AUDIT_REPORT_DIR", str(REPO_ROOT / "evaluation")))
 EVALUATION_REPORT_PATH = EVALUATION_DIR / "evaluation_report.md"
 USAGE_REPORT_PATH = EVALUATION_DIR / "usage_report.md"
-USAGE_LOG_PATH = Path(
-    os.environ.get("DELETION_AUDIT_USAGE_LOG", str(CACHE_DIR / "usage_log.jsonl"))
-)
+
+_env_usage_log = os.environ.get("DELETION_AUDIT_USAGE_LOG")
+if _env_usage_log:
+    USAGE_LOG_PATH = Path(_env_usage_log)
+elif (CACHE_DIR / "usage_log.jsonl").exists():
+    USAGE_LOG_PATH = CACHE_DIR / "usage_log.jsonl"
+else:
+    USAGE_LOG_PATH = COMMITTED_USAGE_LOG_PATH
 
 
 @dataclass(frozen=True)
@@ -66,6 +74,8 @@ def load_pricing(path: str | Path | None = None) -> dict[str, ModelPricing]:
     """
     pricing = dict(PRICING)
     override = path or os.environ.get("DELETION_AUDIT_PRICING_JSON")
+    if not override and DEFAULT_PRICING_PATH.exists():
+        override = DEFAULT_PRICING_PATH
     if override:
         data = json.loads(Path(override).read_text(encoding="utf-8"))
         for key, value in data.items():

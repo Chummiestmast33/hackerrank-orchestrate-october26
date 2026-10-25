@@ -39,7 +39,7 @@ warn_unused_configs = true
 disallow_untyped_defs = false
 ignore_missing_imports = true
 explicit_package_bases = true
-mypy_path = ["code", "code/scripts"]
+mypy_path = ["code"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"

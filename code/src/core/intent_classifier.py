@@ -5,7 +5,7 @@ non-deletion request (access, correction, export, marketing opt-out, account rec
 or adversarial prompt-injection), in which case the request is ``NOT_APPLICABLE``.
 
 Features:
-1. Fast-path deterministic regex rules for 6 languages (en, fr, pt, es, ja, ko)
+1. Fast-path deterministic regex rules for 7 languages (en, fr, pt, es, de, ja, ko)
    and explicit negation detection.
 2. Intake activity check against ``CLASSIFY_REQUEST`` events in ``system_activity.csv``.
 3. Prompt-injection isolation and rejection.
@@ -215,7 +215,7 @@ class IntentClassifier:
                 reason="request is for login or account recovery help",
             )
 
-        # 4. Affirmative deletion patterns in any of the 6 languages
+        # 4. Affirmative deletion patterns in any of the 7 languages
         for lang, pattern in _DELETION_PATTERNS.items():
             if pattern.search(cleaned):
                 return IntentVerdict(
