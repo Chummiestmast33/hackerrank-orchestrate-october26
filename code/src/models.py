@@ -252,3 +252,90 @@ def make_observation(
         state_inputs=tuple(sorted((state_inputs or {}).items())),
         pii_exposed=pii_exposed,
     )
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 Core Audit Engine Dataclasses
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class IdentityGraph:
+    user_id: str
+    canonical_email: str
+    all_emails: frozenset[str]
+    all_phones: frozenset[str]
+    all_names: frozenset[str]
+    all_email_hashes: frozenset[str]
+    audit_at: str
+
+
+@dataclass(frozen=True)
+class IntentVerdict:
+    is_deletion: bool
+    category: str
+    confidence: float
+    reason: str
+
+
+@dataclass(frozen=True)
+class ResourceItem:
+    system_id: str
+    resource_id: str
+    data_category: str
+    discovery_source: str
+    is_primary_account: bool = False
+
+
+@dataclass(frozen=True)
+class ReconstructedResourceState:
+    resource_id: str
+    system_id: str
+    data_category: str
+    observed_state: ObservationState
+    pii_exposed: bool
+    evidence_id: str
+    provenance: Provenance
+    observed_at: str | None = None
+
+
+@dataclass(frozen=True)
+class PolicyViolation:
+    resource_id: str
+    system_id: str
+    data_category: str
+    finding_operation: str
+    remediation_operation: str
+    verification_operation: str
+    target_state: str
+    evidence_id: str
+
+
+@dataclass(frozen=True)
+class AuditStep:
+    step_no: int
+    phase: str
+    system_id: str
+    resource_id: str
+    operation: str
+    state: str
+    evidence_id: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            'step_no': self.step_no,
+            'phase': self.phase,
+            'system_id': self.system_id,
+            'resource_id': self.resource_id,
+            'operation': self.operation,
+            'state': self.state,
+            'evidence_id': self.evidence_id,
+        }
+
+
+@dataclass(frozen=True)
+class CaseAuditResult:
+    case_id: str
+    deletion_status: str
+    steps: tuple[AuditStep, ...]
+    steps_json: str

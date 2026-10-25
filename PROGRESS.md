@@ -3,7 +3,10 @@
 Shared memory and status tracking for the Deletion Audit Agent. Phase numbers match [Plan.md](Plan.md) §4 exactly (Phase 0 = environment setup, added before Plan.md Phase 1).
 
 **Detailed execution plans:** [docs/execution_plans/](docs/execution_plans/README.md)
-- Phase 1 & 2 → [phase_01_02_inspection_and_eval_harness.md](docs/execution_plans/phase_01_02_inspection_and_eval_harness.md) (Planned)
+- Phase 1 & 2 → [phase_01_02_inspection_and_eval_harness.md](docs/execution_plans/phase_01_02_inspection_and_eval_harness.md) (Complete)
+- Phase 3 → [phase_03_deterministic_parsers.md](docs/execution_plans/phase_03_deterministic_parsers.md) (Complete)
+- Phase 4 → [phase_04_multimodal_extraction.md](docs/execution_plans/phase_04_multimodal_extraction.md) (Complete)
+- Phase 5 → [phase_05_core_audit_engine.md](docs/execution_plans/phase_05_core_audit_engine.md) (Planned)
 
 ---
 
@@ -74,11 +77,20 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P4.11 Quality gates green (205 tests); cosmic-ray record run on the 5 multimodal modules: 681/956 killed = 71.2% raw, 79.6% adjusted (101 void BitOr-annotation mutants excluded); session `code/cache/cr_multimodal.sqlite`
 - [x] P4.12 Notes §6 (review, usage, mutation record) + tracker closeout + single P4.8–P4.12 commit
 
-## Phase 5: Core Audit Engine
-- [ ] Task 5.1 `intent_classifier.py` (CLASSIFY_REQUEST events + batched LLM, injection-safe, cached)
-- [ ] Task 5.2 `identity_resolver.py`
-- [ ] Task 5.3 `inventory_builder.py` + `state_reconstructor.py`
-- [ ] Task 5.4 `rules_engine.py` + `planner_sorter.py`
+## Phase 5: Core Audit Engine — ⏳ In Progress (branch `phase-05-core-engine`, plan `docs/execution_plans/phase_05_core_audit_engine.md`)
+- [x] P5.0 Branch & models extension (`models.py`: `IdentityGraph`, `IntentVerdict`, `ResourceItem`, `ReconstructedResourceState`, `PolicyViolation`, `AuditStep`, `CaseAuditResult`)
+- [x] P5.1 `intent_classifier.py` (`CLASSIFY_REQUEST` intake lookup, multilingual fast-path regex rules in 6 languages, prompt injection rejection, negation handling, disk cache)
+- [x] P5.2 `identity_resolver.py` (case-insensitive normalization, audit log traversal for email mutations, phone normalization, historical SHA-256 hash derivation)
+- [x] P5.3 `inventory_builder.py` (direct identifier matching in parsed evidence, activity stream linkage, workflow-window account correlation, tombstone and retention linkages)
+- [x] P5.4 `state_reconstructor.py` (strict `<= audit_at` temporal filtering, claims rejection, recreation detection, latest observation selection, scoped implicit absence proofs)
+- [x] P5.5 `rules_engine.py` (`deletion_rules.csv` mapping, category target states, violation detection, tombstone & retention handling, `COMPLETE` vs `INCOMPLETE` decision)
+- [x] P5.6 `planner_sorter.py` (`FINDING`/`REMEDIATION`/`VERIFICATION` generation, citation rules, canonical 4-key sort, consecutive `step_no`, JSON serialization)
+- [ ] P5.7 `pipeline.py` (end-to-end single-case and dataset batch orchestrator, CSV output generator)
+- [x] P5.8 Unit test suites for core components (`code/tests/test_core_engine.py`: 12 comprehensive unit tests, 217 total suite tests passing)
+- [ ] P5.9 Sample validation vs `sample_output.csv` (32 cases, 100% status accuracy, schema validation 0 violations)
+- [ ] P5.10 Quality gates (`ruff` passing, `mypy` passing with 60 files clean, `pytest` 217 green)
+- [ ] P5.11 Technical notes & findings doc `docs/findings/phase_05_core_engine_notes.md`
+- [ ] P5.12 Tracker closeout & commit on `phase-05-core-engine`
 
 ## Phase 6: Sample Validation & Convergence
 - [ ] Task 6.1 Run pipeline on 32 sample cases + evaluator
@@ -95,4 +107,4 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 
 ## Current Status & Next Steps
 - **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 complete** on branch `phase-04-multimodal-extraction` (all 94 evidence files parse: 79 structured + 4 PDF + 11 PNG; committed transcription store; 205 tests green; golden citations 71/71; multimodal mutation 71.2% raw / 79.6% adjusted).
-- **Next step:** Phase 5 (identity resolver, inventory builder, state reconstruction, rules engine and planner), consuming the Phase 3/4 observation index.
+- **Next step:** Phase 5 on branch `phase-05-core-engine` (derived from `phase-04-multimodal-extraction`), executing `docs/execution_plans/phase_05_core_audit_engine.md` (P5.0–P5.12).
