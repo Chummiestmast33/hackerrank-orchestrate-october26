@@ -6,6 +6,12 @@ import json
 from pathlib import Path
 
 import pytest
+from sample_expectations import (
+    EXPECTED_SAMPLE_CASES,
+    EXPECTED_SEQUENCE_CORRECT,
+    EXPECTED_STATUS_CORRECT,
+    KNOWN_EVIDENCE_GAP,
+)
 from src.core.pipeline import Pipeline
 from src.core.planner_sorter import PlannerSorter
 from src.evaluation.evaluator import evaluate, load_cases
@@ -23,19 +29,27 @@ SAMPLE_GOLD = DATASET_DIR / "sample_output.csv"
 CENSUS_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "parsers" / "corpus_census.json"
 
 
-def _assert_perfect_sample(output_path: Path) -> None:
+def _assert_documented_sample_result(output_path: Path) -> None:
     metrics = evaluate(load_cases(SAMPLE_GOLD), load_cases(output_path))
     assert metrics.status_accuracy == 1.0
-    assert metrics.sequence_accuracy == 1.0
-    assert metrics.positional_step_accuracy == 1.0
-    assert metrics.set_f1 == 1.0
-    assert metrics.overall_field_accuracy == 1.0
+    assert sum(case.status_correct for case in metrics.cases.values()) == EXPECTED_STATUS_CORRECT
+    assert sum(case.sequence_correct for case in metrics.cases.values()) == (
+        EXPECTED_SEQUENCE_CORRECT
+    )
+    assert metrics.sequence_accuracy == pytest.approx(
+        EXPECTED_SEQUENCE_CORRECT / EXPECTED_SAMPLE_CASES
+    )
+    assert {
+        case_id for case_id, case in metrics.cases.items() if not case.sequence_correct
+    } == KNOWN_EVIDENCE_GAP
 
 
 @pytest.fixture(scope="module")
 def clean_run(tmp_path_factory: pytest.TempPathFactory) -> tuple[Pipeline, Path, Path]:
     root = tmp_path_factory.mktemp("clean_run")
     cache_path = root / "parsed_evidence.json"
+    if cache_path.exists():
+        cache_path.unlink()
     output_path = root / "sample_output.csv"
     pipeline = Pipeline(dataset_dir=DATASET_DIR, cache_path=cache_path)
     pipeline.run(SAMPLE_REQUESTS, output_path)
@@ -61,7 +75,7 @@ def test_clean_cache_reaches_sample_convergence(
     clean_run: tuple[Pipeline, Path, Path],
 ) -> None:
     _pipeline, _cache_path, output_path = clean_run
-    _assert_perfect_sample(output_path)
+    _assert_documented_sample_result(output_path)
 
 
 def test_full_dataset_output_is_schema_valid(

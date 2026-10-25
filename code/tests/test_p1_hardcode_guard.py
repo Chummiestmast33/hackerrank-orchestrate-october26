@@ -7,6 +7,7 @@ import json
 import re
 from pathlib import Path
 
+from sample_expectations import KNOWN_EVIDENCE_GAP
 from src.core.pipeline import Pipeline
 from src.evaluation.evaluator import load_cases
 
@@ -62,7 +63,10 @@ def test_core_does_not_read_sample_gold() -> None:
 
 
 def test_case_renaming_does_not_change_audit_output(tmp_path: Path) -> None:
-    pipeline = Pipeline(dataset_dir=DATASET_DIR)
+    pipeline = Pipeline(
+        dataset_dir=DATASET_DIR,
+        cache_path=tmp_path / "parsed_evidence.json",
+    )
     baseline_path = tmp_path / "baseline.csv"
     pipeline.run(SAMPLE_REQUESTS, baseline_path)
 
@@ -93,6 +97,6 @@ def test_case_renaming_does_not_change_audit_output(tmp_path: Path) -> None:
     gold = load_cases(SAMPLE_GOLD)
     assert set(gold) == set(baseline)
     for case_id, output in gold.items():
-        if case_id in {"case_18", "case_20"}:
+        if case_id in KNOWN_EVIDENCE_GAP:
             continue
         assert baseline[case_id] == output

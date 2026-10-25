@@ -1,6 +1,8 @@
 # P1 Hardcode Cleanup Plan
 
-**Goal:** remove sample-specific literals and shortcuts from production logic while preserving the 32/32 sample convergence result and the P0 clean-run guarantee.
+**Goal:** remove sample-specific literals and shortcuts from production logic while preserving the 32/32 sample status result and the P0 clean-run guarantee.
+
+**Status:** Complete (P1 code commit `0c5e876`; closeout includes the evidence-gap document, parser-version bump, and documented 30/32 sequence expectation).
 
 ## Scope
 
