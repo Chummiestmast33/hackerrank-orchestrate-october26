@@ -132,3 +132,41 @@ link them through order references or `user_*`, which this slice does not do.
   state in this phase.
 - No instructions or prompt-like text were found inside any image; if future
   images contain such text, it is treated as data.
+---
+
+## 5. P4.4–P4.7 implementation decisions
+
+- **Two-pass models.** Pass A uses `QWEN_VISION_MODEL` (or `VISION_MODEL`); pass B
+  uses `QWEN_VISION_MODEL_PASS_B` (or `VISION_MODEL_PASS_B`) with the same
+  provider/base URL/API key. If the pass-B key is unset, pass B falls back to the
+  pass-A model with the reversed-field-order prompt (deterministic, documented).
+- **Prompts.** `PROMPT_VERSION = p4-v1`; 11 files `code/prompts/vlm_<family>.md`
+  with transcription-only wording, null-when-not-visible, and the image-as-data
+  isolation line. `build_prompt` appends the exact field order per pass; a test
+  asserts every schema field appears in its prompt file.
+- **Transcription store.** `code/data/multimodal_transcriptions.json`, keyed
+  `p4-v1|<model_a>|<model_b>|<sha256>`, holding both raw passes, the merged facts,
+  disagreements and review flags; atomic deterministic writes. The committed
+  store is produced in P4.9; until then the pipeline is offline-unavailable.
+- **Metering.** `metering.metered_call` alias added; every VLM call records
+  provider/model/purpose/tokens in `code/cache/usage_log.jsonl`.
+- **Validator.** Schema violations (missing, unexpected, wrong container type) are
+  errors; malformed emails/phones or invalid resource prefixes are errors;
+  identifier values not present in identities/audit-log/Phase-3 identifiers are
+  kept and flagged `identifier_unverified` (internal staff emails are expected to
+  be flagged).
+- **PNG decode precedence** (per resource row): explicit status token >
+  registry forced state > existence (sentinel rows) > direct-PII presence >
+  unmapped label → `UNKNOWN(unmapped_console_status:...)` > no fields →
+  `UNKNOWN(no_state_fields)`. Health/throughput labels are stored in
+  `state_inputs.console_status` and never mapped. `pii_exposed` counts only direct
+  PII (email/phone/name), never `user_*` references or resource ids.
+- **Registry (evidence_42).** The `tombstone_*` resource is resolved through the
+  `LINK_RESOURCE_IDENTITY` row mentioning the shown subject; no LINK row ⇒
+  `unresolved_subject_reference` diagnostic and facts only (no guessed resource).
+- **Account console support rows** inherit the page's visible direct PII under
+  rule (a); recorded here because the support record has no separate PII panel.
+- **No real model calls** were executed in this slice (local `.env` has no Qwen
+  vision key). Offline behavior raises `TranscriptionUnavailable`; P4.8 will map
+  that to `UNSUPPORTED_FORMAT(extraction_unavailable)` until P4.9 commits the
+  transcription store.

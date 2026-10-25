@@ -7,7 +7,7 @@ Each file covers one or more Plan.md phases. Progress is tracked in [PROGRESS.md
 |---|---|---|
 | [phase_01_02_inspection_and_eval_harness.md](phase_01_02_inspection_and_eval_harness.md) | Phase 1 (Deep Inspection & Ground-Truth Alignment), Phase 2 (Evaluation & Metering Harness) | Complete (mutation score recorded in PROGRESS.md) |
 | [phase_03_deterministic_parsers.md](phase_03_deterministic_parsers.md) | Phase 3 (Deterministic Evidence Parsers, Structured Files) | Complete on branch `phase-03-evidence-parsers` (src-wide mutation gate deferred to Phase 6) |
-| [phase_04_multimodal_extraction.md](phase_04_multimodal_extraction.md) | Phase 4 (One-Time Multimodal Extraction, 4 PDFs + 11 PNGs) | In progress — P4.0–P4.3 slice complete on branch `phase-04-multimodal-extraction` |
+| [phase_04_multimodal_extraction.md](phase_04_multimodal_extraction.md) | Phase 4 (One-Time Multimodal Extraction, 4 PDFs + 11 PNGs) | In progress — P4.0–P4.7 slices complete on branch `phase-04-multimodal-extraction` (P4.8–P4.12 pending) |
 
 ## Conventions
 

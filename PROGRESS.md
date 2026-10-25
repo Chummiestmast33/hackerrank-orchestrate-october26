@@ -64,10 +64,10 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 - [x] P4.1 Additive model changes (`Provenance.DOCUMENT_TEXT`/`VISION_TRANSCRIPTION`, frozen `ExtractedRecord`, `ParseReport.extracted_records` with `phase3-v1` cache back-compat) + `test_models.py`
 - [x] P4.2 `pdf_extractor.py` (pypdf → pdfplumber fallback, split-time rejoin, label stripping, header-only family detection) + real-PDF tests (4/4)
 - [x] P4.3 PDF decode tables + relations helper (`support_001` PRESENT+PII, `audit_record_003` PRESENT+retention, `evidence_18`/`27` facts only, diagnostics for missing fields, `relate_to_structured`) + tests
-- [ ] P4.4 `vlm_extractor.py` (QwenCloud VL via openai SDK, transcription-only prompts, metered)
-- [ ] P4.5 Two-pass agreement (disagreement ⇒ `UNKNOWN`)
-- [ ] P4.6 `transcription_validator.py` (regex + identity cross-check, flag not drop)
-- [ ] P4.7 PNG decode tables (health labels ⇒ `UNKNOWN` unless evidence-backed decision)
+- [x] P4.4 `vlm_extractor.py` (QwenCloud VL via openai SDK, transcription-only prompts, metered) + `metered_call` alias + pass-B env keys + 11 prompt files (p4-v1)
+- [x] P4.5 Two-pass agreement (second model via `QWEN_VISION_MODEL_PASS_B`, reversed-order fallback) + `transcription_store.py` (sha256+version+models keyed, both passes + merged) + tests
+- [x] P4.6 `transcription_validator.py` (schema/format errors, identity cross-check flags, no drops) + tests
+- [x] P4.7 PNG decode tables (explicit status vocabulary, presence+PII, health labels ⇒ UNKNOWN, LINK-resolved registry, sentinel existence; no real calls) + tests
 - [ ] P4.8 `multimodal_parser.py` + cache/CLI integration (`--extract-images`, `--offline`)
 - [ ] P4.9 One-time extraction run + manual review + committed transcription store
 - [ ] P4.10 Tests (PDF, rules, VLM fake client, validator, census update, `case_07` golden match)
@@ -94,5 +94,5 @@ Shared memory and status tracking for the Deletion Audit Agent. Phase numbers ma
 ---
 
 ## Current Status & Next Steps
-- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 slice P4.0–P4.3 complete** on branch `phase-04-multimodal-extraction` (visual/DB-relations notes, `ExtractedRecord` model with cache back-compat, deterministic PDF extractor for all 4 PDFs, PDF decode tables + relations helper; 155 tests green; 15 binary placeholders intentionally remain until P4.8).
-- **Next step:** P4.4–P4.7 (VLM client + two-pass agreement + transcription validator + PNG decode tables), then P4.8–P4.12 integration/extraction/gates/closeout.
+- **Current milestone:** Phase 1 + Phase 2 complete on `main`; **Phase 3 complete** on branch `phase-03-evidence-parsers`. **Phase 4 slices P4.0–P4.7 complete** on branch `phase-04-multimodal-extraction` (visual/DB-relations notes, `ExtractedRecord` model with cache back-compat, deterministic PDF extraction/decoding, VLM client with two-pass agreement + transcription store, validator, PNG decode tables; 190 tests green; 15 binary placeholders intentionally remain until P4.8/P4.9).
+- **Next step:** P4.8–P4.12 (cache/CLI integration with `multimodal_parser.py`, one-time extraction run with credentials, census/golden updates, gates, closeout).

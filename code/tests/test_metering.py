@@ -192,3 +192,15 @@ def test_report_contains_no_secret_like_values(
     summary = metering.summarize(log_path=log, request_count=518, pricing={})
     path = metering.render_usage_report(summary, tmp_path / "usage_report.md")
     assert "super-secret-value" not in path.read_text(encoding="utf-8")
+
+
+def test_metered_call_alias_records_usage(tmp_path: Path) -> None:
+    log = tmp_path / "usage_log.jsonl"
+    meter = metering.Meter(log_path=log, run_id="run-alias")
+    with metering.metered_call(meter, "qwen", "qwen-vl-plus", "vlm:test") as handle:
+        handle.capture(openai_response())
+    entry = json.loads(log.read_text(encoding="utf-8").strip())
+    assert entry["provider"] == "qwen"
+    assert entry["model"] == "qwen-vl-plus"
+    assert entry["purpose"] == "vlm:test"
+    assert entry["input_tokens"] == 200

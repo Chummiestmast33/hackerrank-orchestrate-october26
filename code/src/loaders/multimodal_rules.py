@@ -202,3 +202,410 @@ def relate_to_structured(
             )
         )
     return relations
+
+
+# --------------------------------------------------------------------------- #
+# PNG decode tables (P4.7)
+# --------------------------------------------------------------------------- #
+
+PNG_FAMILY_TARGETS: dict[str, tuple[str, str]] = {
+    "account_console": ("account_service", "USER_PROFILE"),
+    "search_inspector": ("search_service", "SEARCH_INDEX_ENTRY"),
+    "connector_console": ("integration_service", "DATA_FLOW"),
+    "analytics_profile": ("analytics_platform", "ANALYTICS_PROFILE"),
+    "export_console": ("export_service", "USER_EXPORT"),
+    "support_console": ("support_platform", "SUPPORT_MESSAGE"),
+    "backup_console": ("backup_service", "BACKUP_ARCHIVE"),
+    "marketing_profile": ("marketing_platform", "MARKETING_PROFILE"),
+    "sentinel_events": ("security_service", "SECURITY_AUDIT_LOG"),
+    "reference_registry": ("identity_service", "ACCOUNT_TOMBSTONE"),
+}
+
+STATUS_TOKENS: dict[str, ObservationState] = {
+    "disabled": ObservationState.DISABLED,
+    "blocked": ObservationState.BLOCKED,
+    "restore blocked": ObservationState.BLOCKED,
+    "anonymized": ObservationState.ANONYMIZED,
+    "de-identified": ObservationState.ANONYMIZED,
+    "redacted": ObservationState.REDACTED,
+    "deleted": ObservationState.ABSENT,
+    "not found": ObservationState.ABSENT,
+    "removed": ObservationState.ABSENT,
+    "enabled": ObservationState.ACTIVE,
+}
+
+STATUS_KEY_HINTS = ("status", "mode", "state", "restore", "opt_in", "badge", "integrity")
+PHONE_TOKEN = re.compile(r"\+\d[\d\s()-]{7,}\d")
+NAME_KEYS = ("name", "customer_name", "display_name", "requester_name")
+
+
+@dataclass
+class _Candidate:
+    resource_id: str
+    identifiers: tuple[str, ...] = ()
+    status_labels: tuple[str, ...] = ()
+    category: str | None = None
+    existence_present: bool = False
+    forced_state: ObservationState | None = None
+
+
+def _strings(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, Mapping):
+        found: list[str] = []
+        for item in value.values():
+            found.extend(_strings(item))
+        return found
+    if isinstance(value, (list, tuple)):
+        found = []
+        for item in value:
+            found.extend(_strings(item))
+        return found
+    return []
+
+
+def _labels_from(mapping: Mapping[str, Any]) -> tuple[str, ...]:
+    labels: list[str] = []
+    for key, value in mapping.items():
+        lowered = str(key).lower()
+        if "order" in lowered:
+            continue
+        if any(hint in lowered for hint in STATUS_KEY_HINTS):
+            labels.extend(text for text in _strings(value) if text)
+    return tuple(labels)
+
+
+def _pii_from(mapping: Mapping[str, Any]) -> tuple[str, ...]:
+    found: list[str] = []
+    for key, value in mapping.items():
+        if isinstance(value, str):
+            if any(part == key.lower() or part in key.lower() for part in NAME_KEYS):
+                if value.strip():
+                    found.append(value.strip())
+            found.extend(match.group(0) for match in EMAIL_TOKEN.finditer(value))
+            found.extend(match.group(0) for match in PHONE_TOKEN.finditer(value))
+        else:
+            for text in _strings(value):
+                found.extend(match.group(0) for match in EMAIL_TOKEN.finditer(text))
+                found.extend(match.group(0) for match in PHONE_TOKEN.finditer(text))
+    return tuple(dict.fromkeys(found))
+
+
+def _row_resource(row: Mapping[str, Any]) -> str | None:
+    for key in (
+        "resource_id",
+        "account_id",
+        "analytics_id",
+        "marketing_id",
+        "audit_id",
+        "support_id",
+        "_id",
+        "id",
+    ):
+        value = row.get(key)
+        if isinstance(value, str) and RESOURCE_TOKEN.fullmatch(value):
+            return value
+    return None
+
+
+def _png_candidates(
+    family: str,
+    fields: Mapping[str, Any],
+    activity: Sequence[ActivityRow],
+) -> tuple[list[_Candidate], list[str]]:
+    candidates: list[_Candidate] = []
+    diagnostics: list[str] = []
+    if family == "account_console":
+        account = fields.get("account_id")
+        if isinstance(account, str) and RESOURCE_TOKEN.fullmatch(account):
+            candidates.append(
+                _Candidate(
+                    resource_id=account,
+                    identifiers=_pii_from(
+                        {
+                            "name": fields.get("name"),
+                            "email": fields.get("email"),
+                            "phone": fields.get("phone"),
+                        }
+                    ),
+                    status_labels=_labels_from(fields),
+                )
+            )
+        support = fields.get("support_ref")
+        if isinstance(support, Mapping):
+            support_id = support.get("support_id") or support.get("resource_id")
+            if isinstance(support_id, str) and RESOURCE_TOKEN.fullmatch(support_id):
+                candidates.append(
+                    _Candidate(
+                        resource_id=support_id,
+                        identifiers=_pii_from(
+                            {
+                                "name": fields.get("name"),
+                                "email": fields.get("email"),
+                                "phone": fields.get("phone"),
+                            }
+                        ),
+                        category="SUPPORT_MESSAGE",
+                    )
+                )
+    elif family == "search_inspector":
+        for row in fields.get("results") or []:
+            if not isinstance(row, Mapping):
+                continue
+            resource = _row_resource(row)
+            if resource is None:
+                continue
+            candidates.append(_Candidate(resource_id=resource, identifiers=_pii_from(row)))
+    elif family == "connector_console":
+        for row in fields.get("connectors") or []:
+            if not isinstance(row, Mapping):
+                continue
+            resource = _row_resource(row)
+            if resource is None:
+                continue
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=_pii_from(row),
+                    status_labels=_labels_from(row),
+                )
+            )
+        detail = fields.get("detail")
+        if isinstance(detail, Mapping):
+            resource = _row_resource(detail)
+            if resource is not None:
+                candidates.append(
+                    _Candidate(
+                        resource_id=resource,
+                        identifiers=_pii_from(detail),
+                        status_labels=_labels_from(detail),
+                    )
+                )
+    elif family == "analytics_profile":
+        resource = fields.get("analytics_id")
+        if isinstance(resource, str) and RESOURCE_TOKEN.fullmatch(resource):
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=_pii_from(
+                        {
+                            "name": fields.get("name"),
+                            "email": fields.get("email"),
+                        }
+                    ),
+                    status_labels=_labels_from(fields),
+                )
+            )
+    elif family == "export_console":
+        for row in fields.get("jobs") or []:
+            if not isinstance(row, Mapping):
+                continue
+            resource = _row_resource(row)
+            if resource is None:
+                continue
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=_pii_from(row),
+                    status_labels=_labels_from(row),
+                )
+            )
+    elif family == "support_console":
+        resource = fields.get("resource_id")
+        if isinstance(resource, str) and RESOURCE_TOKEN.fullmatch(resource):
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=_pii_from(
+                        {
+                            "name": fields.get("customer_name"),
+                            "email": fields.get("email"),
+                        }
+                    ),
+                    status_labels=_labels_from(fields),
+                )
+            )
+    elif family == "backup_console":
+        for row in fields.get("archives") or []:
+            if not isinstance(row, Mapping):
+                continue
+            resource = _row_resource(row)
+            if resource is None:
+                continue
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=_pii_from(row),
+                    status_labels=_labels_from(row),
+                )
+            )
+        detail = fields.get("detail")
+        if isinstance(detail, Mapping):
+            resource = _row_resource(detail)
+            if resource is not None:
+                candidates.append(
+                    _Candidate(
+                        resource_id=resource,
+                        identifiers=_pii_from(detail),
+                        status_labels=_labels_from(detail),
+                    )
+                )
+    elif family == "marketing_profile":
+        resource = fields.get("marketing_id")
+        if isinstance(resource, str) and RESOURCE_TOKEN.fullmatch(resource):
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=_pii_from(
+                        {
+                            "name": fields.get("name"),
+                            "email": fields.get("email"),
+                            "phone": fields.get("phone"),
+                        }
+                    ),
+                    status_labels=_labels_from(fields),
+                )
+            )
+    elif family == "sentinel_events":
+        for row in fields.get("events") or []:
+            if not isinstance(row, Mapping):
+                continue
+            resource = _row_resource(row)
+            if resource is None:
+                continue
+            candidates.append(
+                _Candidate(
+                    resource_id=resource,
+                    identifiers=tuple(text for text in _strings(row.get("subject")) if text),
+                    status_labels=_labels_from(row),
+                    existence_present=True,
+                )
+            )
+    elif family == "reference_registry":
+        subject = fields.get("subject_reference")
+        identifiers = _pii_from(fields)
+        if isinstance(subject, str) and subject.strip():
+            tombstone: str | None = None
+            for row in activity:
+                if row.event_type != "LINK_RESOURCE_IDENTITY":
+                    continue
+                if subject not in row.details:
+                    continue
+                tokens = RESOURCE_TOKEN.findall(row.details)
+                tombstone = next(
+                    (token for token in tokens if token.startswith("tombstone_")), None
+                )
+                if tombstone:
+                    break
+            if tombstone is None:
+                diagnostics.append("unresolved_subject_reference")
+            else:
+                candidates.append(
+                    _Candidate(
+                        resource_id=tombstone,
+                        identifiers=identifiers,
+                        forced_state=ObservationState.PRESENT
+                        if identifiers
+                        else ObservationState.REDACTED,
+                    )
+                )
+        else:
+            diagnostics.append("missing_field:subject_reference")
+    elif family == "object_storage":
+        diagnostics.append("no_resource_id_in_document")
+    else:
+        diagnostics.append(f"unknown_png_family:{family}")
+    return candidates, diagnostics
+
+
+def _merge_candidate(existing: _Candidate, incoming: _Candidate) -> _Candidate:
+    return _Candidate(
+        resource_id=existing.resource_id,
+        identifiers=tuple(dict.fromkeys(existing.identifiers + incoming.identifiers)),
+        status_labels=tuple(dict.fromkeys(existing.status_labels + incoming.status_labels)),
+        category=existing.category or incoming.category,
+        existence_present=existing.existence_present or incoming.existence_present,
+        forced_state=existing.forced_state or incoming.forced_state,
+    )
+
+
+def _has_direct_pii(identifiers: Sequence[str]) -> bool:
+    for value in identifiers:
+        if "@" in value or PHONE_TOKEN.fullmatch(value):
+            return True
+        if USER_TOKEN.fullmatch(value) or RESOURCE_TOKEN.fullmatch(value):
+            continue
+        if value.strip():
+            return True
+    return False
+
+
+def decode_png_records(
+    family: str,
+    fields: Mapping[str, Any],
+    *,
+    file_id: str,
+    captured_at: str,
+    activity: Sequence[ActivityRow] = (),
+) -> tuple[list[EvidenceObservation], list[str]]:
+    """Decode a PNG transcription via explicit tables; never guess a state."""
+    candidates, diagnostics = _png_candidates(family, fields, activity)
+    if family not in PNG_FAMILY_TARGETS:
+        return [], diagnostics
+    system_id, default_category = PNG_FAMILY_TARGETS[family]
+    merged: dict[str, _Candidate] = {}
+    for candidate in candidates:
+        if candidate.resource_id in merged:
+            merged[candidate.resource_id] = _merge_candidate(
+                merged[candidate.resource_id], candidate
+            )
+        else:
+            merged[candidate.resource_id] = candidate
+    observations: list[EvidenceObservation] = []
+    for resource_id in sorted(merged):
+        candidate = merged[resource_id]
+        explicit: tuple[ObservationState, str] | None = None
+        for label in candidate.status_labels:
+            state = STATUS_TOKENS.get(label.strip().lower())
+            if state is not None:
+                explicit = (state, f"console_status={label.strip()}")
+                break
+        pii_exposed = _has_direct_pii(candidate.identifiers)
+        if candidate.forced_state is not None:
+            state = candidate.forced_state
+            reason = (
+                "registry_reference_redacted"
+                if state is ObservationState.REDACTED
+                else "registry_identifiers_visible"
+            )
+        elif explicit is not None:
+            state, reason = explicit
+        elif candidate.existence_present:
+            state, reason = ObservationState.PRESENT, "row_exists"
+        elif pii_exposed:
+            state, reason = ObservationState.PRESENT, "row_present_with_direct_pii"
+        elif candidate.status_labels:
+            state = ObservationState.UNKNOWN
+            reason = f"unmapped_console_status:{candidate.status_labels[0]}"
+        else:
+            state, reason = ObservationState.UNKNOWN, "no_state_fields"
+        observations.append(
+            make_observation(
+                file_id=file_id,
+                captured_at=captured_at,
+                system_id=system_id,
+                resource_id=resource_id,
+                data_category=candidate.category or default_category,
+                state=state,
+                reason=reason,
+                locator=f"png:{family}:{resource_id}",
+                provenance=Provenance.VISION_TRANSCRIPTION,
+                identifiers=candidate.identifiers,
+                state_inputs={
+                    "console_status": "; ".join(candidate.status_labels),
+                },
+                pii_exposed=pii_exposed and state is not ObservationState.REDACTED,
+            )
+        )
+    return observations, diagnostics

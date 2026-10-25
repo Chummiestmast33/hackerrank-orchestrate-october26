@@ -157,6 +157,15 @@ class Meter:
             )
 
 
+@contextmanager
+def metered_call(
+    meter: Meter, provider: str, model: str, purpose: str, cached: bool = False
+) -> Iterator[CallHandle]:
+    """Plan-facing alias for :meth:`Meter.track_call`."""
+    with meter.track_call(provider=provider, model=model, purpose=purpose, cached=cached) as handle:
+        yield handle
+
+
 @dataclass
 class ModelSummary:
     provider: str
