@@ -152,6 +152,46 @@ def test_extra_ids_reported(tmp_path: Path) -> None:
     assert validation.missing_ids == []
 
 
+def test_missing_ids_message_ellipsises_after_ten(tmp_path: Path) -> None:
+    path = write_output_csv(tmp_path / "o.csv", [])
+    expected = [f"case_{n:02d}" for n in range(1, 13)]
+    validation = schema.validate_file(path, expected_case_ids=expected)
+    head = ", ".join(expected[:10])
+    assert any(v.endswith(f"missing 12 case_ids: {head}...") for v in validation.violations)
+    short = schema.validate_file(path, expected_case_ids=["case_01", "case_02"])
+    assert any(v.endswith("missing 2 case_ids: case_01, case_02") for v in short.violations)
+    assert not any("..." in v for v in short.violations)
+
+
+def test_unsorted_message_exact(tmp_path: Path) -> None:
+    path = write_output_csv(
+        tmp_path / "o.csv", [("case_b", "NOT_APPLICABLE", []), ("case_a", "NOT_APPLICABLE", [])]
+    )
+    validation = schema.validate_file(path)
+    assert validation.detected_sort is None
+    assert (
+        "o.csv: case_ids are sorted neither lexicographically nor naturally"
+        in validation.violations
+    )
+
+
+def test_extra_ids_message_ellipsises_after_ten(tmp_path: Path) -> None:
+    rows: list[tuple[str, str, list[dict[str, object]]]] = [
+        (f"case_{n:03d}", "NOT_APPLICABLE", []) for n in range(1, 13)
+    ]
+    path = write_output_csv(tmp_path / "o.csv", rows)
+    validation = schema.validate_file(path, expected_case_ids=[])
+    head = ", ".join(f"case_{n:03d}" for n in range(1, 11))
+    assert any(v.endswith(f"unexpected 12 case_ids: {head}...") for v in validation.violations)
+
+
+def test_single_row_file_sort_trivial(tmp_path: Path) -> None:
+    path = write_output_csv(tmp_path / "o.csv", [("case_550", "NOT_APPLICABLE", [])])
+    validation = schema.validate_file(path)
+    assert validation.detected_sort == "trivial"
+    assert validation.violations == []
+
+
 def test_key_order_variation_still_valid() -> None:
     step = make_step(1)
     reordered = {k: step[k] for k in reversed(list(step))}

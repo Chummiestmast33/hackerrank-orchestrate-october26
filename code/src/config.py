@@ -1,8 +1,8 @@
 """Minimal runtime configuration for the deletion-audit agent.
 
-Paths are resolved relative to this file (AGENTS.md section 8). Pricing values are
-never invented: the built-in table is empty and must be filled from the provider's
-official pricing page via a JSON file pointed to by DELETION_AUDIT_PRICING_JSON.
+Paths are resolved relative to this file (AGENTS.md section 8). Official provider
+pricing values for Qwen models are configured by default and can be overridden via
+a JSON file pointed to by DELETION_AUDIT_PRICING_JSON or .pricing.json.
 """
 
 from __future__ import annotations
@@ -19,10 +19,13 @@ REPO_ROOT = CODE_DIR.parent
 DATASET_DIR = REPO_ROOT / "dataset"
 EVIDENCE_DIR = DATASET_DIR / "evidence"
 CACHE_DIR = CODE_DIR / "cache"
+DATA_DIR = CODE_DIR / "data"
 
 SAMPLE_REQUESTS_CSV = DATASET_DIR / "sample_deletion_requests.csv"
 SAMPLE_OUTPUT_CSV = DATASET_DIR / "sample_output.csv"
 EVAL_REQUESTS_CSV = DATASET_DIR / "deletion_requests.csv"
+DEFAULT_PRICING_PATH = REPO_ROOT / ".pricing.json"
+COMMITTED_USAGE_LOG_PATH = DATA_DIR / "usage_log.jsonl"
 
 DEFAULT_REQUEST_COUNT = 518
 
@@ -42,9 +45,14 @@ _load_dotenv()
 EVALUATION_DIR = Path(os.environ.get("DELETION_AUDIT_REPORT_DIR", str(REPO_ROOT / "evaluation")))
 EVALUATION_REPORT_PATH = EVALUATION_DIR / "evaluation_report.md"
 USAGE_REPORT_PATH = EVALUATION_DIR / "usage_report.md"
-USAGE_LOG_PATH = Path(
-    os.environ.get("DELETION_AUDIT_USAGE_LOG", str(CACHE_DIR / "usage_log.jsonl"))
-)
+
+_env_usage_log = os.environ.get("DELETION_AUDIT_USAGE_LOG")
+if _env_usage_log:
+    USAGE_LOG_PATH = Path(_env_usage_log)
+elif (CACHE_DIR / "usage_log.jsonl").exists():
+    USAGE_LOG_PATH = CACHE_DIR / "usage_log.jsonl"
+else:
+    USAGE_LOG_PATH = COMMITTED_USAGE_LOG_PATH
 
 
 @dataclass(frozen=True)
@@ -55,7 +63,14 @@ class ModelPricing:
     output_per_1m: float
 
 
-PRICING: dict[str, ModelPricing] = {}
+PRICING: dict[str, ModelPricing] = {
+    "qwen/qwen3.7-max": ModelPricing(input_per_1m=2.50000, output_per_1m=7.500000),
+    "qwen/qwen3-vl-plus": ModelPricing(input_per_1m=0.200000, output_per_1m=1.600000),
+    "qwen/deepseek-v4.1-flash": ModelPricing(input_per_1m=0.150000, output_per_1m=0.600000),
+    "qwen3.7-max": ModelPricing(input_per_1m=2.50000, output_per_1m=7.500000),
+    "qwen3-vl-plus": ModelPricing(input_per_1m=0.200000, output_per_1m=1.600000),
+    "deepseek-v4.1-flash": ModelPricing(input_per_1m=0.150000, output_per_1m=0.600000),
+}
 
 
 def load_pricing(path: str | Path | None = None) -> dict[str, ModelPricing]:
@@ -66,6 +81,8 @@ def load_pricing(path: str | Path | None = None) -> dict[str, ModelPricing]:
     """
     pricing = dict(PRICING)
     override = path or os.environ.get("DELETION_AUDIT_PRICING_JSON")
+    if not override and DEFAULT_PRICING_PATH.exists():
+        override = DEFAULT_PRICING_PATH
     if override:
         data = json.loads(Path(override).read_text(encoding="utf-8"))
         for key, value in data.items():
@@ -79,7 +96,14 @@ def load_pricing(path: str | Path | None = None) -> dict[str, ModelPricing]:
 def resolve_pricing(
     pricing: Mapping[str, ModelPricing], provider: str, model: str
 ) -> ModelPricing | None:
-    for key in (f"{provider}/{model}", f"{provider} {model}", model):
+    stripped = model.split("/", 1)[-1] if "/" in model else model
+    for key in (
+        f"{provider}/{model}",
+        f"{provider}/{stripped}",
+        f"{provider} {model}",
+        model,
+        stripped,
+    ):
         found = pricing.get(key)
         if found is not None:
             return found

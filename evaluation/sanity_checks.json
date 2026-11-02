@@ -1,0 +1,187 @@
+{
+  "agent_influence": {
+    "adjudication_batches_run": 8,
+    "cohorts_orchestrated": 5,
+    "deterministic_fallbacks": 0,
+    "documents_analyzed": 5,
+    "live_llm_enabled": true,
+    "not_applicable_proposals": 10,
+    "pdf_documents_analyzed": 4,
+    "proposals_accepted": 518,
+    "proposals_evaluated": 518,
+    "proposals_rejected": 0,
+    "rejection_reasons": {},
+    "tool_calls_executed": 8,
+    "total_cases": 518,
+    "txt_documents_analyzed": 1,
+    "unique_intents_classified": 375,
+    "vision_files_total": 11,
+    "vision_files_verified": 11
+  },
+  "branch": "phase-07-p1-hardcode-cleanup",
+  "cache": {
+    "census_files": 94,
+    "errors": 0,
+    "files": 94,
+    "observations": 2912,
+    "parser_version": "phase4-v2",
+    "unsupported": 0
+  },
+  "checks": [
+    {
+      "detail": "",
+      "name": "request_count_518",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "row_count_518",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_request_load_errors",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_manifest_load_errors",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "schema_violations_zero",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "case_ids_exact",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "duplicate_case_ids_none",
+      "passed": true
+    },
+    {
+      "detail": "lexicographic",
+      "name": "sort_mode_valid",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "not_applicable_steps_empty",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "complete_steps_evidence_backed",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "complete_verifications_prove_state",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "incomplete_findings_prove_state",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "citations_exist_in_manifest",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "citations_within_audit_at",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "deterministic_rerun",
+      "passed": true
+    },
+    {
+      "detail": "mode=live, calls=39, cost=$0.434657, accepted=518, rejected=0, fallbacks=0, vision=11/11, docs=5",
+      "name": "current_run_ai_calls_valid",
+      "passed": true
+    },
+    {
+      "detail": "calls=22, cost=$0.022480",
+      "name": "phase4_setup_calls_metered",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "cache_complete_94",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "cache_observations_2912",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "cache_errors_zero",
+      "passed": true
+    },
+    {
+      "detail": "{'INCOMPLETE': 356, 'COMPLETE': 152, 'NOT_APPLICABLE': 10}",
+      "name": "all_status_enums_expected",
+      "passed": true
+    }
+  ],
+  "citation_count": 1124,
+  "combined_cost_usd": 0.457137,
+  "combined_model_calls": 61,
+  "combined_total_tokens": 220227,
+  "command": "code/evaluation/full_run.py",
+  "commit": "e67af2d",
+  "current_run_cost_usd": 0.434657,
+  "current_run_tokens": 161741,
+  "deterministic": true,
+  "empty_step_cases": [],
+  "future_citations": [],
+  "generated_at": "2026-10-25T13:22:40+00:00",
+  "input": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\dataset\\deletion_requests.csv",
+  "live_llm": true,
+  "max_steps": 19,
+  "min_steps": 0,
+  "missing_citations": [],
+  "model_calls": 39,
+  "output": "C:\\Users\\corte\\Downloads\\hackerrank-orchestrate-october26\\output.csv",
+  "output_sha256": "1740be44af3d597ea111b9da3094e91e2112efa81cd4c75ea57c996cfc52beac",
+  "phase4_setup_calls": 22,
+  "phase4_setup_cost_usd": 0.02248,
+  "phase4_setup_tokens": 58486,
+  "request_count": 518,
+  "runtime_seconds": 344.4530246000031,
+  "sample_metrics": {
+    "mismatches": [
+      "case_18",
+      "case_20"
+    ],
+    "overall_field_accuracy": 0.9758203799654577,
+    "positional_step_accuracy": 0.9689119170984456,
+    "sequence_accuracy": 0.9375,
+    "set_f1": 0.9947916666666666,
+    "status_accuracy": 1.0
+  },
+  "status_counts": {
+    "COMPLETE": 152,
+    "INCOMPLETE": 356,
+    "NOT_APPLICABLE": 10
+  },
+  "synthetic_metrics": {
+    "sequence_accuracy": 1.0,
+    "set_f1": 1.0,
+    "status_accuracy": 1.0
+  },
+  "total_steps": 3161,
+  "unproven_complete": [],
+  "unproven_findings": [],
+  "validation_violations": []
+}

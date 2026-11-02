@@ -39,6 +39,7 @@ venv.bak/
 .env.local
 .env.*.local
 *.env
+!.env.example
 
 # IDE / Editor artifacts
 .idea/
@@ -59,6 +60,8 @@ htmlcov/
 
 # Local cache directories
 code/cache/
+*.sqlite
+*.sqlite3
 agent-trace/
 agent-trace.zip
 code.zip

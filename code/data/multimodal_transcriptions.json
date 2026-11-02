@@ -1,0 +1,1439 @@
+{
+  "meta": {
+    "generated_at": "2026-10-25T01:07:46+00:00",
+    "schema": 1
+  },
+  "transcriptions": {
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|18b95c1bd8b8956e40216df935498a9f3c181ea2a69b5cd6d3c0841a816d5557": {
+      "disagreements": [],
+      "file_id": "evidence_23",
+      "merged": {
+        "job_count": "4",
+        "jobs": [
+          {
+            "created": "20 Jun 14:18 UTC",
+            "file_name": "customer_export_1261.zip",
+            "owner_email": "marcus.lee@northstar.shop",
+            "resource_id": "export_1261",
+            "status": "Collecting"
+          },
+          {
+            "created": "18 Jun 06:42 UTC",
+            "file_name": "customer_export_1260.zip",
+            "owner_email": "ingrid.dahl@outlook.com",
+            "resource_id": "export_1260",
+            "status": "Ready"
+          },
+          {
+            "created": "17 Jun 11:03 UTC",
+            "file_name": "customer_export_1259.zip",
+            "owner_email": "sara.kim@northstar.shop",
+            "resource_id": "export_1259",
+            "status": "Packaging"
+          },
+          {
+            "created": "16 Jun 09:27 UTC",
+            "file_name": "customer_export_1258.zip",
+            "owner_email": "daniel.park@northstar.shop",
+            "resource_id": "export_1258",
+            "status": "Ready"
+          }
+        ]
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "job_count": "4",
+        "jobs": [
+          {
+            "created": "20 Jun 14:18 UTC",
+            "file_name": "customer_export_1261.zip",
+            "owner_email": "marcus.lee@northstar.shop",
+            "resource_id": "export_1261",
+            "status": "Collecting"
+          },
+          {
+            "created": "18 Jun 06:42 UTC",
+            "file_name": "customer_export_1260.zip",
+            "owner_email": "ingrid.dahl@outlook.com",
+            "resource_id": "export_1260",
+            "status": "Ready"
+          },
+          {
+            "created": "17 Jun 11:03 UTC",
+            "file_name": "customer_export_1259.zip",
+            "owner_email": "sara.kim@northstar.shop",
+            "resource_id": "export_1259",
+            "status": "Packaging"
+          },
+          {
+            "created": "16 Jun 09:27 UTC",
+            "file_name": "customer_export_1258.zip",
+            "owner_email": "daniel.park@northstar.shop",
+            "resource_id": "export_1258",
+            "status": "Ready"
+          }
+        ]
+      },
+      "pass_b": {
+        "job_count": "4",
+        "jobs": [
+          {
+            "created": "20 Jun 14:18 UTC",
+            "file_name": "customer_export_1261.zip",
+            "owner_email": "marcus.lee@northstar.shop",
+            "resource_id": "export_1261",
+            "status": "Collecting"
+          },
+          {
+            "created": "18 Jun 06:42 UTC",
+            "file_name": "customer_export_1260.zip",
+            "owner_email": "ingrid.dahl@outlook.com",
+            "resource_id": "export_1260",
+            "status": "Ready"
+          },
+          {
+            "created": "17 Jun 11:03 UTC",
+            "file_name": "customer_export_1259.zip",
+            "owner_email": "sara.kim@northstar.shop",
+            "resource_id": "export_1259",
+            "status": "Packaging"
+          },
+          {
+            "created": "16 Jun 09:27 UTC",
+            "file_name": "customer_export_1258.zip",
+            "owner_email": "daniel.park@northstar.shop",
+            "resource_id": "export_1258",
+            "status": "Ready"
+          }
+        ]
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "18b95c1bd8b8956e40216df935498a9f3c181ea2a69b5cd6d3c0841a816d5557"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|2c246aa5843bec609b9ddfdf1154cd81e0fd61996f83954735e9856e48c18bf3": {
+      "disagreements": [],
+      "file_id": "evidence_32",
+      "merged": {
+        "archive_count": "4",
+        "archives": [
+          {
+            "account_email": "bluepeakco@outlook.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "ap-southeast-1",
+            "resource_id": "backup_9291",
+            "size": "102.3 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "miller.logistics@company.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "us-west-2",
+            "resource_id": "backup_9288",
+            "size": "67.1 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "areed1433@gmail.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "eu-west-1",
+            "resource_id": "backup_9287",
+            "size": "84.7 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "summit-retail@company.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "us-east-1",
+            "resource_id": "backup_9286",
+            "size": "91.4 GB",
+            "tier": "Archive"
+          }
+        ],
+        "detail": {
+          "checksum": "Verified",
+          "created": "26 Apr 2026 02:00 UTC",
+          "path": "s3://northstar-backups/customer-platform/weekly/segment-42-20260426.tar.zst",
+          "resource_id": "backup_9287",
+          "retention_end": "26 Jul 2026"
+        }
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "archive_count": "4",
+        "archives": [
+          {
+            "account_email": "bluepeakco@outlook.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "ap-southeast-1",
+            "resource_id": "backup_9291",
+            "size": "102.3 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "miller.logistics@company.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "us-west-2",
+            "resource_id": "backup_9288",
+            "size": "67.1 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "areed1433@gmail.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "eu-west-1",
+            "resource_id": "backup_9287",
+            "size": "84.7 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "summit-retail@company.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "us-east-1",
+            "resource_id": "backup_9286",
+            "size": "91.4 GB",
+            "tier": "Archive"
+          }
+        ],
+        "detail": {
+          "checksum": "Verified",
+          "created": "26 Apr 2026 02:00 UTC",
+          "path": "s3://northstar-backups/customer-platform/weekly/segment-42-20260426.tar.zst",
+          "resource_id": "backup_9287",
+          "retention_end": "26 Jul 2026"
+        }
+      },
+      "pass_b": {
+        "archive_count": "4",
+        "archives": [
+          {
+            "account_email": "bluepeakco@outlook.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "ap-southeast-1",
+            "resource_id": "backup_9291",
+            "size": "102.3 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "miller.logistics@company.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "us-west-2",
+            "resource_id": "backup_9288",
+            "size": "67.1 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "areed1433@gmail.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "eu-west-1",
+            "resource_id": "backup_9287",
+            "size": "84.7 GB",
+            "tier": "Archive"
+          },
+          {
+            "account_email": "summit-retail@company.com",
+            "created": "26 Apr 02:00",
+            "encryption": "AES-256",
+            "region": "us-east-1",
+            "resource_id": "backup_9286",
+            "size": "91.4 GB",
+            "tier": "Archive"
+          }
+        ],
+        "detail": {
+          "checksum": "Verified",
+          "created": "26 Apr 2026 02:00 UTC",
+          "path": "s3://northstar-backups/customer-platform/weekly/segment-42-20260426.tar.zst",
+          "resource_id": "backup_9287",
+          "retention_end": "26 Jul 2026"
+        }
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "2c246aa5843bec609b9ddfdf1154cd81e0fd61996f83954735e9856e48c18bf3"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|4e4cb259bc2010b622b0c53fe5872258f994fefc23452a83bb27473758693484": {
+      "disagreements": [],
+      "file_id": "evidence_19",
+      "merged": {
+        "analytics_id": "analytics_7438",
+        "attributes": {
+          "audience": "Returning shopper",
+          "first_seen": "21 Apr 2026 09:14 UTC",
+          "interest": "Coffee & dining",
+          "last_activity": "13 Jul 2026 14:22 UTC",
+          "market": "AE"
+        },
+        "email": "darwish.omar@icloud.com",
+        "metrics": {
+          "orders": "2",
+          "products_viewed": "19",
+          "revenue": "USD 167.42",
+          "sessions": "12"
+        },
+        "name": "Omar Darwish",
+        "user_id": "user_20",
+        "window_badge": "Last 90 days"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "analytics_id": "analytics_7438",
+        "attributes": {
+          "audience": "Returning shopper",
+          "first_seen": "21 Apr 2026 09:14 UTC",
+          "interest": "Coffee & dining",
+          "last_activity": "13 Jul 2026 14:22 UTC",
+          "market": "AE"
+        },
+        "email": "darwish.omar@icloud.com",
+        "metrics": {
+          "orders": "2",
+          "products_viewed": "19",
+          "revenue": "USD 167.42",
+          "sessions": "12"
+        },
+        "name": "Omar Darwish",
+        "user_id": "user_20",
+        "window_badge": "Last 90 days"
+      },
+      "pass_b": {
+        "analytics_id": "analytics_7438",
+        "attributes": {
+          "audience": "Returning shopper",
+          "first_seen": "21 Apr 2026 09:14 UTC",
+          "interest": "Coffee & dining",
+          "last_activity": "13 Jul 2026 14:22 UTC",
+          "market": "AE"
+        },
+        "email": "darwish.omar@icloud.com",
+        "metrics": {
+          "orders": "2",
+          "products_viewed": "19",
+          "revenue": "USD 167.42",
+          "sessions": "12"
+        },
+        "name": "Omar Darwish",
+        "user_id": "user_20",
+        "window_badge": "Last 90 days"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "4e4cb259bc2010b622b0c53fe5872258f994fefc23452a83bb27473758693484"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|51fa0e6a38f8fa3629ba1b0d0b90b4ed139715956b97bfd09a6f1a6232c15df5": {
+      "disagreements": [],
+      "file_id": "evidence_60",
+      "merged": {
+        "badges": null,
+        "email": "sj.park@naver.com",
+        "email_opt_in": "Yes",
+        "language": "Korean",
+        "last_refreshed": "15 Sep 2026 23:40 UTC",
+        "market": "South Korea",
+        "marketing_id": "marketing_001",
+        "membership": {
+          "audience": "Returning customers \u2014 East Asia",
+          "click_rate": "6.8%",
+          "last_campaign": "Autumn offers",
+          "open_rate": "32.4%",
+          "preferred_categories": "Desk accessories \u2022 Drinkware",
+          "segments": "Repeat customer \u2022 Home & lifestyle \u2022 Mobile shopper"
+        },
+        "name": "Soo-jin Park",
+        "phone": "+82 10-5837-9451",
+        "sms_opt_in": "No"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "badges": null,
+        "email": "sj.park@naver.com",
+        "email_opt_in": "Yes",
+        "language": "Korean",
+        "last_refreshed": "15 Sep 2026 23:40 UTC",
+        "market": "South Korea",
+        "marketing_id": "marketing_001",
+        "membership": {
+          "audience": "Returning customers \u2014 East Asia",
+          "click_rate": "6.8%",
+          "last_campaign": "Autumn offers",
+          "open_rate": "32.4%",
+          "preferred_categories": "Desk accessories \u2022 Drinkware",
+          "segments": "Repeat customer \u2022 Home & lifestyle \u2022 Mobile shopper"
+        },
+        "name": "Soo-jin Park",
+        "phone": "+82 10-5837-9451",
+        "sms_opt_in": "No"
+      },
+      "pass_b": {
+        "badges": null,
+        "email": "sj.park@naver.com",
+        "email_opt_in": "Yes",
+        "language": "Korean",
+        "last_refreshed": "15 Sep 2026 23:40 UTC",
+        "market": "South Korea",
+        "marketing_id": "marketing_001",
+        "membership": {
+          "audience": "Returning customers \u2014 East Asia",
+          "click_rate": "6.8%",
+          "last_campaign": "Autumn offers",
+          "open_rate": "32.4%",
+          "preferred_categories": "Desk accessories \u2022 Drinkware",
+          "segments": "Repeat customer \u2022 Home & lifestyle \u2022 Mobile shopper"
+        },
+        "name": "Soo-jin Park",
+        "phone": "+82 10-5837-9451",
+        "sms_opt_in": "No"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "51fa0e6a38f8fa3629ba1b0d0b90b4ed139715956b97bfd09a6f1a6232c15df5"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|542b7aec17e6b2f38827896e7eb52c70e4bfaaca22433621be1f80f54884e944": {
+      "disagreements": [],
+      "file_id": "evidence_28",
+      "merged": {
+        "assignee": "Maya Chen",
+        "customer_name": "Kofi Agyeman",
+        "email": "kagyeman8947@fastmail.com",
+        "messages": [
+          {
+            "sender": "Kofi Agyeman",
+            "text": "Could you let me know where my order is and when it is expected to arrive?",
+            "time": "09:12"
+          },
+          {
+            "sender": "Northstar Bot",
+            "text": "We received your message and are checking the order details.",
+            "time": "09:13"
+          },
+          {
+            "sender": "Maya Chen",
+            "text": "The parcel reached the regional hub and is on track for delivery on 26 May.",
+            "time": "09:28"
+          },
+          {
+            "sender": "Kofi Agyeman",
+            "text": "Thanks for the update.",
+            "time": "09:35"
+          }
+        ],
+        "order_ref": "ORD-20265034",
+        "order_status": "In transit",
+        "resource_id": "support_1034",
+        "tags": [
+          "Delivery",
+          "Tracking",
+          "Order update"
+        ],
+        "ticket_id": "CS-5034"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "assignee": "Maya Chen",
+        "customer_name": "Kofi Agyeman",
+        "email": "kagyeman8947@fastmail.com",
+        "messages": [
+          {
+            "sender": "Kofi Agyeman",
+            "text": "Could you let me know where my order is and when it is expected to arrive?",
+            "time": "09:12"
+          },
+          {
+            "sender": "Northstar Bot",
+            "text": "We received your message and are checking the order details.",
+            "time": "09:13"
+          },
+          {
+            "sender": "Maya Chen",
+            "text": "The parcel reached the regional hub and is on track for delivery on 26 May.",
+            "time": "09:28"
+          },
+          {
+            "sender": "Kofi Agyeman",
+            "text": "Thanks for the update.",
+            "time": "09:35"
+          }
+        ],
+        "order_ref": "ORD-20265034",
+        "order_status": "In transit",
+        "resource_id": "support_1034",
+        "tags": [
+          "Delivery",
+          "Tracking",
+          "Order update"
+        ],
+        "ticket_id": "CS-5034"
+      },
+      "pass_b": {
+        "assignee": "Maya Chen",
+        "customer_name": "Kofi Agyeman",
+        "email": "kagyeman8947@fastmail.com",
+        "messages": [
+          {
+            "sender": "Kofi Agyeman",
+            "text": "Could you let me know where my order is and when it is expected to arrive?",
+            "time": "09:12"
+          },
+          {
+            "sender": "Northstar Bot",
+            "text": "We received your message and are checking the order details.",
+            "time": "09:13"
+          },
+          {
+            "sender": "Maya Chen",
+            "text": "The parcel reached the regional hub and is on track for delivery on 26 May.",
+            "time": "09:28"
+          },
+          {
+            "sender": "Kofi Agyeman",
+            "text": "Thanks for the update.",
+            "time": "09:35"
+          }
+        ],
+        "order_ref": "ORD-20265034",
+        "order_status": "In transit",
+        "resource_id": "support_1034",
+        "tags": [
+          "Delivery",
+          "Tracking",
+          "Order update"
+        ],
+        "ticket_id": "CS-5034"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "542b7aec17e6b2f38827896e7eb52c70e4bfaaca22433621be1f80f54884e944"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|68c28a72afd6ed184d5990d15c543f8a516face204f0360f732755a8a63c28be": {
+      "disagreements": [],
+      "file_id": "evidence_42",
+      "merged": {
+        "badge": "Retained reference",
+        "history": [
+          {
+            "event": "Metadata reviewed",
+            "time": "10 Mar 2026"
+          },
+          {
+            "event": "Finance link added",
+            "time": "22 Aug 2024"
+          },
+          {
+            "event": "Support link added",
+            "time": "03 Jun 2024"
+          },
+          {
+            "event": "Support link added",
+            "time": "14 Feb 2024"
+          },
+          {
+            "event": "Reference created",
+            "time": "11 Jan 2024"
+          }
+        ],
+        "links": [
+          {
+            "created": "11 Jan 2024 08:45",
+            "reference": "ORD-20263245",
+            "status": "Active",
+            "system": "Orders"
+          },
+          {
+            "created": "14 Feb 2024 12:16",
+            "reference": "CS-3245",
+            "status": "Active",
+            "system": "Support"
+          },
+          {
+            "created": "03 Jun 2024 09:27",
+            "reference": "CS-3378",
+            "status": "Active",
+            "system": "Support"
+          },
+          {
+            "created": "22 Aug 2024 15:03",
+            "reference": "FIN-7742",
+            "status": "Active",
+            "system": "Finance"
+          }
+        ],
+        "reference_type": "Customer key",
+        "subject_reference": "user_17"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "badge": "Retained reference",
+        "history": [
+          {
+            "event": "Metadata reviewed",
+            "time": "10 Mar 2026"
+          },
+          {
+            "event": "Finance link added",
+            "time": "22 Aug 2024"
+          },
+          {
+            "event": "Support link added",
+            "time": "03 Jun 2024"
+          },
+          {
+            "event": "Support link added",
+            "time": "14 Feb 2024"
+          },
+          {
+            "event": "Reference created",
+            "time": "11 Jan 2024"
+          }
+        ],
+        "links": [
+          {
+            "created": "11 Jan 2024 08:45",
+            "reference": "ORD-20263245",
+            "status": "Active",
+            "system": "Orders"
+          },
+          {
+            "created": "14 Feb 2024 12:16",
+            "reference": "CS-3245",
+            "status": "Active",
+            "system": "Support"
+          },
+          {
+            "created": "03 Jun 2024 09:27",
+            "reference": "CS-3378",
+            "status": "Active",
+            "system": "Support"
+          },
+          {
+            "created": "22 Aug 2024 15:03",
+            "reference": "FIN-7742",
+            "status": "Active",
+            "system": "Finance"
+          }
+        ],
+        "reference_type": "Customer key",
+        "subject_reference": "user_17"
+      },
+      "pass_b": {
+        "badge": "Retained reference",
+        "history": [
+          {
+            "event": "Metadata reviewed",
+            "time": "10 Mar 2026"
+          },
+          {
+            "event": "Finance link added",
+            "time": "22 Aug 2024"
+          },
+          {
+            "event": "Support link added",
+            "time": "03 Jun 2024"
+          },
+          {
+            "event": "Support link added",
+            "time": "14 Feb 2024"
+          },
+          {
+            "event": "Reference created",
+            "time": "11 Jan 2024"
+          }
+        ],
+        "links": [
+          {
+            "created": "11 Jan 2024 08:45",
+            "reference": "ORD-20263245",
+            "status": "Active",
+            "system": "Orders"
+          },
+          {
+            "created": "14 Feb 2024 12:16",
+            "reference": "CS-3245",
+            "status": "Active",
+            "system": "Support"
+          },
+          {
+            "created": "03 Jun 2024 09:27",
+            "reference": "CS-3378",
+            "status": "Active",
+            "system": "Support"
+          },
+          {
+            "created": "22 Aug 2024 15:03",
+            "reference": "FIN-7742",
+            "status": "Active",
+            "system": "Finance"
+          }
+        ],
+        "reference_type": "Customer key",
+        "subject_reference": "user_17"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "68c28a72afd6ed184d5990d15c543f8a516face204f0360f732755a8a63c28be"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|75afdb0ae53a4510c83399a70d88073cb4fb2747454095756e4ddad1a8c70605": {
+      "disagreements": [],
+      "file_id": "evidence_09",
+      "merged": {
+        "environment": "prod-eu",
+        "executed_at": "01 Sep 2026 06:00:14 UTC",
+        "index": "customer_directory_v3",
+        "result_count": 2,
+        "results": [
+          {
+            "customer_reference": "user_13",
+            "display_name": "Gabriel Silva",
+            "email": "g.silva76@gmail.com",
+            "indexed_at": "05:58:21 UTC",
+            "resource_id": "search_428",
+            "score": "9.84"
+          },
+          {
+            "customer_reference": "-",
+            "display_name": "-",
+            "email": "g.silva76.jr@gmail.com",
+            "indexed_at": "05:55:03 UTC",
+            "resource_id": "search_1874",
+            "score": "4.12"
+          }
+        ]
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "environment": "prod-eu",
+        "executed_at": "01 Sep 2026 06:00:14 UTC",
+        "index": "customer_directory_v3",
+        "result_count": 2,
+        "results": [
+          {
+            "customer_reference": "user_13",
+            "display_name": "Gabriel Silva",
+            "email": "g.silva76@gmail.com",
+            "indexed_at": "05:58:21 UTC",
+            "resource_id": "search_428",
+            "score": "9.84"
+          },
+          {
+            "customer_reference": "-",
+            "display_name": "-",
+            "email": "g.silva76.jr@gmail.com",
+            "indexed_at": "05:55:03 UTC",
+            "resource_id": "search_1874",
+            "score": "4.12"
+          }
+        ]
+      },
+      "pass_b": {
+        "environment": "prod-eu",
+        "executed_at": "01 Sep 2026 06:00:14 UTC",
+        "index": "customer_directory_v3",
+        "result_count": 2,
+        "results": [
+          {
+            "customer_reference": "user_13",
+            "display_name": "Gabriel Silva",
+            "email": "g.silva76@gmail.com",
+            "indexed_at": "05:58:21 UTC",
+            "resource_id": "search_428",
+            "score": "9.84"
+          },
+          {
+            "customer_reference": "\u2014",
+            "display_name": "\u2014",
+            "email": "g.silva76.jr@gmail.com",
+            "indexed_at": "05:55:03 UTC",
+            "resource_id": "search_1874",
+            "score": "4.12"
+          }
+        ]
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "75afdb0ae53a4510c83399a70d88073cb4fb2747454095756e4ddad1a8c70605"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|96e9a191380c29b9e0ab997007268c4cd6353cb6721ebd1ed4a32599d8d37e04": {
+      "disagreements": [],
+      "file_id": "evidence_46",
+      "merged": {
+        "bucket": "northstar-customer-data",
+        "captured_at": "13 Feb 2026 08:00 UTC",
+        "detail": {
+          "modified": "12 Feb 2026 18:42 UTC",
+          "name": "delivery_confirmation_19.pdf",
+          "size": "684 KB",
+          "uploader": "support-service",
+          "version": "v3"
+        },
+        "objects": [
+          {
+            "modified": "12 Feb 18:42",
+            "name": "delivery_confirmation_19.pdf",
+            "size": "684 KB",
+            "storage_class": "Standard",
+            "version": "v3"
+          },
+          {
+            "modified": "11 Feb 14:17",
+            "name": "delivery_confirmation_20.pdf",
+            "size": "712 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "10 Feb 09:33",
+            "name": "return_label_4821.pdf",
+            "size": "203 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "11 Feb 16:05",
+            "name": "return_label_4876.pdf",
+            "size": "198 KB",
+            "storage_class": "Standard",
+            "version": "v2"
+          },
+          {
+            "modified": "10 Feb 11:21",
+            "name": "invoice_NS-10493.pdf",
+            "size": "318 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "12 Feb 10:08",
+            "name": "parcel_damage_7713.jpg",
+            "size": "2.4 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "10 Feb 23:14",
+            "name": "customer_export_2026-02-10.zip",
+            "size": "128 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "12 Feb 21:56",
+            "name": "customer_export_2026-02-12.zip",
+            "size": "131 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          }
+        ],
+        "region": "eu-west-1"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "bucket": "northstar-customer-data",
+        "captured_at": "13 Feb 2026 08:00 UTC",
+        "detail": {
+          "modified": "12 Feb 2026 18:42 UTC",
+          "name": "delivery_confirmation_19.pdf",
+          "size": "684 KB",
+          "uploader": "support-service",
+          "version": "v3"
+        },
+        "objects": [
+          {
+            "modified": "12 Feb 18:42",
+            "name": "delivery_confirmation_19.pdf",
+            "size": "684 KB",
+            "storage_class": "Standard",
+            "version": "v3"
+          },
+          {
+            "modified": "11 Feb 14:17",
+            "name": "delivery_confirmation_20.pdf",
+            "size": "712 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "10 Feb 09:33",
+            "name": "return_label_4821.pdf",
+            "size": "203 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "11 Feb 16:05",
+            "name": "return_label_4876.pdf",
+            "size": "198 KB",
+            "storage_class": "Standard",
+            "version": "v2"
+          },
+          {
+            "modified": "10 Feb 11:21",
+            "name": "invoice_NS-10493.pdf",
+            "size": "318 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "12 Feb 10:08",
+            "name": "parcel_damage_7713.jpg",
+            "size": "2.4 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "10 Feb 23:14",
+            "name": "customer_export_2026-02-10.zip",
+            "size": "128 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "12 Feb 21:56",
+            "name": "customer_export_2026-02-12.zip",
+            "size": "131 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          }
+        ],
+        "region": "eu-west-1"
+      },
+      "pass_b": {
+        "bucket": "northstar-customer-data",
+        "captured_at": "13 Feb 2026 08:00 UTC",
+        "detail": {
+          "modified": "12 Feb 2026 18:42 UTC",
+          "name": "delivery_confirmation_19.pdf",
+          "size": "684 KB",
+          "uploader": "support-service",
+          "version": "v3"
+        },
+        "objects": [
+          {
+            "modified": "12 Feb 18:42",
+            "name": "delivery_confirmation_19.pdf",
+            "size": "684 KB",
+            "storage_class": "Standard",
+            "version": "v3"
+          },
+          {
+            "modified": "11 Feb 14:17",
+            "name": "delivery_confirmation_20.pdf",
+            "size": "712 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "10 Feb 09:33",
+            "name": "return_label_4821.pdf",
+            "size": "203 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "11 Feb 16:05",
+            "name": "return_label_4876.pdf",
+            "size": "198 KB",
+            "storage_class": "Standard",
+            "version": "v2"
+          },
+          {
+            "modified": "10 Feb 11:21",
+            "name": "invoice_NS-10493.pdf",
+            "size": "318 KB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "12 Feb 10:08",
+            "name": "parcel_damage_7713.jpg",
+            "size": "2.4 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "10 Feb 23:14",
+            "name": "customer_export_2026-02-10.zip",
+            "size": "128 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          },
+          {
+            "modified": "12 Feb 21:56",
+            "name": "customer_export_2026-02-12.zip",
+            "size": "131 MB",
+            "storage_class": "Standard",
+            "version": "v1"
+          }
+        ],
+        "region": "eu-west-1"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "96e9a191380c29b9e0ab997007268c4cd6353cb6721ebd1ed4a32599d8d37e04"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|ca59f693f4e7002466b3fdeaf1bb6763618770963dd811b60003772d07b4b03b": {
+      "disagreements": [],
+      "file_id": "evidence_37",
+      "merged": {
+        "event_count": 6,
+        "events": [
+          {
+            "actor": "Automated workflow",
+            "audit_id": "audit_record_003",
+            "category": "Account lifecycle",
+            "event_name": "Account closure recorded",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "25 Aug 04:03"
+          },
+          {
+            "actor": "Security system",
+            "audit_id": "audit_record_002",
+            "category": "Session management",
+            "event_name": "Session revoked",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "25 Aug 03:21"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_001",
+            "category": "Authentication",
+            "event_name": "Recovery challenge completed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "24 Aug 16:14"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_006",
+            "category": "Profile update",
+            "event_name": "Email change confirmed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "22 Aug 11:27"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_005",
+            "category": "Authentication",
+            "event_name": "Login from new device",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "20 Aug 09:42"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_004",
+            "category": "Authentication",
+            "event_name": "Password changed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "18 Aug 14:05"
+          }
+        ],
+        "subject_reference": "user_03"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "event_count": 6,
+        "events": [
+          {
+            "actor": "Automated workflow",
+            "audit_id": "audit_record_003",
+            "category": "Account lifecycle",
+            "event_name": "Account closure recorded",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "25 Aug 04:03"
+          },
+          {
+            "actor": "Security system",
+            "audit_id": "audit_record_002",
+            "category": "Session management",
+            "event_name": "Session revoked",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "25 Aug 03:21"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_001",
+            "category": "Authentication",
+            "event_name": "Recovery challenge completed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "24 Aug 16:14"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_006",
+            "category": "Profile update",
+            "event_name": "Email change confirmed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "22 Aug 11:27"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_005",
+            "category": "Authentication",
+            "event_name": "Login from new device",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "20 Aug 09:42"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_004",
+            "category": "Authentication",
+            "event_name": "Password changed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "18 Aug 14:05"
+          }
+        ],
+        "subject_reference": "user_03"
+      },
+      "pass_b": {
+        "event_count": 6,
+        "events": [
+          {
+            "actor": "Automated workflow",
+            "audit_id": "audit_record_003",
+            "category": "Account lifecycle",
+            "event_name": "Account closure recorded",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "25 Aug 04:03"
+          },
+          {
+            "actor": "Security system",
+            "audit_id": "audit_record_002",
+            "category": "Session management",
+            "event_name": "Session revoked",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "25 Aug 03:21"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_001",
+            "category": "Authentication",
+            "event_name": "Recovery challenge completed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "24 Aug 16:14"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_006",
+            "category": "Profile update",
+            "event_name": "Email change confirmed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "22 Aug 11:27"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_005",
+            "category": "Authentication",
+            "event_name": "Login from new device",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "20 Aug 09:42"
+          },
+          {
+            "actor": "User (self)",
+            "audit_id": "audit_record_004",
+            "category": "Authentication",
+            "event_name": "Password changed",
+            "integrity": "Valid",
+            "subject": "user_03",
+            "time": "18 Aug 14:05"
+          }
+        ],
+        "subject_reference": "user_03"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "ca59f693f4e7002466b3fdeaf1bb6763618770963dd811b60003772d07b4b03b"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|d5c32ca5b6e1a2b4bbe9f5d41835ef1fd5d4f7061dab9067a4f9f88cea3c1861": {
+      "disagreements": [],
+      "file_id": "evidence_04",
+      "merged": {
+        "account_id": "account_5762",
+        "address": "2-18-4 Kichijoji, Musashino, Tokyo 180-0004",
+        "badge": "Silver",
+        "email": "haruka.s1838@zoho.com",
+        "last_contact": "24 Sep 2026 09:14 JST",
+        "market": "JP",
+        "name": "Haruka Sato",
+        "orders": [
+          {
+            "date": "12 Sep 2026",
+            "item": "Ceramic coffee set",
+            "order_id": "ORD-20265762",
+            "qty": "1",
+            "status": "Delivered - 18 Sep",
+            "total": "JPY 8,900"
+          },
+          {
+            "date": "28 Aug 2026",
+            "item": "Travel backpack",
+            "order_id": "ORD-20265518",
+            "qty": "1",
+            "status": "Returned - 03 Sep",
+            "total": "JPY 12,400"
+          }
+        ],
+        "phone": "+81 90 7610 2507",
+        "signup_channel": "mobile_app",
+        "support_ref": {
+          "support_id": "support_9538",
+          "ticket": "CS-8538"
+        },
+        "user_id": "user_11"
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "account_id": "account_5762",
+        "address": "2-18-4 Kichijoji, Musashino, Tokyo 180-0004",
+        "badge": "Silver",
+        "email": "haruka.s1838@zoho.com",
+        "last_contact": "24 Sep 2026 09:14 JST",
+        "market": "JP",
+        "name": "Haruka Sato",
+        "orders": [
+          {
+            "date": "12 Sep 2026",
+            "item": "Ceramic coffee set",
+            "order_id": "ORD-20265762",
+            "qty": "1",
+            "status": "Delivered - 18 Sep",
+            "total": "JPY 8,900"
+          },
+          {
+            "date": "28 Aug 2026",
+            "item": "Travel backpack",
+            "order_id": "ORD-20265518",
+            "qty": "1",
+            "status": "Returned - 03 Sep",
+            "total": "JPY 12,400"
+          }
+        ],
+        "phone": "+81 90 7610 2507",
+        "signup_channel": "mobile_app",
+        "support_ref": {
+          "support_id": "support_9538",
+          "ticket": "CS-8538"
+        },
+        "user_id": "user_11"
+      },
+      "pass_b": {
+        "account_id": "account_5762",
+        "address": "2-18-4 Kichijoji, Musashino, Tokyo 180-0004",
+        "badge": "Silver",
+        "email": "haruka.s1838@zoho.com",
+        "last_contact": "24 Sep 2026 09:14 JST",
+        "market": "JP",
+        "name": "Haruka Sato",
+        "orders": [
+          {
+            "date": "12 Sep 2026",
+            "item": "Ceramic coffee set",
+            "order_id": "ORD-20265762",
+            "qty": "1",
+            "status": "Delivered - 18 Sep",
+            "total": "JPY 8,900"
+          },
+          {
+            "date": "28 Aug 2026",
+            "item": "Travel backpack",
+            "order_id": "ORD-20265518",
+            "qty": "1",
+            "status": "Returned - 03 Sep",
+            "total": "JPY 12,400"
+          }
+        ],
+        "phone": "+81 90 7610 2507",
+        "signup_channel": "mobile_app",
+        "support_ref": {
+          "support_id": "support_9538",
+          "ticket": "CS-8538"
+        },
+        "user_id": "user_11"
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "d5c32ca5b6e1a2b4bbe9f5d41835ef1fd5d4f7061dab9067a4f9f88cea3c1861"
+    },
+    "p4-v2|qwen3-vl-plus|qwen3-vl-plus|e81fabc93ea1b5f4c918d934cdb2bea05d61737adfcc29f281494f5d8ec46355": {
+      "disagreements": [],
+      "file_id": "evidence_14",
+      "merged": {
+        "connector_count": "12",
+        "connectors": [
+          {
+            "destination": "customer_analytics_warehouse",
+            "events_per_hour": "1,284",
+            "last_contact": "07:59:42",
+            "mode": "Continuous",
+            "resource_id": "data_flow_1121",
+            "selector": "jain.aditi@gmail.com"
+          },
+          {
+            "destination": "customer_analytics_warehouse",
+            "events_per_hour": "842",
+            "last_contact": "07:59:36",
+            "mode": "Continuous",
+            "resource_id": "data_flow_9846",
+            "selector": "lucia-torres@gmail.com"
+          },
+          {
+            "destination": "notification_service",
+            "events_per_hour": "650",
+            "last_contact": "07:59:28",
+            "mode": "Continuous",
+            "resource_id": "Order notifications",
+            "selector": "order events"
+          },
+          {
+            "destination": "logistics_warehouse",
+            "events_per_hour": "420",
+            "last_contact": "07:59:13",
+            "mode": "Continuous",
+            "resource_id": "Delivery tracking",
+            "selector": "shipment events"
+          }
+        ],
+        "detail": {
+          "destination": "customer_analytics_warehouse",
+          "last_response": "200 OK - 1.8 s",
+          "owner": "Data Platform",
+          "resource_id": "data_flow_1121",
+          "selector": "jain.aditi@gmail.com",
+          "status": "Healthy",
+          "sync_mode": "Continuous sync"
+        }
+      },
+      "model_a": "qwen3-vl-plus",
+      "model_b": "qwen3-vl-plus",
+      "pass_a": {
+        "connector_count": "12",
+        "connectors": [
+          {
+            "destination": "customer_analytics_warehouse",
+            "events_per_hour": "1,284",
+            "last_contact": "07:59:42",
+            "mode": "Continuous",
+            "resource_id": "data_flow_1121",
+            "selector": "jain.aditi@gmail.com"
+          },
+          {
+            "destination": "customer_analytics_warehouse",
+            "events_per_hour": "842",
+            "last_contact": "07:59:36",
+            "mode": "Continuous",
+            "resource_id": "data_flow_9846",
+            "selector": "lucia-torres@gmail.com"
+          },
+          {
+            "destination": "notification_service",
+            "events_per_hour": "650",
+            "last_contact": "07:59:28",
+            "mode": "Continuous",
+            "resource_id": "Order notifications",
+            "selector": "order events"
+          },
+          {
+            "destination": "logistics_warehouse",
+            "events_per_hour": "420",
+            "last_contact": "07:59:13",
+            "mode": "Continuous",
+            "resource_id": "Delivery tracking",
+            "selector": "shipment events"
+          }
+        ],
+        "detail": {
+          "destination": "customer_analytics_warehouse",
+          "last_response": "200 OK - 1.8 s",
+          "owner": "Data Platform",
+          "resource_id": "data_flow_1121",
+          "selector": "jain.aditi@gmail.com",
+          "status": "Healthy",
+          "sync_mode": "Continuous sync"
+        }
+      },
+      "pass_b": {
+        "connector_count": "12",
+        "connectors": [
+          {
+            "destination": "customer_analytics_warehouse",
+            "events_per_hour": "1,284",
+            "last_contact": "07:59:42",
+            "mode": "Continuous",
+            "resource_id": "data_flow_1121",
+            "selector": "jain.aditi@gmail.com"
+          },
+          {
+            "destination": "customer_analytics_warehouse",
+            "events_per_hour": "842",
+            "last_contact": "07:59:36",
+            "mode": "Continuous",
+            "resource_id": "data_flow_9846",
+            "selector": "lucia-torres@gmail.com"
+          },
+          {
+            "destination": "notification_service",
+            "events_per_hour": "650",
+            "last_contact": "07:59:28",
+            "mode": "Continuous",
+            "resource_id": "Order notifications",
+            "selector": "order events"
+          },
+          {
+            "destination": "logistics_warehouse",
+            "events_per_hour": "420",
+            "last_contact": "07:59:13",
+            "mode": "Continuous",
+            "resource_id": "Delivery tracking",
+            "selector": "shipment events"
+          }
+        ],
+        "detail": {
+          "destination": "customer_analytics_warehouse",
+          "last_response": "200 OK - 1.8 s",
+          "owner": "Data Platform",
+          "resource_id": "data_flow_1121",
+          "selector": "jain.aditi@gmail.com",
+          "status": "Healthy",
+          "sync_mode": "Continuous sync"
+        }
+      },
+      "prompt_version": "p4-v2",
+      "review_flags": [],
+      "sha256": "e81fabc93ea1b5f4c918d934cdb2bea05d61737adfcc29f281494f5d8ec46355"
+    }
+  }
+}

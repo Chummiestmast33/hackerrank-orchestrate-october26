@@ -6,8 +6,6 @@ Cached calls are counted separately and excluded from token/cost totals. No
 secrets or configuration values are ever written to the reports.
 """
 
-from __future__ import annotations
-
 import json
 import uuid
 from collections.abc import Iterator, Mapping
@@ -17,7 +15,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from ..config import DEFAULT_REQUEST_COUNT, USAGE_LOG_PATH, ModelPricing, resolve_pricing
+from ..config import (
+    DEFAULT_REQUEST_COUNT,
+    USAGE_LOG_PATH,
+    ModelPricing,
+    load_pricing,
+    resolve_pricing,
+)
 
 
 def _now_iso() -> str:
@@ -50,7 +54,7 @@ class UsageRecord:
         )
 
     @classmethod
-    def from_json(cls, line: str) -> UsageRecord:
+    def from_json(cls, line: str) -> "UsageRecord":
         data = json.loads(line)
         return cls(
             run_id=data["run_id"],
@@ -159,6 +163,15 @@ class Meter:
             )
 
 
+@contextmanager
+def metered_call(
+    meter: Meter, provider: str, model: str, purpose: str, cached: bool = False
+) -> Iterator[CallHandle]:
+    """Plan-facing alias for :meth:`Meter.track_call`."""
+    with meter.track_call(provider=provider, model=model, purpose=purpose, cached=cached) as handle:
+        yield handle
+
+
 @dataclass
 class ModelSummary:
     provider: str
@@ -233,6 +246,7 @@ def summarize(
     pricing: Mapping[str, ModelPricing] | None = None,
 ) -> UsageSummary:
     path = log_path or USAGE_LOG_PATH
+    active_pricing = load_pricing() if pricing is None else pricing
     summary = UsageSummary(run_id=run_id, generated_at=_now_iso(), request_count=request_count)
     by_model: dict[tuple[str, str], ModelSummary] = {}
     if path.exists():
@@ -257,7 +271,7 @@ def summarize(
                     model_summary.output_tokens += entry.output_tokens
     models = sorted(by_model.values(), key=lambda m: (m.provider, m.model))
     for model_summary in models:
-        price = resolve_pricing(pricing or {}, model_summary.provider, model_summary.model)
+        price = resolve_pricing(active_pricing, model_summary.provider, model_summary.model)
         if price is None:
             summary.unpriced_models.append(f"{model_summary.provider}/{model_summary.model}")
         else:

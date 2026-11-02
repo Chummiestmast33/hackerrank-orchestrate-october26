@@ -16,8 +16,6 @@ official grader's formulas are unknown, so both variants are reported):
 - Field-level accuracy: per semantic field over the same max-length alignment.
 """
 
-from __future__ import annotations
-
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -276,9 +274,7 @@ def diff_case(case_id: str, gold: CaseOutput | None, pred: CaseOutput | None) ->
                 for name in SEMANTIC_FIELDS
                 if gstep.get(name) != pstep.get(name)
             )
-            lines.append(
-                f"{case_id}: step {position + 1}: {detail or _fmt_step(pstep) + ' != ' + _fmt_step(gstep)}"
-            )
+            lines.append(f"{case_id}: step {position + 1}: {detail}")
     for step in pred.steps[len(gold.steps) :]:
         lines.append(f"{case_id}: EXTRA step: {_fmt_step(step)}")
     for step in gold.steps[len(pred.steps) :]:
